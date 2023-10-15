@@ -28,7 +28,7 @@ export type Letter =
   | "æ"
   | "å";
 
-const LETTERS: Record<string, true> = {
+export const LETTERS: Record<string, true> = {
   a: true,
   b: true,
   c: true,

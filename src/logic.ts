@@ -11,6 +11,23 @@ export const createBoard = (start: Letter): Board => {
   };
 };
 
+export const initializeBoards = (start: string): Board[] => {
+  const [first, ...rest] = start as unknown as Letter[];
+  let boards = [createBoard(first)];
+  for (const letter of rest) {
+    boards = addLetter(boards, letter);
+  }
+  return boards;
+};
+
+export const addWord = (boards: Board[], word: string): Board[] => {
+  let next = boards;
+  for (const letter of word) {
+    next = addLetter(next, letter as Letter);
+  }
+  return next;
+};
+
 const ALLOWED_STEPS = {
   top: ["left", "right", "bottom"],
   left: ["top", "right", "bottom"],
@@ -51,6 +68,10 @@ export const isLegalBoard = (input: unknown): input is Board => {
   return canPlay(board, board.sequence);
 };
 
+export const isComplete = (board: Board): boolean => {
+  return new Set(board.sequence).size === 12;
+};
+
 export const addLetter = (
   boardOrBoards: Board | Board[],
   next: Letter
@@ -64,8 +85,7 @@ export const addLetter = (
     return [{ ...board, sequence: [...board.sequence, next] }];
   }
 
-  const isComplete = new Set(board.sequence).size === 12;
-  if (isComplete) {
+  if (isComplete(board)) {
     throw new Error(`Cannot add to ${next} to a complete board`);
   }
 
@@ -117,7 +137,11 @@ export const canPlay = (board: Board, word: Letter[]): boolean => {
   return true;
 };
 
-export const aStar = (words: string[]) => {
+const isFinished = (path: string[]): boolean => {
+  return new Set(path.join("").split("")).size === 12;
+};
+
+export const aStar = (words: Readonly<string[]>) => {
   const letters = new Map<string, number>();
   words.forEach((word) => {
     letters.set(word, new Set(word.split("")).size);
@@ -152,10 +176,6 @@ export const aStar = (words: string[]) => {
       }
       current = next;
     } while (true);
-  };
-
-  const isFinished = (path: string[]): boolean => {
-    return new Set(path.join("").split("")).size === 12;
   };
 
   const gScore = {
@@ -193,7 +213,7 @@ export const aStar = (words: string[]) => {
     }
 
     const neighbors = words.filter((w) => {
-      return !current || w.startsWith(current);
+      return !current || w.startsWith(current[current.length - 1]);
     });
 
     for (const neighbor of neighbors) {
@@ -214,16 +234,23 @@ export const aStar = (words: string[]) => {
   throw new Error("No matches found");
 };
 
-export const findSolution = (words: string[], board: Board): string[] => {
+export const findSolution = (
+  words: readonly string[],
+  board: Board
+): string[] => {
   const possibleLetters = new Set(board.sequence);
-  const contenders = words.filter((word) => {
-    for (const letter of word) {
-      if (!possibleLetters.has(letter as Letter)) {
-        return false;
+  const contenders = words
+    .filter((word) => {
+      for (const letter of word) {
+        if (!possibleLetters.has(letter as Letter)) {
+          return false;
+        }
       }
-    }
-    return !canPlay(board, word.split("").filter(isLetter));
-  });
+      return true;
+    })
+    .filter((word) => {
+      return canPlay(board, word.split("").filter(isLetter));
+    });
 
   return aStar(contenders);
 };

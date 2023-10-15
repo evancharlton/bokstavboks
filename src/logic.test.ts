@@ -187,17 +187,45 @@ describe("solving", () => {
     })();
 
     test("solving", () => {
-      const board: Board = {
+      const dict = [
+        "enveisgater",
+        "årstilvekstene",
+        "avsetningsvilkår",
+        "skåle",
+        "egentlig",
+        "grave",
+      ];
+
+      const board = {
         sequence: "skåleegentliggrave".split("").filter(isLetter),
         top: new Set("eså".split("").filter(isLetter)),
         left: new Set("lkg".split("").filter(isLetter)),
         right: new Set("ain".split("").filter(isLetter)),
         bottom: new Set("rtv".split("").filter(isLetter)),
-      };
+      } satisfies Board;
 
-      const solution = findSolution(words, board);
-      expect(solution).toHaveLength(1);
-      expect(solution).toContain("avsetningsvilkår");
+      const solution = findSolution(dict, board);
+      expect(solution).toHaveLength(2);
+    });
+
+    test("dnågirktyaes", () => {
+      const dict = ["nedgangsåra", "artskrysningen"] as const;
+
+      const board = {
+        sequence: dict.join("").split("").filter(isLetter),
+        top: new Set("dnå".split("").filter(isLetter)),
+        left: new Set("aes".split("").filter(isLetter)),
+        right: new Set("gir".split("").filter(isLetter)),
+        bottom: new Set("kty".split("").filter(isLetter)),
+      } satisfies Board;
+
+      expect(new Set(dict.join("").split("")).size).toBe(12);
+
+      expect(canPlay(board, dict[0].split("").filter(isLetter))).toBe(true);
+      expect(canPlay(board, dict[1].split("").filter(isLetter))).toBe(true);
+
+      const solution = findSolution(dict, board);
+      expect(solution).toHaveLength(2);
     });
   });
 });
