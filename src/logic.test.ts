@@ -1,5 +1,13 @@
-import { addLetter, createBoard, isLegalBoard } from "./logic";
-import { isLetter } from "./types";
+import { readFileSync } from "fs";
+import {
+  addLetter,
+  canPlay,
+  createBoard,
+  findSolution,
+  isLegalBoard,
+} from "./logic";
+import { Board, isLetter } from "./types";
+import { resolve } from "path";
 
 describe("logic", () => {
   test("createBoard", () => {
@@ -136,5 +144,60 @@ describe("logic", () => {
         "w"
       )
     ).toHaveLength(2);
+  });
+});
+
+describe("solving", () => {
+  test("canPlay", () => {
+    const board: Board = {
+      sequence: "skåleegentliggrave".split("").filter(isLetter),
+      top: new Set("eså".split("").filter(isLetter)),
+      left: new Set("lkg".split("").filter(isLetter)),
+      right: new Set("ain".split("").filter(isLetter)),
+      bottom: new Set("rtv".split("").filter(isLetter)),
+    };
+
+    expect(canPlay(board, "skåle".split("").filter(isLetter))).toBe(true);
+    expect(canPlay(board, "seler".split("").filter(isLetter))).toBe(false);
+  });
+
+  describe("with word list", () => {
+    const words = (() => {
+      const contents = readFileSync(
+        resolve(__dirname, "../wordlist/fullformsliste.txt"),
+        { encoding: "latin1" }
+      ).toString();
+      return contents
+        .split("\n")
+        .map((line) => {
+          const columns = line.split("\t");
+          return columns[2];
+        })
+        .filter(Boolean)
+        .filter((word) => word.length > 2)
+        .filter((word) => {
+          for (let i = 1; i < word.length; i += 1) {
+            if (word[i] === word[i - 1]) {
+              return false;
+            }
+          }
+          return true;
+        })
+        .filter((word) => word.split("").every(isLetter));
+    })();
+
+    test("solving", () => {
+      const board: Board = {
+        sequence: "skåleegentliggrave".split("").filter(isLetter),
+        top: new Set("eså".split("").filter(isLetter)),
+        left: new Set("lkg".split("").filter(isLetter)),
+        right: new Set("ain".split("").filter(isLetter)),
+        bottom: new Set("rtv".split("").filter(isLetter)),
+      };
+
+      const solution = findSolution(words, board);
+      expect(solution).toHaveLength(1);
+      expect(solution).toContain("avsetningsvilkår");
+    });
   });
 });

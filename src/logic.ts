@@ -1,4 +1,5 @@
-import { Board, Letter } from "./types";
+import PriorityQueue from "ts-priority-queue";
+import { Board, Letter, isLetter } from "./types";
 
 export const createBoard = (start: Letter): Board => {
   return {
@@ -47,27 +48,7 @@ export const isLegalBoard = (input: unknown): input is Board => {
     return true;
   }
 
-  // Make sure that it's walkable.
-  let currentSide: keyof typeof ALLOWED_STEPS = "top";
-  sequenceLoop: for (let i = 1; i < board.sequence.length; i += 1) {
-    if (board.sequence[i] === board.sequence[i - 1]) {
-      continue;
-    }
-    const letter = board.sequence[i];
-    let step: keyof typeof ALLOWED_STEPS;
-    for (step of ALLOWED_STEPS[currentSide]) {
-      const nextSide = board[step];
-      if (nextSide.has(letter)) {
-        // We found a step. We know that this is the only valid one because
-        // each letter only exists on at most one side.
-        currentSide = step;
-        continue sequenceLoop;
-      }
-    }
-    return false;
-  }
-
-  return true;
+  return canPlay(board, board.sequence);
 };
 
 export const addLetter = (
@@ -110,4 +91,139 @@ export const addLetter = (
       bottom: new Set([...board.bottom, next]),
     },
   ].filter(isLegalBoard);
+};
+
+export const canPlay = (board: Board, word: Letter[]): boolean => {
+  // Make sure that it's walkable.
+  let currentSide: keyof typeof ALLOWED_STEPS = "top";
+  sequenceLoop: for (let i = 1; i < word.length; i += 1) {
+    if (word[i] === word[i - 1]) {
+      continue;
+    }
+    const letter = word[i];
+    let step: keyof typeof ALLOWED_STEPS;
+    for (step of ALLOWED_STEPS[currentSide]) {
+      const nextSide = board[step];
+      if (nextSide.has(letter)) {
+        // We found a step. We know that this is the only valid one because
+        // each letter only exists on at most one side.
+        currentSide = step;
+        continue sequenceLoop;
+      }
+    }
+    return false;
+  }
+
+  return true;
+};
+
+export const aStar = (words: string[]) => {
+  const letters = new Map<string, number>();
+  words.forEach((word) => {
+    letters.set(word, new Set(word.split("")).size);
+  });
+
+  const h = (word: string) => {
+    return 12 - (letters.get(word) ?? 0);
+  };
+
+  const pSet = new Set<string>();
+  const pQueue = new PriorityQueue<string>({
+    comparator: (a, b) => {
+      return (
+        (letters.get(b) ?? Number.MAX_SAFE_INTEGER) -
+        (letters.get(a) ?? Number.MAX_SAFE_INTEGER)
+      );
+    },
+  });
+  pSet.add("");
+  pQueue.queue("");
+
+  const cameFrom = new Map<string, string>();
+
+  const reconstructPath = (word: string): string[] => {
+    const path = [];
+    let current = word;
+    do {
+      path.push(current);
+      const next = cameFrom.get(current);
+      if (!next) {
+        return path;
+      }
+      current = next;
+    } while (true);
+  };
+
+  const isFinished = (path: string[]): boolean => {
+    return new Set(path.join("").split("")).size === 12;
+  };
+
+  const gScore = {
+    _map: new Map<string, number>(),
+    get(word: string): number {
+      return this._map.get(word) ?? Number.MAX_SAFE_INTEGER;
+    },
+    set(word: string, score: number) {
+      this._map.set(word, score);
+    },
+  };
+  gScore.set("", 0);
+
+  const fScore = {
+    _map: new Map<string, number>(),
+    get(word: string): number {
+      return this._map.get(word) ?? Number.MAX_SAFE_INTEGER;
+    },
+    set(word: string, score: number) {
+      this._map.set(word, score);
+    },
+  };
+  fScore.set("", h(""));
+
+  const d = (a: string, b: string): number => {
+    return 12 - new Set(`${a}${b}`.split("")).size;
+  };
+
+  while (pQueue.length > 0) {
+    const current = pQueue.dequeue();
+    pSet.delete(current);
+    const path = reconstructPath(current);
+    if (isFinished(path)) {
+      return path;
+    }
+
+    const neighbors = words.filter((w) => {
+      return !current || w.startsWith(current);
+    });
+
+    for (const neighbor of neighbors) {
+      const tentativeG = gScore.get(current) + d(current, neighbor);
+      if (tentativeG < gScore.get(neighbor)) {
+        // This is better.
+        cameFrom.set(neighbor, current);
+        gScore.set(neighbor, tentativeG);
+        fScore.set(neighbor, tentativeG + h(neighbor));
+        if (!pSet.has(neighbor)) {
+          pQueue.queue(neighbor);
+          pSet.add(neighbor);
+        }
+      }
+    }
+  }
+
+  throw new Error("No matches found");
+};
+
+export const findSolution = (words: string[], board: Board): string[] => {
+  const possibleLetters = new Set(board.sequence);
+  const contenders = words.filter((word) => {
+    for (const letter of word) {
+      if (!possibleLetters.has(letter as Letter)) {
+        return false;
+      }
+    }
+    return !canPlay(board, word.split("").filter(isLetter));
+  });
+
+  return aStar(contenders);
 };
