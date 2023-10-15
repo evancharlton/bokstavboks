@@ -3,7 +3,7 @@ import classes from "./Builder.module.css";
 import { Words } from "./Words";
 import { Letter } from "../../types";
 import { addLetter, createBoard } from "../../logic";
-import { Grid } from "./Grid";
+import { Grid } from "../../components/Grid";
 
 export const Builder = () => {
   const [sequence, setSequence] = useState<Letter[]>([]);
@@ -42,7 +42,7 @@ export const Builder = () => {
       </h1>
       <div className={classes.boards} key={sequence.join("")}>
         {building && <h1>building ...</h1>}
-        {boards[0] && <Grid board={boards[0]} />}
+        {boards[0] && <Grid board={boards[0]} input="" />}
       </div>
     </div>
   );
