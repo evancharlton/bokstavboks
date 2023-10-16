@@ -13,10 +13,10 @@ describe("logic", () => {
   test("createBoard", () => {
     expect(createBoard("a")).toEqual({
       sequence: ["a"],
-      top: new Set(["a"]),
-      left: new Set(),
-      right: new Set(),
-      bottom: new Set(),
+      sideA: new Set(["a"]),
+      sideB: new Set(),
+      sideC: new Set(),
+      sideD: new Set(),
     });
   });
 
@@ -27,50 +27,50 @@ describe("logic", () => {
     expect(
       isLegalBoard({
         sequence: ["a", "b", "c"],
-        top: new Set(["a", "b"]),
-        left: new Set(),
-        right: new Set(),
-        bottom: new Set(),
+        sideA: new Set(["a", "b"]),
+        sideB: new Set(),
+        sideC: new Set(),
+        sideD: new Set(),
       })
     ).toBe(false);
 
     expect(
       isLegalBoard({
         sequence: ["a", "c"],
-        top: new Set(["a", "b"]),
-        left: new Set(),
-        right: new Set(),
-        bottom: new Set(),
+        sideA: new Set(["a", "b"]),
+        sideB: new Set(),
+        sideC: new Set(),
+        sideD: new Set(),
       })
     ).toBe(false);
 
     expect(
       isLegalBoard({
         sequence: ["a", "b"],
-        top: new Set(["a", "b"]),
-        left: new Set(),
-        right: new Set(),
-        bottom: new Set(),
+        sideA: new Set(["a", "b"]),
+        sideB: new Set(),
+        sideC: new Set(),
+        sideD: new Set(),
       })
     ).toBe(false);
 
     expect(
       isLegalBoard({
         sequence: ["a", "b", "a", "c"],
-        top: new Set(["a"]),
-        left: new Set(["b"]),
-        right: new Set(["c"]),
-        bottom: new Set(),
+        sideA: new Set(["a"]),
+        sideB: new Set(["b"]),
+        sideC: new Set(["c"]),
+        sideD: new Set(),
       })
     ).toBe(true);
 
     expect(
       isLegalBoard({
         sequence: "exhaustionewer".split(""),
-        top: new Set("tue".split("")),
-        left: new Set("aiw".split("")),
-        right: new Set("xso".split("")),
-        bottom: new Set("nhr".split("")),
+        sideA: new Set("tue".split("")),
+        sideB: new Set("aiw".split("")),
+        sideC: new Set("xso".split("")),
+        sideD: new Set("nhr".split("")),
       })
     ).toBe(true);
   });
