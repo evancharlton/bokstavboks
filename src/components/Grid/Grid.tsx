@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import classes from "./Grid.module.css";
 import { useBoard } from "../BoardProvider";
 import { Nest } from "./Nest";
@@ -66,7 +65,6 @@ export const Grid = () => {
         <Button letter={b[2] as Letter} />
         <div className={classes.letter} />
       </div>
-      <Link to={`/${[t, r, b, l].flat().join("")}`}>Play this</Link>
     </div>
   );
 };

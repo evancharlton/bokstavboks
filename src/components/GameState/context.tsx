@@ -7,6 +7,7 @@ export const GameStateContext = createContext<
       current: string;
       setInput: (input: string) => void;
       add: (letter: string) => void;
+      remove: () => void;
       commit: () => void;
       usedLetters: Set<Letter>;
       error?: string;

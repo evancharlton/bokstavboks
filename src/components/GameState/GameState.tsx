@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useReducer } from "react";
 import { GameStateContext } from "./context";
-import { Letter, isLetter, isLetters, neverGuard } from "../../types";
+import { isLetter, isLetters, neverGuard } from "../../types";
 import { useWords } from "../WordsProvider";
 import { useBoard } from "../BoardProvider";
 
@@ -11,13 +11,13 @@ type Props = {
 type State = {
   words: string[];
   current: string;
-  usedLetters: Set<Letter>;
   error: string | undefined;
 };
 
 type Update =
   | { action: "set-current"; input: string }
   | { action: "add-letter"; letter: string }
+  | { action: "remove-letter" }
   | { action: "commit" };
 
 const reducer =
@@ -50,7 +50,7 @@ const reducer =
               ...state,
               // We explicitly want to make a new array so that we don't get stale
               // references around (ie, hooks)
-              words: state.words.slice(0, state.words.length - 2),
+              words: state.words.slice(0, state.words.length - 1),
               current: previousWord,
               error: undefined,
             };
@@ -70,7 +70,6 @@ const reducer =
         return {
           ...state,
           current: input,
-          usedLetters: new Set(input),
           error: undefined,
         };
       }
@@ -92,7 +91,8 @@ const reducer =
           };
         }
 
-        if (!isLetters(input)) {
+        const combined = `${input}${state.words.join("")}`;
+        if (!isLetters(combined)) {
           throw new Error("Impossible situation");
         }
 
@@ -100,8 +100,37 @@ const reducer =
           ...state,
           error: undefined,
           current: input,
-          usedLetters: new Set(input),
         };
+      }
+
+      case "remove-letter": {
+        if (state.current.length > 1) {
+          return {
+            ...state,
+            current: state.current.substring(0, state.current.length - 1),
+            error: undefined,
+          };
+        }
+
+        if (state.current.length === 1) {
+          if (state.words.length === 0) {
+            return {
+              ...state,
+              current: "",
+              error: undefined,
+            };
+          }
+
+          const previousWord = state.words[state.words.length - 1];
+          return {
+            ...state,
+            words: state.words.slice(0, state.words.length - 1),
+            current: previousWord,
+            error: undefined,
+          };
+        }
+
+        return state;
       }
 
       case "commit": {
@@ -188,12 +217,11 @@ export const GameState = ({ children }: Props) => {
     [sides]
   );
 
-  const [{ words, current, usedLetters, error }, dispatch] = useReducer(
+  const [{ words, current, error }, dispatch] = useReducer(
     reducer(dictionary, isValid),
     {
       words: [],
       current: "",
-      usedLetters: new Set<Letter>(),
       error: undefined,
     } satisfies State
   );
@@ -210,9 +238,28 @@ export const GameState = ({ children }: Props) => {
     dispatch({ action: "add-letter", letter });
   }, []);
 
+  const remove = useCallback(() => {
+    dispatch({ action: "remove-letter" });
+  }, []);
+
+  const combined = `${words.join("")}${current}`;
+  if (!isLetters(combined)) {
+    throw new Error("Something happened");
+  }
+  const usedLetters = new Set(combined);
+
   return (
     <GameStateContext.Provider
-      value={{ words, current, setInput, add, commit, usedLetters, error }}
+      value={{
+        words,
+        current,
+        setInput,
+        add,
+        remove,
+        commit,
+        usedLetters,
+        error,
+      }}
     >
       {children}
     </GameStateContext.Provider>
