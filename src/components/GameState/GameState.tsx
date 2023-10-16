@@ -1,0 +1,191 @@
+import { useCallback, useMemo, useReducer, useState } from "react";
+import { GameStateContext } from "./context";
+import { isLetters, neverGuard } from "../../types";
+import { useWords } from "../WordsProvider";
+import { useBoard } from "../BoardProvider";
+
+type Props = {
+  children: React.ReactNode;
+};
+
+type State = {
+  words: string[];
+  current: string;
+  error: string | undefined;
+};
+
+type Update = { action: "set-current"; input: string } | { action: "commit" };
+
+const reducer =
+  (dictionary: Set<string>, isValid: (input: string) => boolean) =>
+  (state: State, update: Update): State => {
+    const { action } = update;
+    switch (action) {
+      case "set-current": {
+        const { input } = update;
+        if (!isLetters(input)) {
+          return {
+            ...state,
+            error: "Invalid input",
+          };
+        }
+
+        if (!isValid(input)) {
+          return {
+            ...state,
+            error: "Illegal move",
+          };
+        }
+
+        if (state.words.length > 0) {
+          const previousWord = state.words[state.words.length - 1];
+          if (input.length === 0) {
+            // They removed their first letter; shift the previous word into the
+            // input.
+            return {
+              ...state,
+              // We explicitly want to make a new array so that we don't get stale
+              // references around (ie, hooks)
+              words: state.words.slice(0, state.words.length - 2),
+              current: previousWord,
+              error: undefined,
+            };
+          }
+
+          // Make sure that the input still starts with the right letter
+          const lastLetter = previousWord[previousWord.length - 1];
+          if (input[0] !== lastLetter) {
+            return {
+              ...state,
+              error: "Must start with the last letter of the previous word",
+            };
+          }
+        }
+
+        // Everything in order!
+        return {
+          ...state,
+          current: input,
+          error: undefined,
+        };
+      }
+
+      case "commit": {
+        const { current } = state;
+        if (!current) {
+          return {
+            ...state,
+            error: "No input provided",
+          };
+        }
+
+        // TODO: validate word
+        if (!dictionary.has(state.current)) {
+          return {
+            ...state,
+            error: "Unknown word",
+          };
+        }
+
+        return {
+          ...state,
+          // Intentionally create a new array to trigger any hook dependencies.
+          words: [...state.words, state.current],
+          current: state.current[state.current.length - 1],
+        };
+      }
+      default: {
+        return neverGuard(update, state);
+      }
+    }
+  };
+
+export const GameState = ({ children }: Props) => {
+  const { dictionary } = useWords();
+  const { id: boardId } = useBoard();
+  console.log(`TCL ~ file: GameState.tsx:106 ~ GameState ~ boardId:`, boardId);
+
+  const sides = useMemo(
+    () => ({
+      [boardId[0]]: "a",
+      [boardId[1]]: "a",
+      [boardId[2]]: "a",
+      [boardId[3]]: "b",
+      [boardId[4]]: "b",
+      [boardId[5]]: "b",
+      [boardId[6]]: "c",
+      [boardId[7]]: "c",
+      [boardId[8]]: "c",
+      [boardId[9]]: "d",
+      [boardId[10]]: "d",
+      [boardId[11]]: "d",
+    }),
+    [boardId]
+  );
+
+  const isValid = useCallback(
+    (input: string) => {
+      console.log(
+        `TCL ~ file: GameState.tsx:134 ~ GameState ~ input:`,
+        input,
+        input.length
+      );
+      if (input.length === 0) {
+        // Whatever.
+        return true;
+      }
+
+      if (input.length === 1) {
+        return !!sides[input[0]];
+      }
+
+      // Make sure no one is trying to go to a neighbor
+      for (let i = 1; i < input.length; i += 1) {
+        console.log(`TCL ~ file: GameState.tsx:143 ~ GameState ~ i:`, i);
+        const a = input[i - 1];
+        const b = input[i];
+
+        const sideA = sides[a];
+        const sideB = sides[b];
+        console.log(
+          `TCL ~ file: GameState.tsx:145 ~ GameState ~ sideA === sideB:`,
+          sideA,
+          sideB
+        );
+        if (sideA === sideB) {
+          return false;
+        }
+      }
+
+      console.log(sides);
+      return true;
+    },
+    [sides]
+  );
+
+  const [{ words, current, error }, dispatch] = useReducer(
+    reducer(dictionary, isValid),
+    {
+      words: [],
+      current: "",
+      error: undefined,
+    }
+  );
+
+  const add = useCallback((input: string) => {
+    dispatch({ action: "set-current", input });
+    console.log(`TCL ~ file: GameState.tsx:168 ~ add ~ input:`, input);
+    return true;
+  }, []);
+
+  const commit = useCallback(() => {
+    dispatch({ action: "commit" });
+    return true;
+  }, []);
+
+  return (
+    <GameStateContext.Provider value={{ words, current, add, commit, error }}>
+      {children}
+    </GameStateContext.Provider>
+  );
+};

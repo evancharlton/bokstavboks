@@ -2,7 +2,13 @@ import { createContext, useContext } from "react";
 import { Board } from "../../types";
 
 export const BoardContext = createContext<
-  { board: Board; shuffle: () => void; words: string[] } | undefined
+  | {
+      board: Board;
+      id: string;
+      shuffle: () => void;
+      words: string[];
+    }
+  | undefined
 >(undefined);
 
 export const useBoard = () => {

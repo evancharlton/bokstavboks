@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Board, Letter, isLetter } from "../../types";
+import { Board, Letter, boardId, isLetter } from "../../types";
 import { BoardContext } from "./context";
 import { createBoard, addLetter, canPlay } from "../../logic";
 import { usePuzzleId } from "../PuzzleIdProvider";
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const BoardProvider = ({ children }: Props) => {
-  const wordBank = useWords();
+  const { words: wordBank } = useWords();
   const { puzzleId, puzzleHash, random } = usePuzzleId();
 
   const [board, setBoard] = useState<Board>();
@@ -23,10 +23,10 @@ export const BoardProvider = ({ children }: Props) => {
     if (puzzleId.length === 12 && puzzleId.split("").every(isLetter)) {
       const board: Board = {
         sequence: puzzleId.split("").filter(isLetter),
-        top: new Set(puzzleId.substring(0, 3).split("").filter(isLetter)),
-        left: new Set(puzzleId.substring(9, 12).split("").filter(isLetter)),
-        right: new Set(puzzleId.substring(3, 6).split("").filter(isLetter)),
-        bottom: new Set(puzzleId.substring(6, 9).split("").filter(isLetter)),
+        sideA: new Set(puzzleId.substring(0, 3).split("").filter(isLetter)),
+        sideB: new Set(puzzleId.substring(9, 12).split("").filter(isLetter)),
+        sideC: new Set(puzzleId.substring(3, 6).split("").filter(isLetter)),
+        sideD: new Set(puzzleId.substring(6, 9).split("").filter(isLetter)),
       };
 
       setBoard(board);
@@ -77,7 +77,9 @@ export const BoardProvider = ({ children }: Props) => {
   }
 
   return (
-    <BoardContext.Provider value={{ board, shuffle, words }}>
+    <BoardContext.Provider
+      value={{ board, id: boardId(board), shuffle, words }}
+    >
       {children}
     </BoardContext.Provider>
   );

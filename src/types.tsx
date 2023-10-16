@@ -66,10 +66,39 @@ export const isLetter = (l: string): l is Letter => {
   return LETTERS[l];
 };
 
+export const isLetters = (l: unknown): l is Letter[] => {
+  if (typeof l !== "string") {
+    return false;
+  }
+
+  for (const c of l) {
+    if (!isLetter(c)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+type Side = Set<Letter>;
+
 export type Board = {
   sequence: Letter[];
-  top: Set<Letter>;
-  left: Set<Letter>;
-  right: Set<Letter>;
-  bottom: Set<Letter>;
+  sideA: Side;
+  sideB: Side;
+  sideC: Side;
+  sideD: Side;
+};
+
+const serializeSide = (side: Side): string => {
+  return `${[...side].sort().join("")}???`.substring(0, 3);
+};
+
+export const boardId = (board: Board): string => {
+  return [board.sideA, board.sideB, board.sideC, board.sideD]
+    .map((side) => serializeSide(side))
+    .join("");
+};
+
+export const neverGuard = <T extends unknown>(_: never, v: T): T => {
+  return v;
 };

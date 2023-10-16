@@ -136,10 +136,10 @@ describe("logic", () => {
       addLetter(
         {
           sequence: "exhaustionne".split("").filter(isLetter),
-          top: new Set("eut".split("").filter(isLetter)),
-          left: new Set("ai".split("").filter(isLetter)),
-          right: new Set("xso".split("").filter(isLetter)),
-          bottom: new Set("nh".split("").filter(isLetter)),
+          sideA: new Set("eut".split("").filter(isLetter)),
+          sideB: new Set("ai".split("").filter(isLetter)),
+          sideC: new Set("xso".split("").filter(isLetter)),
+          sideD: new Set("nh".split("").filter(isLetter)),
         },
         "w"
       )
@@ -151,10 +151,10 @@ describe("solving", () => {
   test("canPlay", () => {
     const board: Board = {
       sequence: "skåleegentliggrave".split("").filter(isLetter),
-      top: new Set("eså".split("").filter(isLetter)),
-      left: new Set("lkg".split("").filter(isLetter)),
-      right: new Set("ain".split("").filter(isLetter)),
-      bottom: new Set("rtv".split("").filter(isLetter)),
+      sideA: new Set("eså".split("").filter(isLetter)),
+      sideB: new Set("lkg".split("").filter(isLetter)),
+      sideC: new Set("ain".split("").filter(isLetter)),
+      sideD: new Set("rtv".split("").filter(isLetter)),
     };
 
     expect(canPlay(board, "skåle".split("").filter(isLetter))).toBe(true);
@@ -198,10 +198,10 @@ describe("solving", () => {
 
       const board = {
         sequence: "skåleegentliggrave".split("").filter(isLetter),
-        top: new Set("eså".split("").filter(isLetter)),
-        left: new Set("lkg".split("").filter(isLetter)),
-        right: new Set("ain".split("").filter(isLetter)),
-        bottom: new Set("rtv".split("").filter(isLetter)),
+        sideA: new Set("eså".split("").filter(isLetter)),
+        sideB: new Set("lkg".split("").filter(isLetter)),
+        sideC: new Set("ain".split("").filter(isLetter)),
+        sideD: new Set("rtv".split("").filter(isLetter)),
       } satisfies Board;
 
       const solution = findSolution(dict, board);
@@ -213,10 +213,10 @@ describe("solving", () => {
 
       const board = {
         sequence: dict.join("").split("").filter(isLetter),
-        top: new Set("dnå".split("").filter(isLetter)),
-        left: new Set("aes".split("").filter(isLetter)),
-        right: new Set("gir".split("").filter(isLetter)),
-        bottom: new Set("kty".split("").filter(isLetter)),
+        sideA: new Set("dnå".split("").filter(isLetter)),
+        sideB: new Set("aes".split("").filter(isLetter)),
+        sideC: new Set("gir".split("").filter(isLetter)),
+        sideD: new Set("kty".split("").filter(isLetter)),
       } satisfies Board;
 
       expect(new Set(dict.join("").split("")).size).toBe(12);

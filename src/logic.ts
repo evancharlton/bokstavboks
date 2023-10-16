@@ -4,10 +4,10 @@ import { Board, Letter, isLetter } from "./types";
 export const createBoard = (start: Letter): Board => {
   return {
     sequence: [start],
-    top: new Set([start]),
-    left: new Set(),
-    right: new Set(),
-    bottom: new Set(),
+    sideA: new Set([start]),
+    sideB: new Set(),
+    sideC: new Set(),
+    sideD: new Set(),
   };
 };
 
@@ -29,10 +29,10 @@ export const addWord = (boards: Board[], word: string): Board[] => {
 };
 
 const ALLOWED_STEPS = {
-  top: ["left", "right", "bottom"],
-  left: ["top", "right", "bottom"],
-  right: ["top", "left", "bottom"],
-  bottom: ["top", "left", "right"],
+  sideA: ["sideB", "sideC", "sideD"],
+  sideB: ["sideA", "sideC", "sideD"],
+  sideC: ["sideA", "sideB", "sideD"],
+  sideD: ["sideA", "sideB", "sideC"],
 } as const;
 
 export const isLegalBoard = (input: unknown): input is Board => {
@@ -45,10 +45,10 @@ export const isLegalBoard = (input: unknown): input is Board => {
   {
     const sequenceLetters = new Set(board.sequence);
     const representedLetters = new Set([
-      ...board.top,
-      ...board.left,
-      ...board.right,
-      ...board.bottom,
+      ...board.sideA,
+      ...board.sideB,
+      ...board.sideC,
+      ...board.sideD,
     ]);
     if (representedLetters.size !== sequenceLetters.size) {
       return false;
@@ -90,32 +90,32 @@ export const addLetter = (
   }
 
   return [
-    board.top.size < 3 && {
+    board.sideA.size < 3 && {
       ...board,
       sequence: [...board.sequence, next],
-      top: new Set([...board.top, next]),
+      sideA: new Set([...board.sideA, next]),
     },
-    board.left.size < 3 && {
+    board.sideB.size < 3 && {
       ...board,
       sequence: [...board.sequence, next],
-      left: new Set([...board.left, next]),
+      sideB: new Set([...board.sideB, next]),
     },
-    board.right.size < 3 && {
+    board.sideC.size < 3 && {
       ...board,
       sequence: [...board.sequence, next],
-      right: new Set([...board.right, next]),
+      sideC: new Set([...board.sideC, next]),
     },
-    board.bottom.size < 3 && {
+    board.sideD.size < 3 && {
       ...board,
       sequence: [...board.sequence, next],
-      bottom: new Set([...board.bottom, next]),
+      sideD: new Set([...board.sideD, next]),
     },
   ].filter(isLegalBoard);
 };
 
 export const canPlay = (board: Board, word: Letter[]): boolean => {
   // Make sure that it's walkable.
-  let currentSide: keyof typeof ALLOWED_STEPS = "top";
+  let currentSide: keyof typeof ALLOWED_STEPS = "sideA";
   sequenceLoop: for (let i = 1; i < word.length; i += 1) {
     if (word[i] === word[i - 1]) {
       continue;

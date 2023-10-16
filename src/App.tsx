@@ -5,6 +5,7 @@ import { Play } from "./pages/Play";
 import { WordsProvider } from "./components/WordsProvider";
 import { BoardProvider } from "./components/BoardProvider";
 import { PuzzleIdProvider } from "./components/PuzzleIdProvider";
+import { GameState } from "./components/GameState";
 
 const LanguageSelect = () => {
   return (
@@ -36,7 +37,9 @@ function App() {
               <WordsProvider>
                 <PuzzleIdProvider>
                   <BoardProvider>
-                    <Play />
+                    <GameState>
+                      <Play />
+                    </GameState>
                   </BoardProvider>
                 </PuzzleIdProvider>
               </WordsProvider>
@@ -48,7 +51,9 @@ function App() {
               <WordsProvider>
                 <PuzzleIdProvider>
                   <BoardProvider>
-                    <Play />
+                    <GameState>
+                      <Play />
+                    </GameState>
                   </BoardProvider>
                 </PuzzleIdProvider>
               </WordsProvider>

@@ -7,7 +7,10 @@ type Props = {
   input: string;
 };
 
-export const Grid = ({ board: { top, right, bottom, left }, input }: Props) => {
+export const Grid = ({
+  board: { sideA: top, sideC: right, sideD: bottom, sideB: left },
+  input,
+}: Props) => {
   const t = [...top, ..."???".split("")].slice(0, 3).sort();
   const l = [...left, ..."???".split("")].slice(0, 3).sort();
   const r = [...right, ..."???".split("")].slice(0, 3).sort();
