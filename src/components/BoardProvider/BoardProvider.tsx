@@ -4,7 +4,6 @@ import { BoardContext } from "./context";
 import { createBoard, addLetter, findSolution } from "../../logic";
 import { usePuzzleId } from "../PuzzleIdProvider";
 import { useWords } from "../WordsProvider";
-import { Sides } from "./types";
 
 type Props = {
   children: React.ReactNode;
@@ -13,7 +12,6 @@ type Props = {
 type State = {
   boardId: string;
   seeds: string[]; // Words used to generate the board
-  sides: Sides | undefined;
   display: string;
 };
 
@@ -54,12 +52,6 @@ const reducer = (state: State, update: Action): State => {
         ...state,
         seeds: seeds ?? [],
         boardId,
-        sides: [
-          [boardId[0], boardId[1], boardId[2]],
-          [boardId[3], boardId[4], boardId[5]],
-          [boardId[6], boardId[7], boardId[8]],
-          [boardId[9], boardId[10], boardId[11]],
-        ],
         display: shuffleId(boardId),
       };
     }
@@ -81,15 +73,11 @@ export const BoardProvider = ({ children }: Props) => {
   const { words: wordBank } = useWords();
   const { puzzleId, random } = usePuzzleId();
 
-  const [{ boardId: id, sides, seeds, display }, dispatch] = useReducer(
-    reducer,
-    {
-      boardId: "",
-      seeds: [],
-      sides: undefined,
-      display: "",
-    }
-  );
+  const [{ boardId: id, seeds, display }, dispatch] = useReducer(reducer, {
+    boardId: "",
+    seeds: [],
+    display: "",
+  });
 
   const shuffle = useCallback(() => {
     dispatch({ action: "shuffle" });
@@ -171,14 +159,12 @@ export const BoardProvider = ({ children }: Props) => {
     });
   }, [puzzleId, random, wordBank]);
 
-  if (!sides || !display) {
+  if (!display) {
     return <h1>No board</h1>; // TODO: Loading
   }
 
   return (
-    <BoardContext.Provider
-      value={{ id, shuffle, solve, seeds, sides, display }}
-    >
+    <BoardContext.Provider value={{ id, shuffle, solve, seeds, display }}>
       {children}
     </BoardContext.Provider>
   );

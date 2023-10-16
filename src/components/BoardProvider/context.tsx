@@ -1,5 +1,4 @@
 import { createContext, useContext } from "react";
-import { Sides } from "./types";
 
 export const BoardContext = createContext<
   | {
@@ -7,7 +6,6 @@ export const BoardContext = createContext<
       shuffle: () => void;
       solve: () => string[];
       seeds: string[];
-      sides: Sides;
       display: string;
     }
   | undefined

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Board } from "../../types";
 import classes from "./Grid.module.css";
 import { useBoard } from "../BoardProvider";
+import { Nest } from "./Nest";
 
 type Props = {
   input: string;
@@ -28,38 +28,6 @@ export const Grid = ({ input }: Props) => {
     coords.set(r[i], [58, 10 + i * 20]);
   }
 
-  const lines: React.ReactNode[] = [];
-  if (input.length > 1) {
-    const p = [];
-    const pairs = new Set<string>();
-    for (let i = 1; i < input.length; i += 1) {
-      const a = input[i - 1];
-      const b = input[i];
-      const ab = `${a}${b}`;
-      if (!pairs.has(ab)) {
-        pairs.add(ab);
-        p.push(ab);
-      }
-    }
-
-    for (const ab of p) {
-      const a = ab[0];
-      const b = ab[1];
-
-      const [x1, y1] = coords.get(a) ?? [0, 0];
-      const [x2, y2] = coords.get(b) ?? [0, 0];
-      lines.push(
-        <line
-          id={ab}
-          key={ab}
-          {...{ x1, y1, x2, y2 }}
-          strokeWidth={2}
-          stroke="#000a"
-        />
-      );
-    }
-  }
-
   return (
     <div>
       <div className={classes.box}>
@@ -70,12 +38,7 @@ export const Grid = ({ input }: Props) => {
         <div className={classes.letter} />
 
         <div className={classes.letter}>{l[0]}</div>
-        <svg
-          className={[classes.filler, classes.nest].join(" ")}
-          viewBox="0 0 60 60"
-        >
-          {lines}
-        </svg>
+        <Nest className={classes.filler} />
         <div className={classes.letter}>{r[0]}</div>
 
         <div className={classes.letter}>{l[1]}</div>
