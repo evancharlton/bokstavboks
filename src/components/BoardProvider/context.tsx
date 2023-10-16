@@ -1,12 +1,14 @@
 import { createContext, useContext } from "react";
-import { Board } from "../../types";
+import { Sides } from "./types";
 
 export const BoardContext = createContext<
   | {
-      board: Board;
       id: string;
       shuffle: () => void;
-      words: string[];
+      solve: () => string[];
+      seeds: string[];
+      sides: Sides;
+      display: string;
     }
   | undefined
 >(undefined);

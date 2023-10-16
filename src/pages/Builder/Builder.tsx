@@ -17,8 +17,6 @@ export const Builder = () => {
         return [];
       }
 
-      console.log(sequence);
-
       let boards = [createBoard(first)];
       for (const next of rest) {
         boards = addLetter(boards, next);
@@ -42,7 +40,7 @@ export const Builder = () => {
       </h1>
       <div className={classes.boards} key={sequence.join("")}>
         {building && <h1>building ...</h1>}
-        {boards[0] && <Grid board={boards[0]} input="" />}
+        {boards[0] && <Grid input="" />}
       </div>
     </div>
   );

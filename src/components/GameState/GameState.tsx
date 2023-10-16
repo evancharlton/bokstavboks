@@ -103,7 +103,6 @@ const reducer =
 export const GameState = ({ children }: Props) => {
   const { dictionary } = useWords();
   const { id: boardId } = useBoard();
-  console.log(`TCL ~ file: GameState.tsx:106 ~ GameState ~ boardId:`, boardId);
 
   const sides = useMemo(
     () => ({
@@ -125,11 +124,6 @@ export const GameState = ({ children }: Props) => {
 
   const isValid = useCallback(
     (input: string) => {
-      console.log(
-        `TCL ~ file: GameState.tsx:134 ~ GameState ~ input:`,
-        input,
-        input.length
-      );
       if (input.length === 0) {
         // Whatever.
         return true;
@@ -141,23 +135,20 @@ export const GameState = ({ children }: Props) => {
 
       // Make sure no one is trying to go to a neighbor
       for (let i = 1; i < input.length; i += 1) {
-        console.log(`TCL ~ file: GameState.tsx:143 ~ GameState ~ i:`, i);
         const a = input[i - 1];
         const b = input[i];
 
         const sideA = sides[a];
         const sideB = sides[b];
-        console.log(
-          `TCL ~ file: GameState.tsx:145 ~ GameState ~ sideA === sideB:`,
-          sideA,
-          sideB
-        );
+        if (!sideA || !sideB) {
+          return false;
+        }
+
         if (sideA === sideB) {
           return false;
         }
       }
 
-      console.log(sides);
       return true;
     },
     [sides]
@@ -174,13 +165,10 @@ export const GameState = ({ children }: Props) => {
 
   const add = useCallback((input: string) => {
     dispatch({ action: "set-current", input });
-    console.log(`TCL ~ file: GameState.tsx:168 ~ add ~ input:`, input);
-    return true;
   }, []);
 
   const commit = useCallback(() => {
     dispatch({ action: "commit" });
-    return true;
   }, []);
 
   return (

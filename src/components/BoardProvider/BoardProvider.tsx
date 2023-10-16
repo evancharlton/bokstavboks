@@ -1,37 +1,133 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Board, Letter, boardId, isLetter } from "../../types";
+import { useCallback, useEffect, useReducer, useRef } from "react";
+import { Letter, boardId, isLetter, isLetters, neverGuard } from "../../types";
 import { BoardContext } from "./context";
-import { createBoard, addLetter, canPlay } from "../../logic";
+import { createBoard, addLetter, findSolution } from "../../logic";
 import { usePuzzleId } from "../PuzzleIdProvider";
 import { useWords } from "../WordsProvider";
+import { Sides } from "./types";
 
 type Props = {
   children: React.ReactNode;
 };
 
+type State = {
+  boardId: string;
+  seeds: string[]; // Words used to generate the board
+  sides: Sides | undefined;
+  display: string;
+};
+
+type Action =
+  | { action: "set-board"; boardId: string; seeds?: string[] }
+  | { action: "shuffle" };
+
+const shuffle = <T extends unknown>(arr: T[]): T[] =>
+  arr
+    .map((v) => ({ v, key: Math.random() }))
+    .sort((a, b) => a.key - b.key)
+    .map(({ v }) => v);
+
+const shuffleId = (boardId: string): string =>
+  shuffle(
+    [
+      [boardId[0], boardId[1], boardId[2]],
+      [boardId[3], boardId[4], boardId[5]],
+      [boardId[6], boardId[7], boardId[8]],
+      [boardId[9], boardId[10], boardId[11]],
+    ].map((arr) => shuffle(arr).join(""))
+  ).join("");
+
+const reducer = (state: State, update: Action): State => {
+  const { action } = update;
+  switch (action) {
+    case "set-board": {
+      const { seeds, boardId } = update;
+      if (boardId.length !== 12) {
+        throw new Error("Invalid board ID provided");
+      }
+
+      if (!isLetters(boardId)) {
+        throw new Error("Invalid board ID");
+      }
+
+      return {
+        ...state,
+        seeds: seeds ?? [],
+        boardId,
+        sides: [
+          [boardId[0], boardId[1], boardId[2]],
+          [boardId[3], boardId[4], boardId[5]],
+          [boardId[6], boardId[7], boardId[8]],
+          [boardId[9], boardId[10], boardId[11]],
+        ],
+        display: shuffleId(boardId),
+      };
+    }
+
+    case "shuffle": {
+      return {
+        ...state,
+        display: shuffleId(state.boardId),
+      };
+    }
+
+    default: {
+      return neverGuard(action, state);
+    }
+  }
+};
+
 export const BoardProvider = ({ children }: Props) => {
   const { words: wordBank } = useWords();
-  const { puzzleId, puzzleHash, random } = usePuzzleId();
+  const { puzzleId, random } = usePuzzleId();
 
-  const [board, setBoard] = useState<Board>();
-  const [words, setWords] = useState<string[]>([]);
+  const [{ boardId: id, sides, seeds, display }, dispatch] = useReducer(
+    reducer,
+    {
+      boardId: "",
+      seeds: [],
+      sides: undefined,
+      display: "",
+    }
+  );
+
   const shuffle = useCallback(() => {
-    console.log("shuffle()");
+    dispatch({ action: "shuffle" });
   }, []);
+
+  const solve = useCallback(() => {
+    if (!isLetters(id)) {
+      throw new Error("I don't know what's going on.");
+    }
+
+    const letters = id as Letter[];
+
+    const sideA = new Set<Letter>(letters.slice(0, 3));
+    const sideB = new Set<Letter>(letters.slice(3, 6));
+    const sideC = new Set<Letter>(letters.slice(6, 9));
+    const sideD = new Set<Letter>(letters.slice(9));
+
+    return findSolution(wordBank, {
+      sideA,
+      sideB,
+      sideC,
+      sideD,
+      sequence: letters,
+    });
+  }, [id, wordBank]);
+
+  const prevPuzzleId = useRef<string>();
 
   useEffect(() => {
     if (puzzleId.length === 12 && puzzleId.split("").every(isLetter)) {
-      const board: Board = {
-        sequence: puzzleId.split("").filter(isLetter),
-        sideA: new Set(puzzleId.substring(0, 3).split("").filter(isLetter)),
-        sideB: new Set(puzzleId.substring(9, 12).split("").filter(isLetter)),
-        sideC: new Set(puzzleId.substring(3, 6).split("").filter(isLetter)),
-        sideD: new Set(puzzleId.substring(6, 9).split("").filter(isLetter)),
-      };
-
-      setBoard(board);
+      dispatch({ action: "set-board", boardId: puzzleId });
       return;
     }
+
+    if (puzzleId === prevPuzzleId.current) {
+      return;
+    }
+    prevPuzzleId.current = puzzleId;
 
     const next = (dict: string[]) => dict[Math.floor(random() * dict.length)];
     const letterCounts = new Map<string, number>();
@@ -68,17 +164,20 @@ export const BoardProvider = ({ children }: Props) => {
       boards = addLetter(boards, letter);
     }
 
-    setBoard(boards.find((board) => canPlay(board, board.sequence)));
-    setWords(words);
-  }, [puzzleHash, puzzleId, random, wordBank]);
+    dispatch({
+      action: "set-board",
+      boardId: boardId(boards[0]),
+      seeds: words,
+    });
+  }, [puzzleId, random, wordBank]);
 
-  if (!board) {
+  if (!sides || !display) {
     return <h1>No board</h1>; // TODO: Loading
   }
 
   return (
     <BoardContext.Provider
-      value={{ board, id: boardId(board), shuffle, words }}
+      value={{ id, shuffle, solve, seeds, sides, display }}
     >
       {children}
     </BoardContext.Provider>

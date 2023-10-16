@@ -1,18 +1,16 @@
-import { useWords } from "../../components/WordsProvider";
-import { findSolution } from "../../logic";
 import { Grid } from "../../components/Grid";
-import { useBoard } from "../../components/BoardProvider";
 import { useGameState } from "../../components/GameState";
+import { useBoard } from "../../components/BoardProvider";
 
 export const Play = () => {
-  const { words: wordBank } = useWords();
-  const { board } = useBoard();
+  const { shuffle, display, solve } = useBoard();
   const { current, add, commit, error, words: path } = useGameState();
 
   return (
     <div>
       <h3>{error}</h3>
       <h3>{path.join(" - ")}</h3>
+      <code>{display}</code>
       <input
         type="text"
         onKeyDown={(e) => {
@@ -26,11 +24,11 @@ export const Play = () => {
         pattern="^a"
         value={current}
       />
-      <Grid board={board} input={current} />
+      <Grid input={current} />
       <button
         onClick={() => {
           try {
-            const solution = findSolution(wordBank, board);
+            const solution = solve();
             alert(solution.join(" + "));
           } catch (ex) {
             alert("Couldn't find a solution");
@@ -39,6 +37,7 @@ export const Play = () => {
       >
         Solve
       </button>
+      <button onClick={() => shuffle()}>shuffle</button>
     </div>
   );
 };

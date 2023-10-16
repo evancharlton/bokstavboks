@@ -1,20 +1,18 @@
 import { Link } from "react-router-dom";
 import { Board } from "../../types";
 import classes from "./Grid.module.css";
+import { useBoard } from "../BoardProvider";
 
 type Props = {
-  board: Board;
   input: string;
 };
 
-export const Grid = ({
-  board: { sideA: top, sideC: right, sideD: bottom, sideB: left },
-  input,
-}: Props) => {
-  const t = [...top, ..."???".split("")].slice(0, 3).sort();
-  const l = [...left, ..."???".split("")].slice(0, 3).sort();
-  const r = [...right, ..."???".split("")].slice(0, 3).sort();
-  const b = [...bottom, ..."???".split("")].slice(0, 3).sort();
+export const Grid = ({ input }: Props) => {
+  const { display: boardId } = useBoard();
+  const t = boardId.substring(0, 3);
+  const r = boardId.substring(3, 6);
+  const b = boardId.substring(6, 9);
+  const l = boardId.substring(9);
 
   const coords = new Map<string, [number, number]>();
   for (let i = 0; i < t.length; i += 1) {
@@ -29,7 +27,6 @@ export const Grid = ({
   for (let i = 0; i < r.length; i += 1) {
     coords.set(r[i], [58, 10 + i * 20]);
   }
-  console.log(`TCL ~ file: Grid.tsx:27 ~ Grid ~ coords:`, coords);
 
   const lines: React.ReactNode[] = [];
   if (input.length > 1) {
