@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { useGameState } from "../../GameState";
 import classes from "./Nest.module.css";
 import { useBoard } from "../../BoardProvider";
@@ -6,6 +6,11 @@ import { useBoard } from "../../BoardProvider";
 type Props = {
   className?: string;
 };
+
+const HALF_UNIT = 50;
+const UNIT = HALF_UNIT * 2;
+const EDGE = HALF_UNIT * 0.2;
+const SIZE = HALF_UNIT * 3 * 2;
 
 export const Nest = ({ className }: Props) => {
   const { display } = useBoard();
@@ -17,16 +22,16 @@ export const Nest = ({ className }: Props) => {
     const l = display.substring(9);
     const coords = new Map<string, [number, number]>();
     for (let i = 0; i < t.length; i += 1) {
-      coords.set(t[i], [10 + i * 20, 2]);
+      coords.set(t[i], [HALF_UNIT + i * UNIT, EDGE]);
     }
     for (let i = 0; i < b.length; i += 1) {
-      coords.set(b[i], [10 + i * 20, 58]);
+      coords.set(b[i], [HALF_UNIT + i * UNIT, SIZE - EDGE]);
     }
     for (let i = 0; i < l.length; i += 1) {
-      coords.set(l[i], [2, 10 + i * 20]);
+      coords.set(l[i], [EDGE, HALF_UNIT + i * UNIT]);
     }
     for (let i = 0; i < r.length; i += 1) {
-      coords.set(r[i], [58, 10 + i * 20]);
+      coords.set(r[i], [SIZE - EDGE, HALF_UNIT + i * UNIT]);
     }
 
     return coords;
@@ -59,13 +64,23 @@ export const Nest = ({ className }: Props) => {
       const opacity = Math.pow(Math.E, (i * -1) / 5);
 
       return (
-        <line
-          key={ab}
-          {...{ x1, y1, x2, y2 }}
-          strokeWidth={2}
-          stroke="#000"
-          opacity={opacity}
-        />
+        <Fragment key={ab}>
+          <line
+            key={ab}
+            {...{ x1, y1, x2, y2 }}
+            strokeWidth={4}
+            stroke="#000"
+            opacity={opacity}
+          />
+          <circle
+            cx={x2}
+            cy={y2}
+            r={EDGE * 0.8}
+            stroke="#000"
+            fill="#fff"
+            opacity={opacity}
+          />
+        </Fragment>
       );
     });
   }, [coords, current, words]);
@@ -73,7 +88,7 @@ export const Nest = ({ className }: Props) => {
   return (
     <svg
       className={[className, classes.nest].filter(Boolean).join(" ")}
-      viewBox="0 0 60 60"
+      viewBox={`0 0 ${SIZE} ${SIZE}`}
     >
       {lines}
     </svg>
