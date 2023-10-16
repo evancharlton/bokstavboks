@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Board } from "../../types";
 import classes from "./Grid.module.css";
 
@@ -89,6 +90,7 @@ export const Grid = ({ board: { top, right, bottom, left }, input }: Props) => {
         <div className={classes.letter}>{b[2]}</div>
         <div className={classes.letter} />
       </div>
+      <Link to={`/${[t, r, b, l].flat().join("")}`}>Play this</Link>
     </div>
   );
 };

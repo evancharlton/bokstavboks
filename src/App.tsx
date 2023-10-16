@@ -3,6 +3,8 @@ import { HashRouter, Link, Route, Routes } from "react-router-dom";
 import Builder from "./pages/Builder";
 import { Play } from "./pages/Play";
 import { WordsProvider } from "./components/WordsProvider";
+import { BoardProvider } from "./components/BoardProvider";
+import { PuzzleIdProvider } from "./components/PuzzleIdProvider";
 
 const LanguageSelect = () => {
   return (
@@ -32,7 +34,11 @@ function App() {
             path="/:lang/:puzzleId"
             element={
               <WordsProvider>
-                <Play />
+                <PuzzleIdProvider>
+                  <BoardProvider>
+                    <Play />
+                  </BoardProvider>
+                </PuzzleIdProvider>
               </WordsProvider>
             }
           />
@@ -40,7 +46,11 @@ function App() {
             path="/:lang"
             element={
               <WordsProvider>
-                <Play />
+                <PuzzleIdProvider>
+                  <BoardProvider>
+                    <Play />
+                  </BoardProvider>
+                </PuzzleIdProvider>
               </WordsProvider>
             }
           />
