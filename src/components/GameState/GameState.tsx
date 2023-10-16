@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useReducer } from "react";
 import { GameStateContext } from "./context";
-import { isLetter, isLetters, neverGuard } from "../../types";
+import { Letter, isLetter, isLetters, neverGuard } from "../../types";
 import { useWords } from "../WordsProvider";
 import { useBoard } from "../BoardProvider";
 
@@ -11,6 +11,7 @@ type Props = {
 type State = {
   words: string[];
   current: string;
+  usedLetters: Set<Letter>;
   error: string | undefined;
 };
 
@@ -69,13 +70,13 @@ const reducer =
         return {
           ...state,
           current: input,
+          usedLetters: new Set(input),
           error: undefined,
         };
       }
 
       case "add-letter": {
         const { letter } = update;
-        console.log(`TCL ~ file: GameState.tsx:78 ~ update:`, update);
         if (!isLetter(letter)) {
           return {
             ...state,
@@ -84,7 +85,6 @@ const reducer =
         }
 
         const input = `${state.current}${letter}`;
-        console.log(`TCL ~ file: GameState.tsx:87 ~ input:`, input);
         if (!isValid(input)) {
           return {
             ...state,
@@ -92,10 +92,15 @@ const reducer =
           };
         }
 
+        if (!isLetters(input)) {
+          throw new Error("Impossible situation");
+        }
+
         return {
           ...state,
           error: undefined,
           current: input,
+          usedLetters: new Set(input),
         };
       }
 
@@ -183,13 +188,14 @@ export const GameState = ({ children }: Props) => {
     [sides]
   );
 
-  const [{ words, current, error }, dispatch] = useReducer(
+  const [{ words, current, usedLetters, error }, dispatch] = useReducer(
     reducer(dictionary, isValid),
     {
       words: [],
       current: "",
+      usedLetters: new Set<Letter>(),
       error: undefined,
-    }
+    } satisfies State
   );
 
   const setInput = useCallback((input: string) => {
@@ -206,7 +212,7 @@ export const GameState = ({ children }: Props) => {
 
   return (
     <GameStateContext.Provider
-      value={{ words, current, setInput, add, commit, error }}
+      value={{ words, current, setInput, add, commit, usedLetters, error }}
     >
       {children}
     </GameStateContext.Provider>

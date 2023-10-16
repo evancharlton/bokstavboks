@@ -238,7 +238,6 @@ export const findSolution = (
   words: readonly string[],
   board: Board
 ): string[] => {
-  console.log(`TCL ~ file: logic.ts:241 ~ board:`, board);
   const possibleLetters = new Set(board.sequence);
   const contenders = words
     .filter((word) => {

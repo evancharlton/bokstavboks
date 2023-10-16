@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { Letter } from "../../types";
 
 export const GameStateContext = createContext<
   | {
@@ -7,6 +8,7 @@ export const GameStateContext = createContext<
       setInput: (input: string) => void;
       add: (letter: string) => void;
       commit: () => void;
+      usedLetters: Set<Letter>;
       error?: string;
     }
   | undefined

@@ -17,18 +17,27 @@
 }
 
 .letter {
-  width: 80px;
-  height: 80px;
+  height: 70px;
+  aspect-ratio: 1 / 1;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
   text-transform: uppercase;
-  outline: 1px solid black;
+  background-color: #fff;
+  border: 0;
+  border-radius: 50%;
+  margin: 8px;
+  font-size: 1.5em;
 }
 
 .filler {
   grid-row: 2 / 5;
   grid-column: 2 / 5;
+}
+
+.used {
+  background-color: #0f01;
+  font-weight: bold;
 }
