@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useReducer, useState } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import { GameStateContext } from "./context";
-import { isLetters, neverGuard } from "../../types";
+import { isLetter, isLetters, neverGuard } from "../../types";
 import { useWords } from "../WordsProvider";
 import { useBoard } from "../BoardProvider";
 
@@ -14,7 +14,10 @@ type State = {
   error: string | undefined;
 };
 
-type Update = { action: "set-current"; input: string } | { action: "commit" };
+type Update =
+  | { action: "set-current"; input: string }
+  | { action: "add-letter"; letter: string }
+  | { action: "commit" };
 
 const reducer =
   (dictionary: Set<string>, isValid: (input: string) => boolean) =>
@@ -67,6 +70,32 @@ const reducer =
           ...state,
           current: input,
           error: undefined,
+        };
+      }
+
+      case "add-letter": {
+        const { letter } = update;
+        console.log(`TCL ~ file: GameState.tsx:78 ~ update:`, update);
+        if (!isLetter(letter)) {
+          return {
+            ...state,
+            error: "Cannot add that letter",
+          };
+        }
+
+        const input = `${state.current}${letter}`;
+        console.log(`TCL ~ file: GameState.tsx:87 ~ input:`, input);
+        if (!isValid(input)) {
+          return {
+            ...state,
+            error: "Invalid input",
+          };
+        }
+
+        return {
+          ...state,
+          error: undefined,
+          current: input,
         };
       }
 
@@ -163,7 +192,7 @@ export const GameState = ({ children }: Props) => {
     }
   );
 
-  const add = useCallback((input: string) => {
+  const setInput = useCallback((input: string) => {
     dispatch({ action: "set-current", input });
   }, []);
 
@@ -171,8 +200,14 @@ export const GameState = ({ children }: Props) => {
     dispatch({ action: "commit" });
   }, []);
 
+  const add = useCallback((letter: string) => {
+    dispatch({ action: "add-letter", letter });
+  }, []);
+
   return (
-    <GameStateContext.Provider value={{ words, current, add, commit, error }}>
+    <GameStateContext.Provider
+      value={{ words, current, setInput, add, commit, error }}
+    >
       {children}
     </GameStateContext.Provider>
   );

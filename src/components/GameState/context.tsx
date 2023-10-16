@@ -4,7 +4,8 @@ export const GameStateContext = createContext<
   | {
       words: string[];
       current: string;
-      add: (input: string) => void;
+      setInput: (input: string) => void;
+      add: (letter: string) => void;
       commit: () => void;
       error?: string;
     }

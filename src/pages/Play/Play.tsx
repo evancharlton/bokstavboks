@@ -4,7 +4,7 @@ import { useBoard } from "../../components/BoardProvider";
 
 export const Play = () => {
   const { shuffle, display, solve } = useBoard();
-  const { current, add, commit, error, words: path } = useGameState();
+  const { current, setInput, commit, error, words: path } = useGameState();
 
   return (
     <div>
@@ -19,12 +19,12 @@ export const Play = () => {
           }
         }}
         onChange={(e) => {
-          add(e.target.value);
+          setInput(e.target.value);
         }}
         pattern="^a"
         value={current}
       />
-      <Grid input={current} />
+      <Grid />
       <button
         onClick={() => {
           try {

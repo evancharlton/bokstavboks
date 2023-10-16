@@ -40,7 +40,7 @@ export const Builder = () => {
       </h1>
       <div className={classes.boards} key={sequence.join("")}>
         {building && <h1>building ...</h1>}
-        {boards[0] && <Grid input="" />}
+        {boards[0] && <Grid />}
       </div>
     </div>
   );
