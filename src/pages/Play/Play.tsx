@@ -4,6 +4,7 @@ import { useBoard } from "../../components/BoardProvider";
 import { useEffect } from "react";
 import { Status } from "../../components/Status";
 import classes from "./Play.module.css";
+import { Toast } from "../../components/Toast";
 
 export const Play = () => {
   const { shuffle, display, solve } = useBoard();
@@ -56,6 +57,7 @@ export const Play = () => {
         Solve
       </button>
       <button onClick={() => shuffle()}>shuffle</button>
+      <Toast />
     </div>
   );
 };
