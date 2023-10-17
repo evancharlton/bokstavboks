@@ -169,7 +169,7 @@ export const aStar = (words: Readonly<string[]>) => {
     const path = [];
     let current = word;
     do {
-      path.push(current);
+      path.unshift(current);
       const next = cameFrom.get(current);
       if (!next) {
         return path;
@@ -204,6 +204,17 @@ export const aStar = (words: Readonly<string[]>) => {
     return 12 - new Set(`${a}${b}`.split("")).size;
   };
 
+  const getNeighbors = (word: string): readonly string[] => {
+    if (!word) {
+      return words;
+    }
+
+    const lastLetter = word[word.length - 1];
+    return words.filter((w) => {
+      return w[0] === lastLetter;
+    });
+  };
+
   while (pQueue.length > 0) {
     const current = pQueue.dequeue();
     pSet.delete(current);
@@ -212,10 +223,7 @@ export const aStar = (words: Readonly<string[]>) => {
       return path;
     }
 
-    const neighbors = words.filter((w) => {
-      return !current || w.startsWith(current[current.length - 1]);
-    });
-
+    const neighbors = getNeighbors(current);
     for (const neighbor of neighbors) {
       const tentativeG = gScore.get(current) + d(current, neighbor);
       if (tentativeG < gScore.get(neighbor)) {
@@ -238,19 +246,58 @@ export const findSolution = (
   words: readonly string[],
   board: Board
 ): string[] => {
-  const possibleLetters = new Set(board.sequence);
-  const contenders = words
-    .filter((word) => {
-      for (const letter of word) {
-        if (!possibleLetters.has(letter as Letter)) {
-          return false;
-        }
-      }
-      return true;
-    })
-    .filter((word) => {
-      return canPlay(board, word.split("").filter(isLetter));
-    });
+  return findSolutionById(
+    words,
+    [...board.sideA, ...board.sideB, ...board.sideC, ...board.sideD].join("")
+  );
+};
+
+const canPlay2 = (sides: Record<string, string>, word: string): boolean => {
+  if (word.length === 0) {
+    return false;
+  }
+
+  if (word.length <= 1) {
+    return !!sides[word];
+  }
+
+  for (let i = 1; i < word.length; i += 1) {
+    const a = word[i - 1];
+    const b = word[i];
+
+    const sideA = sides[a];
+    const sideB = sides[b];
+
+    if (!sideA || !sideB) {
+      return false;
+    }
+
+    if (sideA === sideB) {
+      return false;
+    }
+  }
+  return true;
+};
+
+export const findSolutionById = (words: readonly string[], boardId: string) => {
+  const sides = {
+    [boardId[0]]: "a",
+    [boardId[1]]: "a",
+    [boardId[2]]: "a",
+    [boardId[3]]: "b",
+    [boardId[4]]: "b",
+    [boardId[5]]: "b",
+    [boardId[6]]: "c",
+    [boardId[7]]: "c",
+    [boardId[8]]: "c",
+    [boardId[9]]: "d",
+    [boardId[10]]: "d",
+    [boardId[11]]: "d",
+  };
+
+  const contenders = words.filter((word) => {
+    return canPlay2(sides, word);
+  });
 
   return aStar(contenders);
 };

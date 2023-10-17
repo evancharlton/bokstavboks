@@ -4,6 +4,7 @@ import {
   canPlay,
   createBoard,
   findSolution,
+  findSolutionById,
   isLegalBoard,
 } from "./logic";
 import { Board, isLetter } from "./types";
@@ -226,6 +227,12 @@ describe("solving", () => {
 
       const solution = findSolution(dict, board);
       expect(solution).toHaveLength(2);
+    });
+
+    test("akynorgsteil", () => {
+      const solution = findSolutionById(words, "akynorgsteil");
+      expect(solution).toHaveLength(2);
+      expect(solution[0][solution[0].length - 1]).toEqual(solution[1][0]);
     });
   });
 });

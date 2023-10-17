@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { Letter, boardId, isLetter, isLetters, neverGuard } from "../../types";
 import { BoardContext } from "./context";
-import { createBoard, addLetter, findSolution } from "../../logic";
+import {
+  createBoard,
+  addLetter,
+  findSolution,
+  findSolutionById,
+} from "../../logic";
 import { usePuzzleId } from "../PuzzleIdProvider";
 import { useWords } from "../WordsProvider";
 import { Loader } from "../Loader";
@@ -95,20 +100,7 @@ export const BoardProvider = ({
       throw new Error("I don't know what's going on.");
     }
 
-    const letters = id as Letter[];
-
-    const sideA = new Set<Letter>(letters.slice(0, 3));
-    const sideB = new Set<Letter>(letters.slice(3, 6));
-    const sideC = new Set<Letter>(letters.slice(6, 9));
-    const sideD = new Set<Letter>(letters.slice(9));
-
-    return findSolution(wordBank, {
-      sideA,
-      sideB,
-      sideC,
-      sideD,
-      sequence: letters,
-    });
+    return findSolutionById(wordBank, id);
   }, [id, wordBank]);
 
   const prevPuzzleId = useRef<string>();
