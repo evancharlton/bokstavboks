@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useReducer } from "react";
-import { GameStateContext } from "./context";
+import { ValidationError, GameStateContext } from "./context";
 import { isLetter, isLetters, neverGuard } from "../../types";
 import { useWords } from "../WordsProvider";
 import { useBoard } from "../BoardProvider";
@@ -7,7 +7,7 @@ import { useBoard } from "../BoardProvider";
 type State = {
   words: string[];
   current: string;
-  error: string | undefined;
+  error: ValidationError | undefined;
 };
 
 type Update =
@@ -26,14 +26,14 @@ const reducer =
         if (!isLetters(input)) {
           return {
             ...state,
-            error: "Invalid input",
+            error: "contains-invalid-letters",
           };
         }
 
         if (!isValid(input)) {
           return {
             ...state,
-            error: "Illegal move",
+            error: "append-invalid-letter",
           };
         }
 
@@ -57,7 +57,7 @@ const reducer =
           if (input[0] !== lastLetter) {
             return {
               ...state,
-              error: "Must start with the last letter of the previous word",
+              error: "illegal-start-letter",
             };
           }
         }
@@ -75,7 +75,7 @@ const reducer =
         if (!isLetter(letter)) {
           return {
             ...state,
-            error: "Cannot add that letter",
+            error: "append-illegal-letter",
           };
         }
 
@@ -83,7 +83,7 @@ const reducer =
         if (!isValid(input)) {
           return {
             ...state,
-            error: "Invalid input",
+            error: "append-invalid-letter",
           };
         }
 
@@ -134,7 +134,7 @@ const reducer =
         if (!current) {
           return {
             ...state,
-            error: "No input provided",
+            error: "no-input",
           };
         }
 
@@ -142,8 +142,15 @@ const reducer =
         if (!dictionary.has(state.current)) {
           return {
             ...state,
-            error: "Unknown word",
+            error: "unknown-word",
           };
+        }
+
+        try {
+          // @ts-expect-error
+          document.activeElement?.blur?.();
+        } catch (ex) {
+          // This can throw sometimes.
         }
 
         return {

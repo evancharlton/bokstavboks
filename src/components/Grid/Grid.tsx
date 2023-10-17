@@ -5,14 +5,22 @@ import { useGameState } from "../GameState";
 import { Letter } from "../../types";
 
 const Button = ({ letter }: { letter: Letter }) => {
-  const { add, usedLetters } = useGameState();
+  const { add, current, usedLetters } = useGameState();
 
   return (
     <button
-      className={[classes.letter, usedLetters.has(letter) && classes.used]
+      className={[
+        classes.letter,
+        usedLetters.has(letter) && classes.used,
+        current.includes(letter) && classes.current,
+      ]
         .filter(Boolean)
         .join(" ")}
-      onClick={() => add(letter)}
+      onClick={(e) => {
+        add(letter);
+        // @ts-expect-error - what
+        e.target.blur();
+      }}
     >
       {letter}
     </button>

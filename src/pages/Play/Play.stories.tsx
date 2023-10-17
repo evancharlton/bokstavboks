@@ -9,4 +9,21 @@ export default {
   component: Play,
 } satisfies Meta<ComponentProps<typeof Play>>;
 
-export const PlayStory: T = {};
+export const Default: T = {};
+
+export const Current: T = {
+  parameters: {
+    gameState: {
+      current: "abc",
+    },
+  },
+};
+
+export const Words: T = {
+  parameters: {
+    gameState: {
+      words: ["abc", "cde"],
+      current: "efg",
+    },
+  },
+};

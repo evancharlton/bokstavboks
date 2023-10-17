@@ -79,8 +79,8 @@ export const Nest = ({ className }: Props) => {
   }, [coords, current, words]);
 
   const circles = useMemo(() => {
-    const letters = [...usedLetters];
-    return letters.map((letter) => {
+    const letters = new Set([...usedLetters, ...current]);
+    return [...letters].map((letter) => {
       const [x, y] = coords.get(letter) ?? [0, 0];
       return (
         <circle
@@ -93,7 +93,7 @@ export const Nest = ({ className }: Props) => {
         />
       );
     });
-  }, [coords, usedLetters]);
+  }, [coords, current, usedLetters]);
 
   return (
     <svg

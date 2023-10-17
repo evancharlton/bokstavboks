@@ -2,10 +2,12 @@ import { Grid } from "../../components/Grid";
 import { useGameState } from "../../components/GameState";
 import { useBoard } from "../../components/BoardProvider";
 import { useEffect } from "react";
+import { Status } from "../../components/Status";
+import classes from "./Play.module.css";
 
 export const Play = () => {
   const { shuffle, display, solve } = useBoard();
-  const { current, commit, remove, add, error, words: path } = useGameState();
+  const { commit, remove, add } = useGameState();
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent): void => {
@@ -38,10 +40,8 @@ export const Play = () => {
   }, [add, commit, display, remove]);
 
   return (
-    <div>
-      <h3>{error}</h3>
-      <h2>{current}</h2>
-      <h3>{path.join(" - ")}</h3>
+    <div className={classes.container}>
+      <Status />
       <Grid />
       <button
         onClick={() => {

@@ -1,6 +1,20 @@
 import { createContext, useContext } from "react";
 import { Letter } from "../../types";
 
+export type ValidationError =
+  /** The input contains letters outside the Norwegian alphabet. */
+  | "contains-invalid-letters"
+  /** The letter being added is not in the Norwegian alphabet. */
+  | "append-illegal-letter"
+  /** The letter being added is not in the puzzle. */
+  | "append-invalid-letter"
+  /** The current input doesn't start with the previous word's end. */
+  | "illegal-start-letter"
+  /** No input was provided. */
+  | "no-input"
+  /** Unknown word. */
+  | "unknown-word";
+
 export const GameStateContext = createContext<
   | {
       words: string[];
@@ -10,7 +24,7 @@ export const GameStateContext = createContext<
       remove: () => void;
       commit: () => void;
       usedLetters: Set<Letter>;
-      error?: string;
+      error?: ValidationError;
     }
   | undefined
 >(undefined);
