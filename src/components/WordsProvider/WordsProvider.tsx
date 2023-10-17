@@ -2,17 +2,27 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { WordsContext } from "./context";
 
-export const WordsProvider = ({ children }: { children?: React.ReactNode }) => {
+type Props = {
+  children: React.ReactNode;
+  words?: string[];
+};
+
+export const WordsProvider = ({ children, words: initialWords }: Props) => {
   const { lang } = useParams();
   const [words, setWords] = useState<string[]>([]);
 
   useEffect(() => {
+    if (initialWords) {
+      setWords(initialWords);
+      return;
+    }
+
     fetch(`${process.env.PUBLIC_URL}/${lang}/words.json`)
       .then((response) => response.json())
       .then((words) => {
         setWords(words);
       });
-  }, [lang]);
+  }, [lang, initialWords]);
 
   const value = useMemo(
     () => ({
@@ -27,11 +37,6 @@ export const WordsProvider = ({ children }: { children?: React.ReactNode }) => {
   }
 
   return (
-    <WordsContext.Provider value={value}>
-      <div>
-        <h1>loaded {words.length} words</h1>
-        {children}
-      </div>
-    </WordsContext.Provider>
+    <WordsContext.Provider value={value}>{children}</WordsContext.Provider>
   );
 };

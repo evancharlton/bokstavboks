@@ -4,10 +4,6 @@ import { isLetter, isLetters, neverGuard } from "../../types";
 import { useWords } from "../WordsProvider";
 import { useBoard } from "../BoardProvider";
 
-type Props = {
-  children: React.ReactNode;
-};
-
 type State = {
   words: string[];
   current: string;
@@ -163,7 +159,16 @@ const reducer =
     }
   };
 
-export const GameState = ({ children }: Props) => {
+type Props = {
+  children: React.ReactNode;
+} & Partial<Pick<State, "words" | "current" | "error">>;
+
+export const GameState = ({
+  children,
+  words: initialWords,
+  current: initialCurrent,
+  error: initialError,
+}: Props) => {
   const { dictionary } = useWords();
   const { id: boardId } = useBoard();
 
@@ -220,9 +225,9 @@ export const GameState = ({ children }: Props) => {
   const [{ words, current, error }, dispatch] = useReducer(
     reducer(dictionary, isValid),
     {
-      words: [],
-      current: "",
-      error: undefined,
+      words: initialWords ?? [],
+      current: initialCurrent ?? "",
+      error: initialError ?? undefined,
     } satisfies State
   );
 

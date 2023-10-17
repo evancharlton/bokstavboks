@@ -7,6 +7,8 @@ import { useWords } from "../WordsProvider";
 
 type Props = {
   children: React.ReactNode;
+  boardId?: string;
+  seeds?: string[];
 };
 
 type State = {
@@ -69,15 +71,19 @@ const reducer = (state: State, update: Action): State => {
   }
 };
 
-export const BoardProvider = ({ children }: Props) => {
+export const BoardProvider = ({
+  children,
+  boardId: initialBoardId,
+  seeds: initialSeeds,
+}: Props) => {
   const { words: wordBank } = useWords();
   const { puzzleId, random } = usePuzzleId();
 
   const [{ boardId: id, seeds, display }, dispatch] = useReducer(reducer, {
-    boardId: "",
-    seeds: [],
-    display: "",
-  });
+    boardId: initialBoardId ?? "",
+    seeds: initialSeeds ?? [],
+    display: initialBoardId ?? "",
+  } satisfies State);
 
   const shuffle = useCallback(() => {
     dispatch({ action: "shuffle" });

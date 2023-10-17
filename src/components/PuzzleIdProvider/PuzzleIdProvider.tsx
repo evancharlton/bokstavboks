@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 type Props = {
   children: React.ReactNode;
+  puzzleId?: string;
 };
 
 const todayId = () => {
@@ -37,8 +38,11 @@ const javaHashCode = (input: string): number => {
   return hash;
 };
 
-export const PuzzleIdProvider = ({ children }: Props) => {
-  const { puzzleId = todayId() } = useParams();
+export const PuzzleIdProvider = ({
+  children,
+  puzzleId: initialPuzzleId,
+}: Props) => {
+  const { puzzleId = initialPuzzleId ?? todayId() } = useParams();
   const puzzleHash = useMemo(() => javaHashCode(puzzleId), [puzzleId]);
   const random = useMemo(() => mulberry32(puzzleHash), [puzzleHash]);
 
