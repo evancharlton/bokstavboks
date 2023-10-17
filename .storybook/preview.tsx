@@ -64,6 +64,21 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    words: (() => {
+      const letters: readonly string[] = ["a", "b", "c"] as const;
+      const out: string[] = [];
+      for (let i = 0; i < Math.pow(2, letters.length); i += 1) {
+        const item: string[] = [];
+        for (let j = 0; j < letters.length; j += 1) {
+          if (((i >> j) | 0x1) > 0) {
+            item.push(letters[j]);
+          }
+        }
+        out.push(item.join(""));
+      }
+      return out;
+    })(),
+    puzzleId: "aeibfjcgkdhl",
   },
 };
 

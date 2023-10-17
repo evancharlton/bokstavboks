@@ -14,6 +14,7 @@ const SIZE = HALF_UNIT * 3 * 2;
 
 export const Nest = ({ className }: Props) => {
   const { display } = useBoard();
+  const { usedLetters } = useGameState();
 
   const coords = useMemo(() => {
     const t = display.substring(0, 3);
@@ -72,18 +73,27 @@ export const Nest = ({ className }: Props) => {
             stroke="#000"
             opacity={opacity}
           />
-          <circle
-            cx={x2}
-            cy={y2}
-            r={EDGE * 0.8}
-            stroke="#000"
-            fill="#fff"
-            opacity={opacity}
-          />
         </Fragment>
       );
     });
   }, [coords, current, words]);
+
+  const circles = useMemo(() => {
+    const letters = [...usedLetters];
+    return letters.map((letter) => {
+      const [x, y] = coords.get(letter) ?? [0, 0];
+      return (
+        <circle
+          key={letter}
+          cx={x}
+          cy={y}
+          r={EDGE * 0.8}
+          stroke="#000"
+          fill="#fff"
+        />
+      );
+    });
+  }, [coords, usedLetters]);
 
   return (
     <svg
@@ -91,6 +101,16 @@ export const Nest = ({ className }: Props) => {
       viewBox={`0 0 ${SIZE} ${SIZE}`}
     >
       {lines}
+      <rect
+        x={EDGE}
+        y={EDGE}
+        width={SIZE - 2 * EDGE}
+        height={SIZE - 2 * EDGE}
+        stroke="#000"
+        fill="transparent"
+        strokeWidth={5}
+      />
+      {circles}
     </svg>
   );
 };

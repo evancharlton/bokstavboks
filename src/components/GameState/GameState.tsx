@@ -247,7 +247,7 @@ export const GameState = ({
     dispatch({ action: "remove-letter" });
   }, []);
 
-  const combined = `${words.join("")}${current}`;
+  const combined = `${words.join("")}`;
   if (!isLetters(combined)) {
     throw new Error("Something happened");
   }
