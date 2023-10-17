@@ -1,67 +1,55 @@
 import "./App.css";
-import { HashRouter, Link, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import Builder from "./pages/Builder";
 import { Play } from "./pages/Play";
 import { WordsProvider } from "./components/WordsProvider";
 import { BoardProvider } from "./components/BoardProvider";
 import { PuzzleIdProvider } from "./components/PuzzleIdProvider";
 import { GameState } from "./components/GameState";
+import { Header } from "./components/Header";
+import { Page } from "./components/Page";
+import { LanguageSelect } from "./pages/LanguageSelect";
 
-const LanguageSelect = () => {
-  return (
-    <div>
-      <h1>Language</h1>
-      <Link to="/nb">NB</Link>
-      <Link to="/nn">NN</Link>
-    </div>
-  );
-};
+const GameTime = () => (
+  <PuzzleIdProvider>
+    <Page header={<Header />}>
+      <WordsProvider>
+        <BoardProvider>
+          <GameState>
+            <Play />
+          </GameState>
+        </BoardProvider>
+      </WordsProvider>
+    </Page>
+  </PuzzleIdProvider>
+);
 
 function App() {
   return (
-    <div className="App">
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<LanguageSelect />} />
-          <Route
-            path="/:lang/build"
-            element={
-              <WordsProvider>
-                <Builder />
-              </WordsProvider>
-            }
-          />
-          <Route
-            path="/:lang/:puzzleId"
-            element={
-              <WordsProvider>
-                <PuzzleIdProvider>
-                  <BoardProvider>
-                    <GameState>
-                      <Play />
-                    </GameState>
-                  </BoardProvider>
-                </PuzzleIdProvider>
-              </WordsProvider>
-            }
-          />
-          <Route
-            path="/:lang"
-            element={
-              <WordsProvider>
-                <PuzzleIdProvider>
-                  <BoardProvider>
-                    <GameState>
-                      <Play />
-                    </GameState>
-                  </BoardProvider>
-                </PuzzleIdProvider>
-              </WordsProvider>
-            }
-          />
-        </Routes>
-      </HashRouter>
-    </div>
+    <HashRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <PuzzleIdProvider>
+              <Page header={<Header />}>
+                <LanguageSelect />
+              </Page>
+            </PuzzleIdProvider>
+          }
+        />
+        <Route
+          path="/:lang/build"
+          element={
+            <WordsProvider>
+              <Builder />
+            </WordsProvider>
+          }
+        />
+        <Route path="/:lang/:puzzleId" element={<GameTime />} />
+        <Route path="/:lang" element={<GameTime />} />
+      </Routes>
+    </HashRouter>
   );
 }
 

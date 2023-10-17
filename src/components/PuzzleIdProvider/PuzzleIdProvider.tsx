@@ -47,7 +47,10 @@ export const PuzzleIdProvider = ({
   const random = useMemo(() => mulberry32(puzzleHash), [puzzleHash]);
 
   return (
-    <PuzzleIdContext.Provider value={{ random, puzzleId, puzzleHash }}>
+    <PuzzleIdContext.Provider
+      key={puzzleId}
+      value={{ random, puzzleId, puzzleHash }}
+    >
       {children}
     </PuzzleIdContext.Provider>
   );

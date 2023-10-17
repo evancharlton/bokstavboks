@@ -11,6 +11,7 @@ const ERRORS: Record<ValidationError, string> = {
   "illegal-start-letter": "",
   "no-input": "",
   "unknown-word": "ukjent ord",
+  "duplicate-word": "ordet er allerede brukt",
 };
 
 export const Toast = () => {

@@ -13,7 +13,9 @@ export type ValidationError =
   /** No input was provided. */
   | "no-input"
   /** Unknown word. */
-  | "unknown-word";
+  | "unknown-word"
+  /** Word has already been used. */
+  | "duplicate-word";
 
 export const GameStateContext = createContext<
   | {
@@ -23,6 +25,7 @@ export const GameStateContext = createContext<
       add: (letter: string) => void;
       remove: () => void;
       commit: () => void;
+      reset: () => void;
       usedLetters: Set<Letter>;
       error?: ValidationError;
     }

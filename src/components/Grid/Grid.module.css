@@ -13,11 +13,10 @@
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(5, 1fr);
   background-color: white;
-  width: min-content;
+  width: 100%;
 }
 
 .letter {
-  height: 70px;
   aspect-ratio: 1 / 1;
 
   display: flex;

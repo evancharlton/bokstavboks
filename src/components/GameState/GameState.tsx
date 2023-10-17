@@ -14,7 +14,8 @@ type Update =
   | { action: "set-current"; input: string }
   | { action: "add-letter"; letter: string }
   | { action: "remove-letter" }
-  | { action: "commit" };
+  | { action: "commit" }
+  | { action: "reset" };
 
 const reducer =
   (dictionary: Set<string>, isValid: (input: string) => boolean) =>
@@ -138,11 +139,17 @@ const reducer =
           };
         }
 
-        // TODO: validate word
         if (!dictionary.has(state.current)) {
           return {
             ...state,
             error: "unknown-word",
+          };
+        }
+
+        if (state.words.includes(current)) {
+          return {
+            ...state,
+            error: "duplicate-word",
           };
         }
 
@@ -160,6 +167,16 @@ const reducer =
           current: state.current[state.current.length - 1],
         };
       }
+
+      case "reset": {
+        return {
+          ...state,
+          words: [],
+          current: "",
+          error: undefined,
+        };
+      }
+
       default: {
         return neverGuard(update, state);
       }
@@ -254,6 +271,10 @@ export const GameState = ({
     dispatch({ action: "remove-letter" });
   }, []);
 
+  const reset = useCallback(() => {
+    dispatch({ action: "reset" });
+  }, []);
+
   const combined = `${words.join("")}`;
   if (!isLetters(combined)) {
     throw new Error("Something happened");
@@ -269,6 +290,7 @@ export const GameState = ({
         add,
         remove,
         commit,
+        reset,
         usedLetters,
         error,
       }}

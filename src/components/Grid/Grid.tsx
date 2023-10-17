@@ -28,7 +28,7 @@ const Button = ({ letter }: { letter: Letter }) => {
 };
 
 export const Grid = () => {
-  const { display: boardId } = useBoard();
+  const { id, display: boardId } = useBoard();
   const t = boardId.substring(0, 3);
   const r = boardId.substring(3, 6);
   const b = boardId.substring(6, 9);

@@ -5,9 +5,11 @@ import { useEffect } from "react";
 import { Status } from "../../components/Status";
 import classes from "./Play.module.css";
 import { Toast } from "../../components/Toast";
+import { Buttons } from "../../components/Buttons";
+import { Header } from "../../components/Header";
 
 export const Play = () => {
-  const { shuffle, display, solve } = useBoard();
+  const { display } = useBoard();
   const { commit, remove, add } = useGameState();
 
   useEffect(() => {
@@ -44,19 +46,7 @@ export const Play = () => {
     <div className={classes.container}>
       <Status />
       <Grid />
-      <button
-        onClick={() => {
-          try {
-            const solution = solve();
-            alert(solution.join(" + "));
-          } catch (ex) {
-            alert("Couldn't find a solution");
-          }
-        }}
-      >
-        Solve
-      </button>
-      <button onClick={() => shuffle()}>shuffle</button>
+      <Buttons />
       <Toast />
     </div>
   );

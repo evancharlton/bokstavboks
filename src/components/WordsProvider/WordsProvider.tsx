@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { WordsContext } from "./context";
+import { Loader } from "../Loader";
 
 type Props = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   words?: string[];
 };
 
@@ -33,7 +34,7 @@ export const WordsProvider = ({ children, words: initialWords }: Props) => {
   );
 
   if (words.length === 0) {
-    return <h1>loading</h1>;
+    return <Loader text="laster ned ..." />;
   }
 
   return (

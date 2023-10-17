@@ -4,6 +4,7 @@ import { BoardContext } from "./context";
 import { createBoard, addLetter, findSolution } from "../../logic";
 import { usePuzzleId } from "../PuzzleIdProvider";
 import { useWords } from "../WordsProvider";
+import { Loader } from "../Loader";
 
 type Props = {
   children: React.ReactNode;
@@ -166,11 +167,14 @@ export const BoardProvider = ({
   }, [puzzleId, random, wordBank]);
 
   if (!display) {
-    return <h1>No board</h1>; // TODO: Loading
+    return <Loader text="generere puslespill ..." />;
   }
 
   return (
-    <BoardContext.Provider value={{ id, shuffle, solve, seeds, display }}>
+    <BoardContext.Provider
+      key={id}
+      value={{ id, shuffle, solve, seeds, display }}
+    >
       {children}
     </BoardContext.Provider>
   );
