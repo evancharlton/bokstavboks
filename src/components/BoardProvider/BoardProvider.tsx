@@ -1,15 +1,12 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { Letter, boardId, isLetter, isLetters, neverGuard } from "../../types";
 import { BoardContext } from "./context";
-import {
-  createBoard,
-  addLetter,
-  findSolution,
-  findSolutionById,
-} from "../../logic";
+import { createBoard, addLetter, findSolutionById } from "../../logic";
 import { usePuzzleId } from "../PuzzleIdProvider";
 import { useWords } from "../WordsProvider";
 import { Loader } from "../Loader";
+import { State } from "./types";
+import { useNavigate, useParams } from "react-router";
 
 type Props = {
   children: React.ReactNode;
@@ -17,15 +14,10 @@ type Props = {
   seeds?: string[];
 };
 
-type State = {
-  boardId: string;
-  seeds: string[]; // Words used to generate the board
-  display: string;
-};
-
 type Action =
   | { action: "set-board"; boardId: string; seeds?: string[] }
-  | { action: "shuffle" };
+  | { action: "shuffle" }
+  | { action: "solve"; solution: string[] };
 
 const shuffle = <T extends unknown>(arr: T[]): T[] =>
   arr
@@ -59,7 +51,7 @@ const reducer = (state: State, update: Action): State => {
       return {
         ...state,
         seeds: seeds ?? [],
-        boardId,
+        id: boardId,
         display: shuffleId(boardId),
       };
     }
@@ -67,7 +59,14 @@ const reducer = (state: State, update: Action): State => {
     case "shuffle": {
       return {
         ...state,
-        display: shuffleId(state.boardId),
+        display: shuffleId(state.id),
+      };
+    }
+
+    case "solve": {
+      return {
+        ...state,
+        solution: update.solution,
       };
     }
 
@@ -85,10 +84,11 @@ export const BoardProvider = ({
   const { words: wordBank } = useWords();
   const { puzzleId, random } = usePuzzleId();
 
-  const [{ boardId: id, seeds, display }, dispatch] = useReducer(reducer, {
-    boardId: initialBoardId ?? "",
+  const [{ id, seeds, display, solution }, dispatch] = useReducer(reducer, {
+    id: initialBoardId ?? "",
     seeds: initialSeeds ?? [],
     display: initialBoardId ?? "",
+    solution: [],
   } satisfies State);
 
   const shuffle = useCallback(() => {
@@ -100,7 +100,8 @@ export const BoardProvider = ({
       throw new Error("I don't know what's going on.");
     }
 
-    return findSolutionById(wordBank, id);
+    const solution = findSolutionById(wordBank, id);
+    dispatch({ action: "solve", solution });
   }, [id, wordBank]);
 
   const prevPuzzleId = useRef<string>();
@@ -158,6 +159,12 @@ export const BoardProvider = ({
     });
   }, [puzzleId, random, wordBank]);
 
+  const navigate = useNavigate();
+  const { lang } = useParams();
+  const randomize = useCallback(() => {
+    navigate(`/${lang}/${Date.now()}`);
+  }, [lang, navigate]);
+
   if (!display) {
     return <Loader text="generere puslespill ..." />;
   }
@@ -165,7 +172,7 @@ export const BoardProvider = ({
   return (
     <BoardContext.Provider
       key={id}
-      value={{ id, shuffle, solve, seeds, display }}
+      value={{ id, shuffle, solve, seeds, display, solution, randomize }}
     >
       {children}
     </BoardContext.Provider>

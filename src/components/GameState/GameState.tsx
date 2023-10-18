@@ -1,14 +1,9 @@
 import { useCallback, useMemo, useReducer } from "react";
-import { ValidationError, GameStateContext } from "./context";
+import { GameStateContext } from "./context";
 import { isLetter, isLetters, neverGuard } from "../../types";
 import { useWords } from "../WordsProvider";
 import { useBoard } from "../BoardProvider";
-
-type State = {
-  words: string[];
-  current: string;
-  error: ValidationError | undefined;
-};
+import { State } from "./types";
 
 type Update =
   | { action: "set-current"; input: string }
@@ -16,7 +11,8 @@ type Update =
   | { action: "remove-letter" }
   | { action: "commit" }
   | { action: "reset" }
-  | { action: "clear-error" };
+  | { action: "clear-error" }
+  | { action: "solve" };
 
 const reducer =
   (dictionary: Set<string>, isValid: (input: string) => boolean) =>
@@ -161,11 +157,15 @@ const reducer =
           // This can throw sometimes.
         }
 
+        // Intentionally create a new array to trigger any hook dependencies.
+        const nextWords = [...state.words, state.current];
+        const complete = new Set(nextWords.join("")).size === 12;
+
         return {
           ...state,
-          // Intentionally create a new array to trigger any hook dependencies.
-          words: [...state.words, state.current],
-          current: state.current[state.current.length - 1],
+          words: nextWords,
+          complete: complete ? "solved" : state.complete,
+          current: complete ? "" : state.current[state.current.length - 1],
         };
       }
 
@@ -182,6 +182,14 @@ const reducer =
         return {
           ...state,
           error: undefined,
+        };
+      }
+
+      case "solve": {
+        return {
+          ...state,
+          current: "",
+          complete: "revealed",
         };
       }
 
@@ -202,7 +210,7 @@ export const GameState = ({
   error: initialError,
 }: Props) => {
   const { dictionary } = useWords();
-  const { id: boardId } = useBoard();
+  const { id: boardId, solve: solveBoard } = useBoard();
 
   const sides = useMemo(
     () => ({
@@ -254,12 +262,13 @@ export const GameState = ({
     [sides]
   );
 
-  const [{ words, current, error }, dispatch] = useReducer(
+  const [{ words, current, error, complete }, dispatch] = useReducer(
     reducer(dictionary, isValid),
     {
       words: initialWords ?? [],
       current: initialCurrent ?? "",
       error: initialError ?? undefined,
+      complete: undefined,
     } satisfies State
   );
 
@@ -287,6 +296,11 @@ export const GameState = ({
     dispatch({ action: "clear-error" });
   }, []);
 
+  const solve = useCallback(() => {
+    solveBoard();
+    dispatch({ action: "solve" });
+  }, [solveBoard]);
+
   const combined = `${words.join("")}`;
   if (!isLetters(combined)) {
     throw new Error("Something happened");
@@ -298,6 +312,7 @@ export const GameState = ({
       value={{
         words,
         current,
+        complete,
         setInput,
         add,
         remove,
@@ -306,6 +321,7 @@ export const GameState = ({
         usedLetters,
         error,
         clearError,
+        solve,
       }}
     >
       {children}

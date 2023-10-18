@@ -1,5 +1,4 @@
-import PriorityQueue from "ts-priority-queue";
-import { Board, Letter, isLetter } from "./types";
+import { Board, Letter } from "./types";
 
 export const createBoard = (start: Letter): Board => {
   return {
@@ -135,10 +134,6 @@ export const canPlay = (board: Board, word: Letter[]): boolean => {
   }
 
   return true;
-};
-
-const isFinished = (path: string[]): boolean => {
-  return new Set(path.join("").split("")).size === 12;
 };
 
 export const findSolution = (

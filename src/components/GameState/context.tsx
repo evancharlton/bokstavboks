@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
 import { Letter } from "../../types";
+import { State } from "./types";
 
 export type ValidationError =
   /** The input contains letters outside the Norwegian alphabet. */
@@ -18,9 +19,7 @@ export type ValidationError =
   | "duplicate-word";
 
 export const GameStateContext = createContext<
-  | {
-      words: string[];
-      current: string;
+  | (Pick<State, "words" | "complete" | "current"> & {
       setInput: (input: string) => void;
       add: (letter: string) => void;
       remove: () => void;
@@ -29,7 +28,8 @@ export const GameStateContext = createContext<
       usedLetters: Set<Letter>;
       error?: ValidationError;
       clearError: () => void;
-    }
+      solve: () => void;
+    })
   | undefined
 >(undefined);
 

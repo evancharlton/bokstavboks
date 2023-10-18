@@ -1,13 +1,12 @@
 import { createContext, useContext } from "react";
+import { State } from "./types";
 
 export const BoardContext = createContext<
-  | {
-      id: string;
+  | (Pick<State, "id" | "seeds" | "solution" | "display"> & {
       shuffle: () => void;
-      solve: () => string[];
-      seeds: string[];
-      display: string;
-    }
+      solve: () => void;
+      randomize: () => void;
+    })
   | undefined
 >(undefined);
 

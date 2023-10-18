@@ -236,7 +236,7 @@ describe("solving", () => {
       expect(solution[0][solution[0].length - 1]).toEqual(solution[1][0]);
     });
 
-    test.only("aejorvbmtinp", () => {
+    test("aejorvbmtinp", () => {
       const solution = findSolutionById(
         words ?? ["evertebrat", "tjonete", "empatiene"],
         "aejorvbmtinp"

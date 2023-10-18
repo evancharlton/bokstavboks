@@ -5,10 +5,11 @@ import { useGameState } from "../GameState";
 import { Letter } from "../../types";
 
 const Button = ({ letter }: { letter: Letter }) => {
-  const { add, current, usedLetters } = useGameState();
+  const { add, current, usedLetters, complete } = useGameState();
 
   return (
     <button
+      disabled={!!complete}
       className={[
         classes.letter,
         usedLetters.has(letter) && classes.used,
@@ -28,7 +29,7 @@ const Button = ({ letter }: { letter: Letter }) => {
 };
 
 export const Grid = () => {
-  const { id, display: boardId, seeds } = useBoard();
+  const { display: boardId } = useBoard();
   const t = boardId.substring(0, 3);
   const r = boardId.substring(3, 6);
   const b = boardId.substring(6, 9);

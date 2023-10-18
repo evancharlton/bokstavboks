@@ -4,7 +4,11 @@ import { Dialog } from "../Dialog";
 import { MdHelpOutline, MdOutlineSettings } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-export const Header = () => {
+type Props = {
+  buttons?: React.ReactNode[] | React.ReactNode;
+};
+
+export const Header = ({ buttons }: Props) => {
   const [dialog, setDialog] = useState<"help" | "settings" | undefined>();
 
   return (
@@ -20,6 +24,7 @@ export const Header = () => {
         </div>
         <h1>Bokstavene Eske</h1>
         <div className={classes.buttons}>
+          {buttons}
           <button onClick={() => setDialog("help")}>
             <MdHelpOutline />
           </button>
@@ -31,6 +36,11 @@ export const Header = () => {
       {dialog === "help" && (
         <Dialog title="Hjelp" onClose={() => setDialog(undefined)}>
           <p>Help text here</p>
+        </Dialog>
+      )}
+      {dialog === "settings" && (
+        <Dialog title="Instillinger" onClose={() => setDialog(undefined)}>
+          <p>Settings dialog</p>
         </Dialog>
       )}
     </>

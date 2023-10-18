@@ -6,14 +6,17 @@ import { Status } from "../../components/Status";
 import classes from "./Play.module.css";
 import { Toast } from "../../components/Toast";
 import { Buttons } from "../../components/Buttons";
-import { Header } from "../../components/Header";
 
 export const Play = () => {
   const { display } = useBoard();
-  const { commit, remove, add } = useGameState();
+  const { commit, remove, add, complete } = useGameState();
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent): void => {
+      if (complete) {
+        return;
+      }
+
       const key = e.key;
       if (key === "Enter") {
         commit();
@@ -40,7 +43,7 @@ export const Play = () => {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [add, commit, display, remove]);
+  }, [add, commit, complete, display, remove]);
 
   return (
     <div className={classes.container}>

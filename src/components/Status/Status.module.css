@@ -53,3 +53,27 @@
   background-color: #aaaa;
   border-radius: 2px;
 }
+
+.complete {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 16px;
+}
+
+.complete > h1 {
+  margin-block: 0;
+}
+
+.complete > button {
+  border: 1px solid #333;
+  background-color: transparent;
+  border-radius: 8px;
+  font-size: 30px;
+  margin: 0;
+  padding: 8px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
