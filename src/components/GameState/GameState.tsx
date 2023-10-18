@@ -15,7 +15,8 @@ type Update =
   | { action: "add-letter"; letter: string }
   | { action: "remove-letter" }
   | { action: "commit" }
-  | { action: "reset" };
+  | { action: "reset" }
+  | { action: "clear-error" };
 
 const reducer =
   (dictionary: Set<string>, isValid: (input: string) => boolean) =>
@@ -177,6 +178,13 @@ const reducer =
         };
       }
 
+      case "clear-error": {
+        return {
+          ...state,
+          error: undefined,
+        };
+      }
+
       default: {
         return neverGuard(update, state);
       }
@@ -275,6 +283,10 @@ export const GameState = ({
     dispatch({ action: "reset" });
   }, []);
 
+  const clearError = useCallback(() => {
+    dispatch({ action: "clear-error" });
+  }, []);
+
   const combined = `${words.join("")}`;
   if (!isLetters(combined)) {
     throw new Error("Something happened");
@@ -293,6 +305,7 @@ export const GameState = ({
         reset,
         usedLetters,
         error,
+        clearError,
       }}
     >
       {children}

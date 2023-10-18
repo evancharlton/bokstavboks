@@ -15,34 +15,35 @@ const ERRORS: Record<ValidationError, string> = {
 };
 
 export const Toast = () => {
-  const [showing, setShowing] = useState(false);
+  const [showing, setShowing] = useState<ValidationError>();
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
-  const { error } = useGameState();
+  const { error, clearError } = useGameState();
 
   useEffect(() => {
-    clearTimeout(timerRef.current);
     if (!error) {
       return;
     }
 
-    setShowing(true);
+    clearError();
+    clearTimeout(timerRef.current);
+    setShowing(error);
     timerRef.current = setTimeout(() => {
-      setShowing(false);
+      setShowing(undefined);
     }, 2000);
-  }, [error]);
+  }, [clearError, error]);
 
   useEffect(() => {
     return () => {
-      setShowing(false);
+      setShowing(undefined);
       clearTimeout(timerRef.current);
     };
   }, []);
 
-  if (!error || !showing) {
+  if (!showing) {
     return null;
   }
 
-  const string = ERRORS[error];
+  const string = ERRORS[showing];
   if (!string) {
     return null;
   }

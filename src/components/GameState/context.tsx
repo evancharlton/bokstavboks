@@ -28,6 +28,7 @@ export const GameStateContext = createContext<
       reset: () => void;
       usedLetters: Set<Letter>;
       error?: ValidationError;
+      clearError: () => void;
     }
   | undefined
 >(undefined);

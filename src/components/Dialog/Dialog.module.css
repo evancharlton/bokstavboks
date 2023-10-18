@@ -1,0 +1,42 @@
+.backdrop {
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog {
+  min-width: 200px;
+  border: 1px solid #333a;
+  border-radius: 16px;
+  background-color: #fff;
+}
+
+.header {
+  border-bottom: 2px solid #999a;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  margin-block: 0;
+  margin: 16px 0px 8px 16px;
+}
+
+.header button {
+  margin-right: 12px;
+}
+
+.content {
+  padding: 8px 16px 16px 16px;
+}

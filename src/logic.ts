@@ -141,107 +141,6 @@ const isFinished = (path: string[]): boolean => {
   return new Set(path.join("").split("")).size === 12;
 };
 
-export const aStar = (words: Readonly<string[]>) => {
-  const letters = new Map<string, number>();
-  words.forEach((word) => {
-    letters.set(word, new Set(word.split("")).size);
-  });
-
-  const h = (word: string) => {
-    return 12 - (letters.get(word) ?? 0);
-  };
-
-  const pSet = new Set<string>();
-  const pQueue = new PriorityQueue<string>({
-    comparator: (a, b) => {
-      return (
-        (letters.get(b) ?? Number.MAX_SAFE_INTEGER) -
-        (letters.get(a) ?? Number.MAX_SAFE_INTEGER)
-      );
-    },
-  });
-  pSet.add("");
-  pQueue.queue("");
-
-  const cameFrom = new Map<string, string>();
-
-  const reconstructPath = (word: string): string[] => {
-    const path = [];
-    let current = word;
-    do {
-      path.unshift(current);
-      const next = cameFrom.get(current);
-      if (!next) {
-        return path;
-      }
-      current = next;
-    } while (true);
-  };
-
-  const gScore = {
-    _map: new Map<string, number>(),
-    get(word: string): number {
-      return this._map.get(word) ?? Number.MAX_SAFE_INTEGER;
-    },
-    set(word: string, score: number) {
-      this._map.set(word, score);
-    },
-  };
-  gScore.set("", 0);
-
-  const fScore = {
-    _map: new Map<string, number>(),
-    get(word: string): number {
-      return this._map.get(word) ?? Number.MAX_SAFE_INTEGER;
-    },
-    set(word: string, score: number) {
-      this._map.set(word, score);
-    },
-  };
-  fScore.set("", h(""));
-
-  const d = (a: string, b: string): number => {
-    return 12 - new Set(`${a}${b}`.split("")).size;
-  };
-
-  const getNeighbors = (word: string): readonly string[] => {
-    if (!word) {
-      return words;
-    }
-
-    const lastLetter = word[word.length - 1];
-    return words.filter((w) => {
-      return w[0] === lastLetter;
-    });
-  };
-
-  while (pQueue.length > 0) {
-    const current = pQueue.dequeue();
-    pSet.delete(current);
-    const path = reconstructPath(current);
-    if (isFinished(path)) {
-      return path;
-    }
-
-    const neighbors = getNeighbors(current);
-    for (const neighbor of neighbors) {
-      const tentativeG = gScore.get(current) + d(current, neighbor);
-      if (tentativeG < gScore.get(neighbor)) {
-        // This is better.
-        cameFrom.set(neighbor, current);
-        gScore.set(neighbor, tentativeG);
-        fScore.set(neighbor, tentativeG + h(neighbor));
-        if (!pSet.has(neighbor)) {
-          pQueue.queue(neighbor);
-          pSet.add(neighbor);
-        }
-      }
-    }
-  }
-
-  throw new Error("No matches found");
-};
-
 export const findSolution = (
   words: readonly string[],
   board: Board
@@ -279,6 +178,84 @@ const canPlay2 = (sides: Record<string, string>, word: string): boolean => {
   return true;
 };
 
+// TODO: This is a bit inefficient, data-structure-wise. Let's see if we can
+//       clean this up with some better structures.
+export const bfs = (words: string[]): string[] => {
+  const letters = new Map<string, number>();
+  const wordsByLetter = new Map<string, string[]>();
+  const singleWordSolutions: string[] = [];
+  for (const word of words) {
+    const a = word[0];
+    if (!wordsByLetter.has(a)) {
+      wordsByLetter.set(a, []);
+    }
+    wordsByLetter.get(a)?.push(word);
+    const length = new Set(word).size;
+    letters.set(word, length);
+
+    if (length === 12) {
+      // We found a single-word solution - awesome!
+      singleWordSolutions.push(word);
+    }
+  }
+
+  // See if we can short-cut the larger BFS.
+  if (singleWordSolutions.length > 0) {
+    const shortest = singleWordSolutions.sort((a, b) => a.length - b.length);
+    return [shortest[0]];
+  }
+
+  wordsByLetter.forEach((words, k) => {
+    wordsByLetter.set(
+      k,
+      words.sort(
+        (a, b) =>
+          (letters.get(b) ?? Number.MAX_SAFE_INTEGER) -
+          (letters.get(a) ?? Number.MAX_SAFE_INTEGER)
+      )
+    );
+  });
+
+  const queue: string[][] = words.map((w) => [w]);
+  const solutions: string[][] = [];
+  while (queue.length > 0) {
+    const path = queue.shift();
+    if (!path) {
+      continue;
+    }
+
+    if (solutions.length > 0 && path.length > solutions[0].length) {
+      // We're into the losers
+      break;
+    }
+
+    const finalWord = path[path.length - 1];
+    const finalLetter = finalWord[finalWord.length - 1];
+
+    const nextWords = wordsByLetter.get(finalLetter);
+    if (!nextWords) {
+      continue;
+    }
+
+    for (const nextWord of nextWords) {
+      const nextPath = [...path, nextWord];
+      if (new Set(nextPath.join("")).size === 12) {
+        return nextPath;
+      }
+      queue.push(nextPath);
+    }
+  }
+
+  if (solutions.length === 0) {
+    throw new Error("no solution found");
+  }
+
+  const bestSolutions = solutions.sort((a, b) => {
+    return a.join("").length - b.join("").length;
+  });
+  return bestSolutions[0];
+};
+
 export const findSolutionById = (words: readonly string[], boardId: string) => {
   const sides = {
     [boardId[0]]: "a",
@@ -299,5 +276,5 @@ export const findSolutionById = (words: readonly string[], boardId: string) => {
     return canPlay2(sides, word);
   });
 
-  return aStar(contenders);
+  return bfs(contenders);
 };

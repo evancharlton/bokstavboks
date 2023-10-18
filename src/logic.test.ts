@@ -168,7 +168,7 @@ describe("solving", () => {
         resolve(__dirname, "../wordlist/fullformsliste.txt"),
         { encoding: "latin1" }
       ).toString();
-      return contents
+      const words = contents
         .split("\n")
         .map((line) => {
           const columns = line.split("\t");
@@ -185,6 +185,7 @@ describe("solving", () => {
           return true;
         })
         .filter((word) => word.split("").every(isLetter));
+      return [...new Set(words)].sort();
     })();
 
     test("solving", () => {
@@ -233,6 +234,14 @@ describe("solving", () => {
       const solution = findSolutionById(words, "akynorgsteil");
       expect(solution).toHaveLength(2);
       expect(solution[0][solution[0].length - 1]).toEqual(solution[1][0]);
+    });
+
+    test.only("aejorvbmtinp", () => {
+      const solution = findSolutionById(
+        words ?? ["evertebrat", "tjonete", "empatiene"],
+        "aejorvbmtinp"
+      );
+      expect(solution).toHaveLength(2);
     });
   });
 });
