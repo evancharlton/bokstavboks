@@ -1,11 +1,7 @@
 import { useState } from "react";
 import classes from "./Header.module.css";
 import { Dialog } from "../Dialog";
-import {
-  MdHelpOutline,
-  MdOutlineAutorenew,
-  MdOutlineSettings,
-} from "react-icons/md";
+import { MdHelpOutline, MdOutlineAutorenew } from "react-icons/md";
 import { Link, useParams } from "react-router-dom";
 
 type Props = {
