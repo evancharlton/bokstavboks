@@ -14,6 +14,7 @@
 
 .dialog {
   min-width: 200px;
+  max-width: 600px;
   border: 1px solid #333a;
   border-radius: 16px;
   background-color: #fff;
