@@ -5,7 +5,7 @@ export const LanguageSelect = () => {
   return (
     <div className={classes.container}>
       <Link to="/nb">bokmål</Link>
-      <Link to="/nn">nynorsk</Link>
+      {/* <Link to="/nn">nynorsk</Link> */}
     </div>
   );
 };
