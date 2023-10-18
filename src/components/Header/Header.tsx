@@ -2,13 +2,14 @@ import { useState } from "react";
 import classes from "./Header.module.css";
 import { Dialog } from "../Dialog";
 import { MdHelpOutline, MdOutlineSettings } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 type Props = {
   buttons?: React.ReactNode[] | React.ReactNode;
 };
 
 export const Header = ({ buttons }: Props) => {
+  const { lang } = useParams();
   const [dialog, setDialog] = useState<"help" | "settings" | undefined>();
 
   return (
@@ -16,14 +17,16 @@ export const Header = ({ buttons }: Props) => {
       <div className={classes.container}>
         <div
           className={classes.buttons}
-          style={{ justifyContent: "flex-start" }}
+          style={{ justifyContent: "flex-start", gridArea: "left" }}
         >
           <Link className={classes.button} to="/">
             🇳🇴
           </Link>
         </div>
-        <h1>Bokstavene Eske</h1>
-        <div className={classes.buttons}>
+        <h1>
+          <Link to={`/${lang}`}>Bokstav boks</Link>
+        </h1>
+        <div className={classes.buttons} style={{ gridArea: "right" }}>
           {buttons}
           <button onClick={() => setDialog("help")}>
             <MdHelpOutline />

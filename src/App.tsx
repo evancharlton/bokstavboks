@@ -3,18 +3,19 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import Builder from "./pages/Builder";
 import { Play } from "./pages/Play";
 import { WordsProvider } from "./components/WordsProvider";
-import { BoardProvider } from "./components/BoardProvider";
+import { BoardProvider, useBoard } from "./components/BoardProvider";
 import { PuzzleIdProvider } from "./components/PuzzleIdProvider";
 import { GameState, useGameState } from "./components/GameState";
 import { Header } from "./components/Header";
 import { Page } from "./components/Page";
 import { LanguageSelect } from "./pages/LanguageSelect";
 import { useState } from "react";
-import { MdOutlineDone } from "react-icons/md";
+import { MdOutlineAutorenew, MdOutlineDone } from "react-icons/md";
 import { Dialog } from "./components/Dialog";
 
 const GameTime = () => {
   const Buttons = () => {
+    const { randomize } = useBoard();
     const { solve, complete } = useGameState();
     const [dialog, setDialog] = useState<"solve" | undefined>();
 
@@ -25,6 +26,9 @@ const GameTime = () => {
             <MdOutlineDone />
           </button>
         )}
+        <button onClick={() => randomize()}>
+          <MdOutlineAutorenew />
+        </button>
         {dialog === "solve" && (
           <Dialog title="Løsningen" onClose={() => setDialog(undefined)}>
             <div>
