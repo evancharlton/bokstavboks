@@ -9,14 +9,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install and Build 🔧 
+      - name: Install and Build 🔧
         run: |
           yarn install --frozen-lockfile
           yarn build
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: build # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
