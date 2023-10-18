@@ -13,6 +13,8 @@ jobs:
           persist-credentials: false
 
       - name: Install and Build 🔧
+        env:
+          PUBLIC_URL: /bokstavboks
         run: |
           yarn install --frozen-lockfile
           yarn build
