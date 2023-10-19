@@ -12,7 +12,7 @@ type Update =
   | { action: "commit" }
   | { action: "reset" }
   | { action: "clear-error" }
-  | { action: "solve" };
+  | { action: "reveal" };
 
 const reducer =
   (dictionary: Set<string>, isValid: (input: string) => boolean) =>
@@ -103,7 +103,8 @@ const reducer =
             ...state,
             current: state.current.substring(0, state.current.length - 1),
             error: undefined,
-            complete: undefined,
+            solved: false,
+            revealed: false,
           };
         }
 
@@ -112,7 +113,8 @@ const reducer =
             ...state,
             current: "",
             error: undefined,
-            complete: undefined,
+            solved: false,
+            revealed: false,
           };
         }
 
@@ -122,7 +124,8 @@ const reducer =
           words: state.words.slice(0, state.words.length - 1),
           current: previousWord,
           error: undefined,
-          complete: undefined,
+          solved: false,
+          revealed: false,
         };
       }
 
@@ -163,7 +166,7 @@ const reducer =
         return {
           ...state,
           words: nextWords,
-          complete: complete ? "solved" : state.complete,
+          solved: complete,
           current: complete ? "" : state.current[state.current.length - 1],
         };
       }
@@ -184,11 +187,11 @@ const reducer =
         };
       }
 
-      case "solve": {
+      case "reveal": {
         return {
           ...state,
           current: "",
-          complete: "revealed",
+          revealed: true,
         };
       }
 
@@ -256,13 +259,14 @@ export const GameState = ({ children, ...initialState }: Props) => {
     [sides]
   );
 
-  const [{ words, current, error, complete }, dispatch] = useReducer(
+  const [{ words, current, error, solved, revealed }, dispatch] = useReducer(
     reducer(dictionary, isValid),
     {
       words: [],
       current: "",
       error: undefined,
-      complete: undefined,
+      solved: false,
+      revealed: false,
       ...initialState,
     } satisfies State
   );
@@ -293,7 +297,7 @@ export const GameState = ({ children, ...initialState }: Props) => {
 
   const solve = useCallback(() => {
     solveBoard();
-    dispatch({ action: "solve" });
+    dispatch({ action: "reveal" });
   }, [solveBoard]);
 
   const combined = `${words.join("")}`;
@@ -307,7 +311,8 @@ export const GameState = ({ children, ...initialState }: Props) => {
       value={{
         words,
         current,
-        complete,
+        revealed,
+        solved,
         setInput,
         add,
         remove,

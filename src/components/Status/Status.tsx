@@ -4,10 +4,12 @@ import classes from "./Status.module.css";
 import {
   MdOutlineAutorenew,
   MdOutlineContentCopy,
+  MdOutlineDone,
   MdOutlineShare,
 } from "react-icons/md";
 import { useNavigate, useParams } from "react-router";
 import { useBoard } from "../BoardProvider";
+import { useDialog } from "../Dialogs";
 
 const WordList = ({ path }: { path: string[] }) => {
   return (
@@ -25,19 +27,22 @@ const WordList = ({ path }: { path: string[] }) => {
 const EMOJI = {
   revealed: "💥",
   solved: "🎉",
+  none: "",
 } as const;
 
 export const Status = () => {
   const { id, solution } = useBoard();
-  const { words, current, complete } = useGameState();
+  const { words, current, solved, revealed } = useGameState();
   const navigate = useNavigate();
   const { lang } = useParams();
+  const { show } = useDialog();
+
+  const emoji = EMOJI[solved ? "solved" : revealed ? "revealed" : "none"];
 
   const [mode, share] = useMemo(() => {
-    const header =
-      complete === "solved"
-        ? `Løst med ${words.length} ord!`
-        : `Sitter fast på ${words.length} ord`;
+    const header = solved
+      ? `Løst med ${words.length} ord!`
+      : `Sitter fast på ${words.length} ord`;
 
     const url = `${window.location.protocol}//${
       window.location.host
@@ -49,23 +54,24 @@ export const Status = () => {
       x[i] = "🟢";
     }
 
-    const text = complete
-      ? [
-          header,
-          `⚪${x[0]}${x[1]}${x[2]}⚪`,
-          `${x[11]}⚪⚪⚪${x[3]}`,
-          `${x[10]}⚪${EMOJI[complete]}⚪${x[4]}`,
-          `${x[9]}⚪⚪⚪${x[5]}`,
-          `⚪${x[8]}${x[7]}${x[6]}⚪`,
-          ``,
-          url,
-        ].join("\n")
-      : "";
+    const text =
+      revealed || solved
+        ? [
+            header,
+            `⚪${x[0]}${x[1]}${x[2]}⚪`,
+            `${x[11]}⚪⚪⚪${x[3]}`,
+            `${x[10]}⚪${emoji}⚪${x[4]}`,
+            `${x[9]}⚪⚪⚪${x[5]}`,
+            `⚪${x[8]}${x[7]}${x[6]}⚪`,
+            ``,
+            url,
+          ].join("\n")
+        : "";
 
     const canShare = navigator.canShare?.({ text });
 
     const share = () => {
-      if (!complete) {
+      if (!solved && !revealed) {
         return;
       }
 
@@ -79,28 +85,31 @@ export const Status = () => {
     };
 
     return [canShare ? "share" : "copy", share];
-  }, [complete, id, lang, words]);
+  }, [solved, words, lang, id, emoji, revealed]);
 
   return (
     <div className={classes.container}>
-      {complete && (
+      {(solved || revealed) && (
         <div className={classes.complete}>
-          <h1>{EMOJI[complete]}</h1>
+          <h1>{emoji}</h1>
           <button onClick={() => share()}>
             {mode === "share" ? <MdOutlineShare /> : <MdOutlineContentCopy />}
+          </button>
+          <button disabled={revealed} onClick={() => show("solve")}>
+            <MdOutlineDone />
           </button>
           <button onClick={() => navigate(`/${lang}/${Date.now()}`)}>
             <MdOutlineAutorenew />
           </button>
         </div>
       )}
-      {!complete && (
+      {!(revealed || solved) && (
         <div className={classes.input}>
           {current}
           <div className={classes.caret} />
         </div>
       )}
-      {complete === "revealed" && <WordList path={solution} />}
+      {revealed && <WordList path={solution} />}
       <WordList path={words} />
     </div>
   );

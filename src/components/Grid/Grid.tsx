@@ -6,13 +6,13 @@ import { Letter } from "../../types";
 import { useEffect } from "react";
 
 const Button = ({ letter }: { letter: Letter }) => {
-  const { add, remove, current, usedLetters, complete } = useGameState();
+  const { add, remove, current, usedLetters, revealed } = useGameState();
 
   const lastLetter = current[current.length - 1];
 
   return (
     <button
-      disabled={complete === "revealed"}
+      disabled={revealed}
       className={[
         classes.letter,
         usedLetters.has(letter) && classes.used,
@@ -35,7 +35,7 @@ const Button = ({ letter }: { letter: Letter }) => {
 };
 
 export const Grid = () => {
-  const { complete, commit, remove, add } = useGameState();
+  const { solved, revealed, commit, remove, add } = useGameState();
   const { display } = useBoard();
   const t = display.substring(0, 3);
   const r = display.substring(3, 6);
@@ -58,7 +58,7 @@ export const Grid = () => {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent): void => {
-      if (complete) {
+      if (revealed || solved) {
         return;
       }
 
@@ -88,7 +88,7 @@ export const Grid = () => {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [add, commit, complete, display, remove]);
+  }, [add, commit, revealed, solved, display, remove]);
 
   return (
     <div>

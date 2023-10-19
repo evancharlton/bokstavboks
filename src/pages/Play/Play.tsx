@@ -14,12 +14,12 @@ import { Dialogs, useDialog } from "../../components/Dialogs";
 
 const HeaderButtons = () => {
   const { randomize } = useBoard();
-  const { complete } = useGameState();
+  const { revealed } = useGameState();
   const { show } = useDialog();
 
   return (
     <>
-      {complete !== "revealed" && (
+      {!revealed && (
         <button onClick={() => show("solve")}>
           <MdOutlineDone />
         </button>

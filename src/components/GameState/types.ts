@@ -4,5 +4,6 @@ export type State = {
   words: string[];
   current: string;
   error: ValidationError | undefined;
-  complete: "revealed" | "solved" | undefined;
+  solved: boolean;
+  revealed: boolean;
 };

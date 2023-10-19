@@ -19,7 +19,7 @@ export type ValidationError =
   | "duplicate-word";
 
 export const GameStateContext = createContext<
-  | (Pick<State, "words" | "complete" | "current"> & {
+  | (Pick<State, "words" | "solved" | "revealed" | "current"> & {
       setInput: (input: string) => void;
       add: (letter: string) => void;
       remove: () => void;
