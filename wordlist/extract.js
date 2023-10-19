@@ -50,7 +50,7 @@ const loadWords = (file) => {
         return;
       }
 
-      if (unique.size < 3) {
+      if (unique.size < 2) {
         return;
       }
 
