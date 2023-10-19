@@ -10,12 +10,13 @@
 .container a {
   padding: 16px;
   font-size: 2em;
-  border: 1px solid transparent;
+  border: 2px solid var(--link-color);
   border-radius: 16px;
   color: var(--link-color);
 }
 
 .container a:focus,
 .container a:hover {
-  border: 1px solid var(--link-color);
+  background-color: var(--link-color);
+  color: white;
 }

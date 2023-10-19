@@ -71,7 +71,18 @@ const loadWords = (file) => {
 };
 
 loadWords("fullformsliste.txt").then((words) => {
-  const folder = path.resolve(path.join(__dirname, "..", "public", "nb-no"));
+  const folder = path.resolve(path.join(__dirname, "..", "public", "nb"));
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder, { recursive: true });
+  }
+  fs.writeFileSync(
+    path.resolve(path.join(folder, "words.json")),
+    JSON.stringify(words, null, 2)
+  );
+});
+
+loadWords("fullformer_2012.txt").then((words) => {
+  const folder = path.resolve(path.join(__dirname, "..", "public", "nn"));
   if (!fs.existsSync(folder)) {
     fs.mkdirSync(folder, { recursive: true });
   }

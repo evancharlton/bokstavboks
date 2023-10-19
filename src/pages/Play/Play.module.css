@@ -13,6 +13,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  gap: 16px;
 }
 
 .buttonBar button {
@@ -25,4 +26,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .buttonBar {
+    flex-direction: column;
+  }
 }

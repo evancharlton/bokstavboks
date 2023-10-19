@@ -5,7 +5,7 @@ body,
   display: flex;
   flex-direction: column;
 
-  --link-color: #69b390;
+  --link-color: #21c294;
 }
 
 .App {
@@ -22,11 +22,6 @@ a:active,
 a:visited {
   text-decoration: none;
   /* border-bottom: 2px solid transparent; */
-}
-
-a:focus,
-a:hover {
-  /* border-bottom: 2px dashed var(--link-color); */
 }
 
 button.primary {
