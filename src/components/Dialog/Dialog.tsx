@@ -31,6 +31,6 @@ export const Dialog = ({ children, onClose, title }: Props) => {
         <div className={classes.content}>{children}</div>
       </div>
     </div>,
-    document.body
+    document.getElementById("root") ?? document.body
   );
 };
