@@ -7,6 +7,7 @@ import { PuzzleIdProvider } from "./components/PuzzleIdProvider";
 import { Header } from "./components/Header";
 import { Page } from "./components/Page";
 import { LanguageSelect } from "./pages/LanguageSelect";
+import { Dialogs } from "./components/Dialogs";
 
 function App() {
   return (
