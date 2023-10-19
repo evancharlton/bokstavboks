@@ -22,6 +22,11 @@ const WordList = ({ path }: { path: string[] }) => {
   );
 };
 
+const EMOJI = {
+  revealed: "💥",
+  solved: "🎉",
+} as const;
+
 export const Status = () => {
   const { id, solution } = useBoard();
   const { words, current, complete } = useGameState();
@@ -29,11 +34,14 @@ export const Status = () => {
   const { lang } = useParams();
 
   const share = useCallback(() => {
+    if (!complete) {
+      return;
+    }
+
     const url = `${window.location.protocol}//${
       window.location.host
     }/${window.location.pathname.replace(/^\//, "")}#/${lang}/${id}`;
 
-    const s = complete === "solved" ? "🎉" : "💥";
     const header =
       complete === "solved"
         ? `Løst med ${words.length} ord!`
@@ -49,7 +57,7 @@ export const Status = () => {
       header,
       `⚪${x[0]}${x[1]}${x[2]}⚪`,
       `${x[11]}⚪⚪⚪${x[3]}`,
-      `${x[10]}⚪${s}⚪${x[4]}`,
+      `${x[10]}⚪${EMOJI[complete]}⚪${x[4]}`,
       `${x[9]}⚪⚪⚪${x[5]}`,
       `⚪${x[8]}${x[7]}${x[6]}⚪`,
       ``,
@@ -69,7 +77,7 @@ export const Status = () => {
     <div className={classes.container}>
       {complete && (
         <div className={classes.complete}>
-          <h1>{complete === "solved" ? "🎉" : "💥"}</h1>
+          <h1>{EMOJI[complete]}</h1>
           <button onClick={() => share()}>
             {navigator.canShare?.() ? (
               <MdOutlineShare />
