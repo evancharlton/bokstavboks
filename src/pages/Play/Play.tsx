@@ -1,7 +1,7 @@
 import { Grid } from "../../components/Grid";
 import { GameState, useGameState } from "../../components/GameState";
 import { BoardProvider, useBoard } from "../../components/BoardProvider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Status } from "../../components/Status";
 import classes from "./Play.module.css";
 import { Toast } from "../../components/Toast";
