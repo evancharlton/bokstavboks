@@ -6,7 +6,6 @@ import classes from "./Play.module.css";
 import { Toast } from "../../components/Toast";
 import { Buttons } from "../../components/Buttons";
 import { MdOutlineDone, MdOutlineAutorenew } from "react-icons/md";
-import { Dialog } from "../../components/Dialog";
 import { Header } from "../../components/Header";
 import { Page } from "../../components/Page";
 import { PuzzleIdProvider } from "../../components/PuzzleIdProvider";

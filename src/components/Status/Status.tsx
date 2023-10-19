@@ -1,4 +1,4 @@
-import { Fragment, useCallback } from "react";
+import { Fragment, useMemo } from "react";
 import { useGameState } from "../GameState";
 import classes from "./Status.module.css";
 import {
@@ -33,19 +33,15 @@ export const Status = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
 
-  const share = useCallback(() => {
-    if (!complete) {
-      return;
-    }
-
-    const url = `${window.location.protocol}//${
-      window.location.host
-    }/${window.location.pathname.replace(/^\//, "")}#/${lang}/${id}`;
-
+  const [mode, share] = useMemo(() => {
     const header =
       complete === "solved"
         ? `Løst med ${words.length} ord!`
         : `Sitter fast på ${words.length} ord`;
+
+    const url = `${window.location.protocol}//${
+      window.location.host
+    }/${window.location.pathname.replace(/^\//, "")}#/${lang}/${id}`;
 
     const foundLetters = new Set(words.join("")).size;
     const x = new Array(12).fill("⚫");
@@ -53,24 +49,36 @@ export const Status = () => {
       x[i] = "🟢";
     }
 
-    const text = [
-      header,
-      `⚪${x[0]}${x[1]}${x[2]}⚪`,
-      `${x[11]}⚪⚪⚪${x[3]}`,
-      `${x[10]}⚪${EMOJI[complete]}⚪${x[4]}`,
-      `${x[9]}⚪⚪⚪${x[5]}`,
-      `⚪${x[8]}${x[7]}${x[6]}⚪`,
-      ``,
-      url,
-    ].join("\n");
+    const text = complete
+      ? [
+          header,
+          `⚪${x[0]}${x[1]}${x[2]}⚪`,
+          `${x[11]}⚪⚪⚪${x[3]}`,
+          `${x[10]}⚪${EMOJI[complete]}⚪${x[4]}`,
+          `${x[9]}⚪⚪⚪${x[5]}`,
+          `⚪${x[8]}${x[7]}${x[6]}⚪`,
+          ``,
+          url,
+        ].join("\n")
+      : "";
 
-    if (navigator.canShare?.()) {
-      navigator.share({ text, url }).catch(() => {
+    const canShare = navigator.canShare?.({ text });
+
+    const share = () => {
+      if (!complete) {
+        return;
+      }
+
+      if (canShare) {
+        navigator.share({ text }).catch(() => {
+          navigator.clipboard.writeText(text);
+        });
+      } else if (navigator.clipboard && !!navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text);
-      });
-    } else if (navigator.clipboard && !!navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text);
-    }
+      }
+    };
+
+    return [canShare ? "share" : "copy", share];
   }, [complete, id, lang, words]);
 
   return (
@@ -79,11 +87,7 @@ export const Status = () => {
         <div className={classes.complete}>
           <h1>{EMOJI[complete]}</h1>
           <button onClick={() => share()}>
-            {navigator.canShare?.() ? (
-              <MdOutlineShare />
-            ) : (
-              <MdOutlineContentCopy />
-            )}
+            {mode === "share" ? <MdOutlineShare /> : <MdOutlineContentCopy />}
           </button>
           <button onClick={() => navigate(`/${lang}/${Date.now()}`)}>
             <MdOutlineAutorenew />
