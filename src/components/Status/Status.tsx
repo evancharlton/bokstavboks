@@ -7,6 +7,7 @@ import {
   MdOutlineDone,
   MdOutlineShare,
 } from "react-icons/md";
+import { TbExternalLink } from "react-icons/tb";
 import { useNavigate, useParams } from "react-router";
 import { useBoard } from "../BoardProvider";
 import { useDialog } from "../Dialogs";
@@ -17,7 +18,16 @@ const WordList = ({ path }: { path: string[] }) => {
       {path.map((word, i) => (
         <Fragment key={word}>
           {i > 0 && <div className={classes.spacer} />}
-          <h3 key={word}>{word}</h3>
+          <h3 key={word} className={classes.word}>
+            <a
+              href={`https://naob.no/s%C3%B8k/${word}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {word}
+              <TbExternalLink />
+            </a>
+          </h3>
         </Fragment>
       ))}
     </div>
