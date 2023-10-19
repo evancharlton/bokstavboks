@@ -26,6 +26,12 @@
   flex-direction: column;
 }
 
+@media (max-width: 800px) {
+  .dialog {
+    max-width: 90vh;
+  }
+}
+
 .dialog a {
   color: black;
   border-bottom: 1px solid var(--link-color);
