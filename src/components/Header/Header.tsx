@@ -56,7 +56,7 @@ export const Header = ({ buttons }: Props) => {
           <hr />
           <h3>Eksemple</h3>
           <p>
-            I rutenettet under er <strong>BOKSTAV</strong> startet. Du kan gå
+            I rutenettet under er <strong>BOKSTAV</strong> startet. Du kan taste
             inn i <strong>BOKSTAVENE</strong>, men <strong>BOKSTAVER</strong> er
             umulig.
           </p>
