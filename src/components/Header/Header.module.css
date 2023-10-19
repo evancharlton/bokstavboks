@@ -33,7 +33,7 @@
 }
 
 .container h1 a:hover,
-.cotnainer h1 a:focus {
+.container h1 a:focus {
   text-decoration: underline;
 }
 
@@ -42,8 +42,8 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  padding-left: 32px;
-  padding-right: 32px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 .buttons button,
