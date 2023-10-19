@@ -48,3 +48,7 @@
   font-weight: bold;
   box-shadow: 0px 0px 16px #000;
 }
+
+.mostRecent {
+  color: var(--link-color);
+}

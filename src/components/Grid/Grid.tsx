@@ -8,6 +8,8 @@ import { useEffect } from "react";
 const Button = ({ letter }: { letter: Letter }) => {
   const { add, current, usedLetters, complete } = useGameState();
 
+  const lastLetter = current[current.length - 1];
+
   return (
     <button
       disabled={complete === "revealed"}
@@ -15,6 +17,7 @@ const Button = ({ letter }: { letter: Letter }) => {
         classes.letter,
         usedLetters.has(letter) && classes.used,
         current.includes(letter) && classes.current,
+        letter === lastLetter && classes.mostRecent,
       ]
         .filter(Boolean)
         .join(" ")}
