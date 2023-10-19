@@ -29,7 +29,9 @@ export const Status = () => {
   const { lang } = useParams();
 
   const share = useCallback(() => {
-    const url = `${window.location.protocol}//${window.location.host}/#/${lang}/${id}`;
+    const url = `${window.location.protocol}//${
+      window.location.host
+    }/${window.location.pathname.replace(/^\//, "")}#/${lang}/${id}`;
 
     const s = complete === "solved" ? "🎉" : "💥";
     const header =
