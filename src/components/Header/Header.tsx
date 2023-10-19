@@ -24,7 +24,7 @@ export const Header = ({ buttons }: Props) => {
           </Link>
         </div>
         <h1>
-          <Link to={`/${lang}`}>Bokstav boks</Link>
+          <Link to={`/${lang}`}>Bokstavboks</Link>
         </h1>
         <div className={classes.buttons} style={{ gridArea: "right" }}>
           {buttons}
@@ -36,7 +36,7 @@ export const Header = ({ buttons }: Props) => {
       {dialog === "help" && (
         <Dialog title="Hjelp" onClose={() => setDialog(undefined)}>
           <p>
-            <strong>Bokstav Boks</strong> er et spill med norske ord. Fullfør
+            <strong>Bokstavboks</strong> er et spill med norske ord. Fullfør
             puslespillet ved å lage ord som bruker alle 12 bokstavene. Det er
             lov å bruke bokstaver flere ganger! Hver bokstav må imidlertid være
             på en annen side enn den forrige bokstaven.
