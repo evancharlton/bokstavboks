@@ -6,7 +6,7 @@ import { Letter } from "../../types";
 import { useEffect } from "react";
 
 const Button = ({ letter }: { letter: Letter }) => {
-  const { add, current, usedLetters, complete } = useGameState();
+  const { add, remove, current, usedLetters, complete } = useGameState();
 
   const lastLetter = current[current.length - 1];
 
@@ -22,7 +22,11 @@ const Button = ({ letter }: { letter: Letter }) => {
         .filter(Boolean)
         .join(" ")}
       onClick={() => {
-        add(letter);
+        if (letter === lastLetter) {
+          remove();
+        } else {
+          add(letter);
+        }
       }}
     >
       {letter}
