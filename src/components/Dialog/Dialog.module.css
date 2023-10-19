@@ -15,10 +15,15 @@
 .dialog {
   min-width: 200px;
   max-width: 600px;
+  max-height: 80vh;
+  overflow: hidden;
   border: 1px solid #333a;
   border-radius: 16px;
   background-color: #fff;
   margin: 32px;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .dialog a {
@@ -46,4 +51,6 @@
 
 .content {
   padding: 8px 16px 16px 16px;
+  overflow: auto;
+  flex: 1;
 }
