@@ -7,6 +7,9 @@ import { PuzzleIdProvider } from "./components/PuzzleIdProvider";
 import { Header } from "./components/Header";
 import { Page } from "./components/Page";
 import { LanguageSelect } from "./pages/LanguageSelect";
+import { Dialogs } from "./components/Dialogs";
+import { BoardProvider } from "./components/BoardProvider";
+import { GameState } from "./components/GameState";
 
 function App() {
   return (
@@ -15,11 +18,19 @@ function App() {
         <Route
           path="/"
           element={
-            <PuzzleIdProvider>
-              <Page header={<Header />}>
-                <LanguageSelect />
-              </Page>
-            </PuzzleIdProvider>
+            <WordsProvider words={["x"]}>
+              <PuzzleIdProvider puzzleId="aaaaaaaaaaaa">
+                <BoardProvider>
+                  <GameState>
+                    <Dialogs>
+                      <Page header={<Header />}>
+                        <LanguageSelect />
+                      </Page>
+                    </Dialogs>
+                  </GameState>
+                </BoardProvider>
+              </PuzzleIdProvider>
+            </WordsProvider>
           }
         />
         <Route

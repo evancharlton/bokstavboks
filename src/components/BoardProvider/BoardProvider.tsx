@@ -106,9 +106,7 @@ export const BoardProvider = ({ children, ...state }: Props) => {
   const prevPuzzleId = useRef<string>();
 
   useEffect(() => {
-    console.log(`puzzleId:`, puzzleId);
     if (puzzleId.length === 12 && puzzleId.split("").every(isLetter)) {
-      console.log("We have a puzzleId");
       dispatch({ action: "set-board", boardId: puzzleId });
       return;
     }
