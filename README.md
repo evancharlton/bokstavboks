@@ -7,6 +7,8 @@ It is heavily inspired by [NYTimes Letter Boxed][letterboxed]. However, as it
 is an educational tool, the user can play (and replay) as many games as they
 wish.
 
+It is free to play on <https://evancharlton.github.io/bokstavboks>.
+
 ## Dictionaries
 
 The word lists are sourced from <nb.no>, and are licensed under the CC-BY
