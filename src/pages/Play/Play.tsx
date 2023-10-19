@@ -12,45 +12,39 @@ import { PuzzleIdProvider } from "../../components/PuzzleIdProvider";
 import { WordsProvider } from "../../components/WordsProvider";
 import { Dialogs, useDialog } from "../../components/Dialogs";
 
-const Play2 = () => {
+const HeaderButtons = () => {
+  const { randomize } = useBoard();
+  const { complete } = useGameState();
+  const { show } = useDialog();
+
   return (
-    <div className={classes.container}>
-      <Status />
-      <Grid />
-      <Buttons />
-      <Toast />
-    </div>
+    <>
+      {complete !== "revealed" && (
+        <button onClick={() => show("solve")}>
+          <MdOutlineDone />
+        </button>
+      )}
+      <button onClick={() => randomize()}>
+        <MdOutlineAutorenew />
+      </button>
+    </>
   );
 };
 
 export const Play = () => {
-  const Buttons = () => {
-    const { randomize } = useBoard();
-    const { complete } = useGameState();
-    const { show } = useDialog();
-
-    return (
-      <>
-        {complete !== "revealed" && (
-          <button onClick={() => show("solve")}>
-            <MdOutlineDone />
-          </button>
-        )}
-        <button onClick={() => randomize()}>
-          <MdOutlineAutorenew />
-        </button>
-      </>
-    );
-  };
-
   return (
     <PuzzleIdProvider>
       <WordsProvider>
         <BoardProvider>
           <GameState>
             <Dialogs>
-              <Page header={<Header buttons={<Buttons />} />}>
-                <Play2 />
+              <Page header={<Header buttons={<HeaderButtons />} />}>
+                <div className={classes.container}>
+                  <Status />
+                  <Grid />
+                  <Buttons />
+                  <Toast />
+                </div>
               </Page>
             </Dialogs>
           </GameState>
