@@ -9,13 +9,24 @@ import {
 import { useNavigate, useParams } from "react-router";
 import { useBoard } from "../BoardProvider";
 
+const WordList = ({ path }: { path: string[] }) => {
+  return (
+    <div className={classes.words}>
+      {path.map((word, i) => (
+        <Fragment key={word}>
+          {i > 0 && <div className={classes.spacer} />}
+          <h3 key={word}>{word}</h3>
+        </Fragment>
+      ))}
+    </div>
+  );
+};
+
 export const Status = () => {
   const { id, solution } = useBoard();
   const { words, current, complete } = useGameState();
   const navigate = useNavigate();
   const { lang } = useParams();
-
-  const path = complete === "revealed" ? solution : words;
 
   const share = useCallback(() => {
     const url = `${window.location.protocol}//${window.location.host}/#/${lang}/${id}`;
@@ -54,12 +65,6 @@ export const Status = () => {
 
   return (
     <div className={classes.container}>
-      {!complete && (
-        <div className={classes.input}>
-          {current}
-          <div className={classes.caret} />
-        </div>
-      )}
       {complete && (
         <div className={classes.complete}>
           <h1>{complete === "solved" ? "🎉" : "💥"}</h1>
@@ -75,14 +80,14 @@ export const Status = () => {
           </button>
         </div>
       )}
-      <div className={classes.words}>
-        {path.map((word, i) => (
-          <Fragment key={word}>
-            {i > 0 && <div className={classes.spacer} />}
-            <h3 key={word}>{word}</h3>
-          </Fragment>
-        ))}
-      </div>
+      {!complete && (
+        <div className={classes.input}>
+          {current}
+          <div className={classes.caret} />
+        </div>
+      )}
+      {complete === "revealed" && <WordList path={solution} />}
+      <WordList path={words} />
     </div>
   );
 };

@@ -27,3 +27,27 @@ export const Words: T = {
     },
   },
 };
+
+export const GaveUp: T = {
+  parameters: {
+    gameState: {
+      complete: "revealed",
+      words: ["ab", "bc", "cd"],
+    },
+    board: {
+      solution: ["abcdefghijkl"],
+    },
+  },
+};
+
+export const Solved: T = {
+  parameters: {
+    gameState: {
+      complete: "solved",
+      words: ["ab", "bc", "cd", "de", "ef", "fghijkl"],
+    },
+    board: {
+      solution: ["abcdefghijkl"],
+    },
+  },
+};

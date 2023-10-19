@@ -54,8 +54,10 @@ const withGameState = makeDecorator({
   },
 });
 
+import { withRouter } from "storybook-addon-react-router-v6";
+
 const preview: Preview = {
-  decorators: [withGameState, withBoard, withWords, withPuzzleId],
+  decorators: [withGameState, withBoard, withWords, withPuzzleId, withRouter],
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
@@ -66,7 +68,7 @@ const preview: Preview = {
     },
     words: (() => {
       const letters: readonly string[] = ["a", "b", "c", "d", "e"] as const;
-      const out: string[] = [];
+      const out: string[] = ["abcdefghijkl"];
       for (let i = 0; i < Math.pow(2, letters.length); i += 1) {
         const item: string[] = [];
         for (let j = 0; j < letters.length; j += 1) {

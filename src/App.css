@@ -28,3 +28,7 @@ a:focus,
 a:hover {
   /* border-bottom: 2px dashed var(--link-color); */
 }
+
+button.primary {
+  background-color: var(--link-color) !important;
+}

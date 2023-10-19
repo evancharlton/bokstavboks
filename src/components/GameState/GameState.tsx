@@ -103,28 +103,27 @@ const reducer =
             ...state,
             current: state.current.substring(0, state.current.length - 1),
             error: undefined,
+            complete: undefined,
           };
         }
 
-        if (state.current.length === 1) {
-          if (state.words.length === 0) {
-            return {
-              ...state,
-              current: "",
-              error: undefined,
-            };
-          }
-
-          const previousWord = state.words[state.words.length - 1];
+        if (state.words.length === 0) {
           return {
             ...state,
-            words: state.words.slice(0, state.words.length - 1),
-            current: previousWord,
+            current: "",
             error: undefined,
+            complete: undefined,
           };
         }
 
-        return state;
+        const previousWord = state.words[state.words.length - 1];
+        return {
+          ...state,
+          words: state.words.slice(0, state.words.length - 1),
+          current: previousWord,
+          error: undefined,
+          complete: undefined,
+        };
       }
 
       case "commit": {
@@ -201,14 +200,9 @@ const reducer =
 
 type Props = {
   children: React.ReactNode;
-} & Partial<Pick<State, "words" | "current" | "error">>;
+} & Partial<State>;
 
-export const GameState = ({
-  children,
-  words: initialWords,
-  current: initialCurrent,
-  error: initialError,
-}: Props) => {
+export const GameState = ({ children, ...initialState }: Props) => {
   const { dictionary } = useWords();
   const { id: boardId, solve: solveBoard } = useBoard();
 
@@ -265,10 +259,11 @@ export const GameState = ({
   const [{ words, current, error, complete }, dispatch] = useReducer(
     reducer(dictionary, isValid),
     {
-      words: initialWords ?? [],
-      current: initialCurrent ?? "",
-      error: initialError ?? undefined,
+      words: [],
+      current: "",
+      error: undefined,
       complete: undefined,
+      ...initialState,
     } satisfies State
   );
 
@@ -303,7 +298,7 @@ export const GameState = ({
 
   const combined = `${words.join("")}`;
   if (!isLetters(combined)) {
-    throw new Error("Something happened");
+    throw new Error("Impossible input");
   }
   const usedLetters = new Set(combined);
 

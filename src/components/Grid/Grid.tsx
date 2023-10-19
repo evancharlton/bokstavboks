@@ -3,13 +3,14 @@ import { useBoard } from "../BoardProvider";
 import { Nest } from "./Nest";
 import { useGameState } from "../GameState";
 import { Letter } from "../../types";
+import { useEffect } from "react";
 
 const Button = ({ letter }: { letter: Letter }) => {
   const { add, current, usedLetters, complete } = useGameState();
 
   return (
     <button
-      disabled={!!complete}
+      disabled={complete === "revealed"}
       className={[
         classes.letter,
         usedLetters.has(letter) && classes.used,
@@ -17,10 +18,8 @@ const Button = ({ letter }: { letter: Letter }) => {
       ]
         .filter(Boolean)
         .join(" ")}
-      onClick={(e) => {
+      onClick={() => {
         add(letter);
-        // @ts-expect-error - what
-        e.target.blur();
       }}
     >
       {letter}
@@ -29,11 +28,12 @@ const Button = ({ letter }: { letter: Letter }) => {
 };
 
 export const Grid = () => {
-  const { display: boardId } = useBoard();
-  const t = boardId.substring(0, 3);
-  const r = boardId.substring(3, 6);
-  const b = boardId.substring(6, 9);
-  const l = boardId.substring(9);
+  const { complete, commit, remove, add } = useGameState();
+  const { display } = useBoard();
+  const t = display.substring(0, 3);
+  const r = display.substring(3, 6);
+  const b = display.substring(6, 9);
+  const l = display.substring(9);
 
   const coords = new Map<string, [number, number]>();
   for (let i = 0; i < t.length; i += 1) {
@@ -48,6 +48,40 @@ export const Grid = () => {
   for (let i = 0; i < r.length; i += 1) {
     coords.set(r[i], [58, 10 + i * 20]);
   }
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent): void => {
+      if (complete) {
+        return;
+      }
+
+      const key = e.key;
+      if (key === "Enter") {
+        commit();
+        return;
+      }
+
+      if (key === "Backspace" || key === "Delete") {
+        remove();
+        return;
+      }
+
+      if (key.length !== 1) {
+        return;
+      }
+
+      if (!display.includes(key)) {
+        return;
+      }
+
+      add(key);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [add, commit, complete, display, remove]);
 
   return (
     <div>

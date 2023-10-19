@@ -8,12 +8,6 @@ import { Loader } from "../Loader";
 import { State } from "./types";
 import { useNavigate, useParams } from "react-router";
 
-type Props = {
-  children: React.ReactNode;
-  boardId?: string;
-  seeds?: string[];
-};
-
 type Action =
   | { action: "set-board"; boardId: string; seeds?: string[] }
   | { action: "shuffle" }
@@ -76,19 +70,20 @@ const reducer = (state: State, update: Action): State => {
   }
 };
 
-export const BoardProvider = ({
-  children,
-  boardId: initialBoardId,
-  seeds: initialSeeds,
-}: Props) => {
+type Props = {
+  children: React.ReactNode;
+} & Partial<State>;
+
+export const BoardProvider = ({ children, ...state }: Props) => {
   const { words: wordBank } = useWords();
   const { puzzleId, random } = usePuzzleId();
 
   const [{ id, seeds, display, solution }, dispatch] = useReducer(reducer, {
-    id: initialBoardId ?? "",
-    seeds: initialSeeds ?? [],
-    display: initialBoardId ?? "",
+    id: "",
+    seeds: [],
+    display: "",
     solution: [],
+    ...state,
   } satisfies State);
 
   const shuffle = useCallback(() => {
@@ -96,13 +91,17 @@ export const BoardProvider = ({
   }, []);
 
   const solve = useCallback(() => {
+    if (solution && solution.length > 0) {
+      return;
+    }
+
     if (!isLetters(id)) {
       throw new Error("I don't know what's going on.");
     }
 
-    const solution = findSolutionById(wordBank, id);
-    dispatch({ action: "solve", solution });
-  }, [id, wordBank]);
+    const foundSolution = findSolutionById(wordBank, id);
+    dispatch({ action: "solve", solution: foundSolution });
+  }, [id, wordBank, solution]);
 
   const prevPuzzleId = useRef<string>();
 

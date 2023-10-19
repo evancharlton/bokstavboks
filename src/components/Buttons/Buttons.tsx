@@ -12,13 +12,13 @@ export const Buttons = () => {
   return (
     <div className={classes.container}>
       <div className={classes.row}>
-        <button disabled={!!complete} onClick={() => reset()}>
+        <button disabled={complete === "revealed"} onClick={() => reset()}>
           <MdOutlineRestartAlt />
         </button>
-        <button disabled={!!complete} onClick={() => remove()}>
+        <button disabled={complete === "revealed"} onClick={() => remove()}>
           <MdOutlineBackspace />
         </button>
-        <button disabled={!!complete} onClick={() => commit()}>
+        <button disabled={complete === "revealed"} onClick={() => commit()}>
           <MdKeyboardReturn />
         </button>
       </div>
