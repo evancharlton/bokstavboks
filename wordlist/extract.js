@@ -70,24 +70,63 @@ const loadWords = (file) => {
   });
 };
 
-loadWords("fullformsliste.txt").then((words) => {
-  const folder = path.resolve(path.join(__dirname, "..", "public", "nb"));
-  if (!fs.existsSync(folder)) {
-    fs.mkdirSync(folder, { recursive: true });
-  }
-  fs.writeFileSync(
-    path.resolve(path.join(folder, "words.json")),
-    JSON.stringify(words, null, 2)
-  );
-});
+Promise.all([
+  loadWords("fullformsliste.txt").then((words) => {
+    const folder = path.resolve(path.join(__dirname, "..", "public", "nb"));
+    if (!fs.existsSync(folder)) {
+      fs.mkdirSync(folder, { recursive: true });
+    }
+    fs.writeFileSync(
+      path.resolve(path.join(folder, "words.json")),
+      JSON.stringify(words, null, 2)
+    );
+    return words;
+  }),
 
-loadWords("fullformer_2012.txt").then((words) => {
-  const folder = path.resolve(path.join(__dirname, "..", "public", "nn"));
+  loadWords("fullformer_2012.txt").then((words) => {
+    const folder = path.resolve(path.join(__dirname, "..", "public", "nn"));
+    if (!fs.existsSync(folder)) {
+      fs.mkdirSync(folder, { recursive: true });
+    }
+    fs.writeFileSync(
+      path.resolve(path.join(folder, "words.json")),
+      JSON.stringify(words, null, 2)
+    );
+    return words;
+  }),
+]).then(([nb, nn]) => {
+  const ordbank = new Set([...nb, ...nn]);
+
+  // Load the "real" data sets
+  const usage = [
+    require("./2019_bokelskere/2019_bokelskere.json")
+      .map(({ text }) =>
+        text
+          .toLocaleLowerCase()
+          .replace(/[\s]+/g, " ")
+          .replace(/[^abcdefghijklmnopqrstuvwxyzåæø ]/g, "")
+          .replace(/ +/g, " ")
+          .split(" ")
+          .filter((w) => w.length > 1)
+      )
+      .flat(),
+  ];
+
+  const knownWords = new Set();
+  usage.forEach((words) => {
+    words
+      .filter((word) => ordbank.has(word))
+      .forEach((word) => {
+        knownWords.add(word);
+      });
+  });
+
+  const folder = path.resolve(path.join(__dirname, "..", "public", "known"));
   if (!fs.existsSync(folder)) {
     fs.mkdirSync(folder, { recursive: true });
   }
   fs.writeFileSync(
     path.resolve(path.join(folder, "words.json")),
-    JSON.stringify(words, null, 2)
+    JSON.stringify([...knownWords].sort(), null, 2)
   );
 });
