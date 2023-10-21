@@ -2,6 +2,8 @@ export type State = {
   id: string;
   solution: string[]; // Shortest solution
   display: string;
+  state: "solving" | "solved" | "pending";
+  solvingPromise: Promise<unknown> | undefined;
 };
 
 export type SavedState = Pick<State, "id" | "solution">;

@@ -13,7 +13,10 @@ import { useStorage } from "../../useStorage";
 type Action =
   | { action: "set-board"; boardId: string; seeds?: string[] }
   | { action: "shuffle" }
-  | { action: "solve"; solution: string[] };
+  | { action: "add-solution"; solution: string[] }
+  | { action: "start-solving"; promise: State["solvingPromise"] }
+  | { action: "mark-solved"; solution: string[] }
+  | { action: "unsolveable" };
 
 const shuffle = <T extends unknown>(arr: T[]): T[] =>
   arr
@@ -58,10 +61,36 @@ const reducer = (state: State, update: Action): State => {
       };
     }
 
-    case "solve": {
+    case "mark-solved": {
       return {
         ...state,
         solution: update.solution,
+        state: "solved",
+      };
+    }
+
+    case "add-solution": {
+      return {
+        ...state,
+        solution: update.solution,
+        state: "solving",
+      };
+    }
+
+    case "start-solving": {
+      return {
+        ...state,
+        solution: [],
+        state: "solving",
+      };
+    }
+
+    case "unsolveable": {
+      return {
+        ...state,
+        solvingPromise: undefined,
+        state: "pending",
+        solution: [],
       };
     }
 
@@ -75,17 +104,19 @@ type Props = {
   children: React.ReactNode;
 } & Partial<State>;
 
-export const BoardProvider = ({ children, ...state }: Props) => {
+export const BoardProvider = ({ children, ...initialState }: Props) => {
   const navigate = useNavigate();
   const { lang } = useParams();
   const { words: wordBank } = useWords();
   const { puzzleId, random } = usePuzzleId();
 
-  const [{ id, display, solution }, dispatch] = useReducer(reducer, {
+  const [{ id, display, solution, state }, dispatch] = useReducer(reducer, {
     id: "",
     display: "",
     solution: [],
-    ...state,
+    state: "pending",
+    solvingPromise: undefined,
+    ...initialState,
   } satisfies State);
 
   const ids = useStorage("ids");
@@ -140,9 +171,18 @@ export const BoardProvider = ({ children, ...state }: Props) => {
       throw new Error("I don't know what's going on.");
     }
 
-    const foundSolution = findSolutionById(wordBank, id);
-    dispatch({ action: "solve", solution: foundSolution });
-    solutionStore.setItem(id, foundSolution);
+    const addSolution = (solution: string[]) =>
+      dispatch({ action: "add-solution", solution });
+
+    const promise = findSolutionById(wordBank, id, addSolution)
+      .then((foundSolution) => {
+        dispatch({ action: "mark-solved", solution: foundSolution });
+        solutionStore.setItem(id, foundSolution);
+      })
+      .catch((e) => {
+        // TODO
+      });
+    dispatch({ action: "start-solving", promise });
   }, [solution, id, wordBank, solutionStore]);
 
   useEffect(() => {
@@ -155,7 +195,7 @@ export const BoardProvider = ({ children, ...state }: Props) => {
         return;
       }
 
-      dispatch({ action: "solve", solution: value });
+      dispatch({ action: "mark-solved", solution: value });
     });
   }, [id, solutionStore]);
 
@@ -166,7 +206,7 @@ export const BoardProvider = ({ children, ...state }: Props) => {
   return (
     <BoardContext.Provider
       key={id}
-      value={{ id, shuffle, solve, display, solution, randomize, url }}
+      value={{ id, shuffle, solve, display, solution, randomize, url, state }}
     >
       {children}
     </BoardContext.Provider>

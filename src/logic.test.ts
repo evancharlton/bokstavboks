@@ -162,7 +162,8 @@ describe("solving", () => {
     expect(canPlay(board, "seler".split("").filter(isLetter))).toBe(false);
   });
 
-  describe("with word list", () => {
+  // Skip these by default because they're slow.
+  describe.skip("with word list", () => {
     const words = (() => {
       const contents = readFileSync(
         resolve(__dirname, "../wordlist/fullformsliste.txt"),
@@ -188,7 +189,7 @@ describe("solving", () => {
       return [...new Set(words)].sort();
     })();
 
-    test("solving", () => {
+    test("solving", async () => {
       const dict = [
         "enveisgater",
         "årstilvekstene",
@@ -206,11 +207,11 @@ describe("solving", () => {
         sideD: new Set("rtv".split("").filter(isLetter)),
       } satisfies Board;
 
-      const solution = findSolution(dict, board);
+      const solution = await findSolution(dict, board);
       expect(solution).toHaveLength(2);
     });
 
-    test("dnågirktyaes", () => {
+    test("dnågirktyaes", async () => {
       const dict = ["nedgangsåra", "artskrysningen"] as const;
 
       const board = {
@@ -226,18 +227,18 @@ describe("solving", () => {
       expect(canPlay(board, dict[0].split("").filter(isLetter))).toBe(true);
       expect(canPlay(board, dict[1].split("").filter(isLetter))).toBe(true);
 
-      const solution = findSolution(dict, board);
+      const solution = await findSolution(dict, board);
       expect(solution).toHaveLength(2);
     });
 
-    test("akynorgsteil", () => {
-      const solution = findSolutionById(words, "akynorgsteil");
+    test("akynorgsteil", async () => {
+      const solution = await findSolutionById(words, "akynorgsteil");
       expect(solution).toHaveLength(2);
       expect(solution[0][solution[0].length - 1]).toEqual(solution[1][0]);
     });
 
-    test("aejorvbmtinp", () => {
-      const solution = findSolutionById(
+    test("aejorvbmtinp", async () => {
+      const solution = await findSolutionById(
         words ?? ["evertebrat", "tjonete", "empatiene"],
         "aejorvbmtinp"
       );

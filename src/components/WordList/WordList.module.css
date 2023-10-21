@@ -1,0 +1,29 @@
+.words {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1em;
+}
+
+.spacer {
+  height: 4px;
+  width: 12px;
+  background-color: #aaaa;
+  border-radius: 2px;
+}
+
+.word,
+.word a {
+  color: #000;
+
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.word svg {
+  color: #888;
+}

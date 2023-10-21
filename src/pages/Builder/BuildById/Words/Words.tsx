@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { Letter, isLetter } from "../../../types";
+import { Letter, isLetter } from "../../../../types";
 
 type State = {
   words: string[];

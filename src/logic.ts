@@ -136,10 +136,10 @@ export const canPlay = (board: Board, word: Letter[]): boolean => {
   return true;
 };
 
-export const findSolution = (
+export const findSolution = async (
   words: readonly string[],
   board: Board
-): string[] => {
+): Promise<string[]> => {
   return findSolutionById(
     words,
     [...board.sideA, ...board.sideB, ...board.sideC, ...board.sideD].join("")
@@ -175,7 +175,10 @@ const canPlay2 = (sides: Record<string, string>, word: string): boolean => {
 
 // TODO: This is a bit inefficient, data-structure-wise. Let's see if we can
 //       clean this up with some better structures.
-export const bfs = (words: string[]): string[] => {
+export const bfs = async (
+  words: string[],
+  onSolution: (solution: string[]) => void
+): Promise<string[]> => {
   const letters = new Map<string, number>();
   const wordsByLetter = new Map<string, string[]>();
   const singleWordSolutions: string[] = [];
@@ -213,15 +216,26 @@ export const bfs = (words: string[]): string[] => {
 
   const queue: string[][] = words.map((w) => [w]);
   const solutions: string[][] = [];
+  let i = 0;
+  let maxSolutionLength = Number.MAX_SAFE_INTEGER;
   while (queue.length > 0) {
     const path = queue.shift();
     if (!path) {
-      continue;
+      break; // We're done
     }
 
-    if (solutions.length > 0 && path.length > solutions[0].length) {
-      // We're into the losers
-      break;
+    if (i++ % 5_000 === 0) {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    }
+
+    if (path.length >= 4) {
+      throw new Error("no solution found within 4 words");
+    }
+
+    if (solutions.length > 0) {
+      if (path.length >= solutions[0].length) {
+        break;
+      }
     }
 
     const finalWord = path[path.length - 1];
@@ -234,10 +248,23 @@ export const bfs = (words: string[]): string[] => {
 
     for (const nextWord of nextWords) {
       const nextPath = [...path, nextWord];
-      if (new Set(nextPath.join("")).size === 12) {
-        return nextPath;
+      const joined = nextPath.join("");
+      const numChars = new Set(joined).size;
+      if (numChars === 12) {
+        // Is this a solution worth worrying about?
+        if (joined.length < maxSolutionLength) {
+          solutions.push(nextPath);
+          onSolution(nextPath);
+          maxSolutionLength = joined.length;
+        }
+      } else if (numChars > 12) {
+        throw new Error(
+          "This doesn't make sense - how could we have more than 12 chars?"
+        );
+      } else if (numChars < 12) {
+        // console.log(nextPath);
+        queue.push(nextPath);
       }
-      queue.push(nextPath);
     }
   }
 
@@ -248,10 +275,16 @@ export const bfs = (words: string[]): string[] => {
   const bestSolutions = solutions.sort((a, b) => {
     return a.join("").length - b.join("").length;
   });
+  console.log(bestSolutions.slice(0, 3));
+
   return bestSolutions[0];
 };
 
-export const findSolutionById = (words: readonly string[], boardId: string) => {
+export const findSolutionById = (
+  words: readonly string[],
+  boardId: string,
+  onSolution: (solution: string[]) => void = () => undefined
+) => {
   const sides = {
     [boardId[0]]: "a",
     [boardId[1]]: "a",
@@ -271,5 +304,5 @@ export const findSolutionById = (words: readonly string[], boardId: string) => {
     return canPlay2(sides, word);
   });
 
-  return bfs(contenders);
+  return bfs(contenders, onSolution);
 };
