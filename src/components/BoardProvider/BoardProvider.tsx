@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
-import { Letter, boardId, isLetter, isLetters, neverGuard } from "../../types";
+import { isLetters, neverGuard } from "../../types";
 import { BoardContext } from "./context";
-import { createBoard, addLetter, findSolutionById } from "../../logic";
+import { findSolutionById } from "../../logic";
 import { usePuzzleId } from "../PuzzleIdProvider";
 import { useWords } from "../WordsProvider";
 import { Loader } from "../Loader";
 import { State } from "./types";
 import { useNavigate, useParams } from "react-router";
+import { extractBoardId } from "./extractBoardId";
+import { useStorage } from "../../useStorage";
 
 type Action =
   | { action: "set-board"; boardId: string; seeds?: string[] }
@@ -33,7 +35,7 @@ const reducer = (state: State, update: Action): State => {
   const { action } = update;
   switch (action) {
     case "set-board": {
-      const { seeds, boardId } = update;
+      const { boardId } = update;
       if (boardId.length !== 12) {
         throw new Error("Invalid board ID provided");
       }
@@ -44,7 +46,6 @@ const reducer = (state: State, update: Action): State => {
 
       return {
         ...state,
-        seeds: seeds ?? [],
         id: boardId,
         display: shuffleId(boardId),
       };
@@ -75,16 +76,56 @@ type Props = {
 } & Partial<State>;
 
 export const BoardProvider = ({ children, ...state }: Props) => {
+  const navigate = useNavigate();
+  const { lang } = useParams();
   const { words: wordBank } = useWords();
   const { puzzleId, random } = usePuzzleId();
 
-  const [{ id, seeds, display, solution }, dispatch] = useReducer(reducer, {
+  const [{ id, display, solution }, dispatch] = useReducer(reducer, {
     id: "",
-    seeds: [],
     display: "",
     solution: [],
     ...state,
   } satisfies State);
+
+  const ids = useStorage("ids");
+  const solutionStore = useStorage("solutions");
+
+  const prevPuzzleId = useRef<string>();
+  useEffect(() => {
+    if (prevPuzzleId.current === puzzleId) {
+      return;
+    }
+    prevPuzzleId.current = puzzleId;
+
+    ids
+      .getItem("board")
+      .then(async (value): Promise<string> => {
+        if (
+          value &&
+          typeof value === "string" &&
+          value.length === 12 &&
+          isLetters(value)
+        ) {
+          return Promise.resolve(value);
+        }
+        return extractBoardId(puzzleId, random, wordBank);
+      })
+      .then((boardId) => {
+        dispatch({ action: "set-board", boardId });
+        ids.setItem(puzzleId, boardId);
+      });
+  }, [puzzleId, random, ids, wordBank]);
+
+  // Context API stuff
+
+  const randomize = useCallback(() => {
+    navigate(`/${lang}/${Date.now()}`);
+  }, [lang, navigate]);
+
+  const url = `${window.location.protocol}//${
+    window.location.host
+  }/${window.location.pathname.replace(/^\//, "")}#/${lang}/${id}`;
 
   const shuffle = useCallback(() => {
     dispatch({ action: "shuffle" });
@@ -101,72 +142,22 @@ export const BoardProvider = ({ children, ...state }: Props) => {
 
     const foundSolution = findSolutionById(wordBank, id);
     dispatch({ action: "solve", solution: foundSolution });
-  }, [id, wordBank, solution]);
-
-  const prevPuzzleId = useRef<string>();
+    solutionStore.setItem(id, foundSolution);
+  }, [solution, id, wordBank, solutionStore]);
 
   useEffect(() => {
-    if (puzzleId.length === 12 && puzzleId.split("").every(isLetter)) {
-      dispatch({ action: "set-board", boardId: puzzleId });
-      return;
-    }
-
-    if (puzzleId === prevPuzzleId.current) {
-      return;
-    }
-    prevPuzzleId.current = puzzleId;
-
-    const next = (dict: string[]) => dict[Math.floor(random() * dict.length)];
-    const letterCounts = new Map<string, number>();
-    for (const word of wordBank) {
-      letterCounts.set(word, new Set(...word).size);
-    }
-
-    const words: string[] = [];
-    const letterSet = new Set<string>();
-    do {
-      const last =
-        words.length === 0 ? next(wordBank) : words[words.length - 1];
-      const scopedWords = wordBank
-        .filter((w) => w[0] === last[last.length - 1])
-        .filter((w) => {
-          let extraLetters = 0;
-          for (const char of w) {
-            if (!letterSet.has(char)) {
-              extraLetters += 1;
-            }
-          }
-          return letterSet.size + extraLetters <= 12;
-        });
-      const chosenWord = next(scopedWords);
-      words.push(chosenWord);
-      for (const letter of chosenWord) {
-        letterSet.add(letter);
+    solutionStore.getItem(id).then((value) => {
+      if (
+        !value ||
+        !Array.isArray(value) ||
+        !value.every((v) => isLetters(v))
+      ) {
+        return;
       }
-    } while (letterSet.size < 12);
 
-    const [first, ...rest] = words.join("") as unknown as Letter[];
-    let boards = [createBoard(first)];
-    for (const letter of rest) {
-      boards = addLetter(boards, letter);
-    }
-
-    dispatch({
-      action: "set-board",
-      boardId: boardId(boards[0]),
-      seeds: words,
+      dispatch({ action: "solve", solution: value });
     });
-  }, [puzzleId, random, wordBank]);
-
-  const navigate = useNavigate();
-  const { lang } = useParams();
-  const randomize = useCallback(() => {
-    navigate(`/${lang}/${Date.now()}`);
-  }, [lang, navigate]);
-
-  const url = `${window.location.protocol}//${
-    window.location.host
-  }/${window.location.pathname.replace(/^\//, "")}#/${lang}/${id}`;
+  }, [id, solutionStore]);
 
   if (!display) {
     return <Loader text="generere puslespill ..." />;
@@ -175,7 +166,7 @@ export const BoardProvider = ({ children, ...state }: Props) => {
   return (
     <BoardContext.Provider
       key={id}
-      value={{ id, shuffle, solve, seeds, display, solution, randomize, url }}
+      value={{ id, shuffle, solve, display, solution, randomize, url }}
     >
       {children}
     </BoardContext.Provider>

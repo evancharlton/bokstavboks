@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 import { State } from "./types";
 
 export const BoardContext = createContext<
-  | (Pick<State, "id" | "seeds" | "solution" | "display"> & {
+  | (Pick<State, "id" | "solution" | "display"> & {
       shuffle: () => void;
       solve: () => void;
       randomize: () => void;
