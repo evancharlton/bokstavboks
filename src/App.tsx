@@ -3,13 +3,10 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import Builder from "./pages/Builder";
 import { Play } from "./pages/Play";
 import { WordsProvider } from "./components/WordsProvider";
-import { PuzzleIdProvider } from "./components/PuzzleIdProvider";
 import { Header } from "./components/Header";
 import { Page } from "./components/Page";
 import { LanguageSelect } from "./pages/LanguageSelect";
 import { Dialogs } from "./components/Dialogs";
-import { BoardProvider } from "./components/BoardProvider";
-import { GameState } from "./components/GameState";
 
 function App() {
   return (
@@ -18,19 +15,11 @@ function App() {
         <Route
           path="/"
           element={
-            <WordsProvider words={["x"]}>
-              <PuzzleIdProvider puzzleId="aaaaaaaaaaaa">
-                <BoardProvider>
-                  <GameState>
-                    <Dialogs>
-                      <Page header={<Header />}>
-                        <LanguageSelect />
-                      </Page>
-                    </Dialogs>
-                  </GameState>
-                </BoardProvider>
-              </PuzzleIdProvider>
-            </WordsProvider>
+            <Dialogs>
+              <Page header={<Header />}>
+                <LanguageSelect />
+              </Page>
+            </Dialogs>
           }
         />
         <Route

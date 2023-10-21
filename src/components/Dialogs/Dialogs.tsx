@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { DialogContext, DialogType } from "./context";
+import { DialogContext, DialogType, useDialog } from "./context";
 import { Dialog } from "../Dialog/Dialog";
 import { MdOutlineAutorenew } from "react-icons/md";
 import { PuzzleIdProvider } from "../PuzzleIdProvider";
@@ -13,9 +13,36 @@ type Props = {
   children: React.ReactNode;
 };
 
+const SolveDialog = () => {
+  const { hide } = useDialog();
+  const { solve } = useGameState();
+
+  return (
+    <Dialog title="Vis løsning?" onClose={() => hide()}>
+      <div>
+        <p>
+          Vil du se en løsning på dette puslespillet? (Det er mange mulige
+          løsninger - dette er bare den korteste!)
+        </p>
+        <div className={classes.buttonBar}>
+          <button onClick={() => hide()}>Nei, jeg vil fortsette å prøve</button>
+          <button
+            className="primary"
+            onClick={() => {
+              solve();
+              hide();
+            }}
+          >
+            Ja, takk!
+          </button>
+        </div>
+      </div>
+    </Dialog>
+  );
+};
+
 export const Dialogs = ({ children }: Props) => {
   const [dialog, setDialog] = useState<DialogType | undefined>(undefined);
-  const { solve } = useGameState();
 
   const hide = useCallback(() => {
     setDialog(undefined);
@@ -155,34 +182,7 @@ export const Dialogs = ({ children }: Props) => {
       }
 
       case "solve": {
-        return (
-          <Dialog title="Vis løsning?" onClose={() => setDialog(undefined)}>
-            <div>
-              <p>
-                Vil du se en løsning på dette puslespillet? (Det er mange mulige
-                løsninger - dette er bare den korteste!)
-              </p>
-              <div className={classes.buttonBar}>
-                <button
-                  onClick={() => {
-                    setDialog(undefined);
-                  }}
-                >
-                  Nei, jeg vil fortsette å prøve
-                </button>
-                <button
-                  className="primary"
-                  onClick={() => {
-                    solve();
-                    setDialog(undefined);
-                  }}
-                >
-                  Ja, takk!
-                </button>
-              </div>
-            </div>
-          </Dialog>
-        );
+        return <SolveDialog />;
       }
 
       default: {
