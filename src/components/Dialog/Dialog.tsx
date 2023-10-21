@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 import classes from "./Dialog.module.css";
 import { useEffect } from "react";
+import { MdOutlineClose } from "react-icons/md";
 
 type Props = {
   onClose: () => void;
@@ -26,7 +27,9 @@ export const Dialog = ({ children, onClose, title }: Props) => {
       <div className={classes.dialog}>
         <div className={classes.header}>
           <h2>{title}</h2>
-          <button onClick={onClose}>X</button>
+          <button onClick={onClose}>
+            <MdOutlineClose />
+          </button>
         </div>
         <div className={classes.content}>{children}</div>
       </div>

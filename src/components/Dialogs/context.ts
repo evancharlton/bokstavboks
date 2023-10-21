@@ -1,6 +1,10 @@
 import { createContext, useContext } from "react";
 
-export type DialogType = "help" | "about" | "solve";
+export type DialogType =
+  | "help"
+  | "about"
+  | "solve"
+  | { title: string; content: React.ReactNode };
 
 export const DialogContext = createContext<
   { show: (kind: DialogType) => void; hide: () => void } | undefined

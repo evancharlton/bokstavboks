@@ -90,3 +90,28 @@
 .word svg {
   color: #888;
 }
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.buttons button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: #fff;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 8px;
+  gap: 8px;
+  font-size: 18px;
+  transition: 0.25s all;
+}
+
+.buttons button:hover {
+  box-shadow: 0px 0px 8px var(--link-color);
+}

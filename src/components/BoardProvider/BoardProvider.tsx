@@ -164,6 +164,10 @@ export const BoardProvider = ({ children, ...state }: Props) => {
     navigate(`/${lang}/${Date.now()}`);
   }, [lang, navigate]);
 
+  const url = `${window.location.protocol}//${
+    window.location.host
+  }/${window.location.pathname.replace(/^\//, "")}#/${lang}/${id}`;
+
   if (!display) {
     return <Loader text="generere puslespill ..." />;
   }
@@ -171,7 +175,7 @@ export const BoardProvider = ({ children, ...state }: Props) => {
   return (
     <BoardContext.Provider
       key={id}
-      value={{ id, shuffle, solve, seeds, display, solution, randomize }}
+      value={{ id, shuffle, solve, seeds, display, solution, randomize, url }}
     >
       {children}
     </BoardContext.Provider>

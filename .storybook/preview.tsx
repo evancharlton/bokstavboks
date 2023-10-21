@@ -5,6 +5,7 @@ import { WordsProvider } from "../src/components/WordsProvider";
 import { BoardProvider } from "../src/components/BoardProvider";
 import { PuzzleIdProvider } from "../src/components/PuzzleIdProvider";
 import { GameState } from "../src/components/GameState";
+import { Dialogs } from "../src/components/Dialogs";
 
 const withPuzzleId = makeDecorator({
   name: "withPuzzleId",
@@ -54,10 +55,29 @@ const withGameState = makeDecorator({
   },
 });
 
+const withDialogs = makeDecorator({
+  name: "withDialogs",
+  parameterName: "dialogs",
+  wrapper: (storyFn, context) => {
+    return (
+      <Dialogs>
+        <>{storyFn(context)}</>
+      </Dialogs>
+    );
+  },
+});
+
 import { withRouter } from "storybook-addon-react-router-v6";
 
 const preview: Preview = {
-  decorators: [withGameState, withBoard, withWords, withPuzzleId, withRouter],
+  decorators: [
+    withDialogs,
+    withGameState,
+    withBoard,
+    withWords,
+    withPuzzleId,
+    withRouter,
+  ],
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {

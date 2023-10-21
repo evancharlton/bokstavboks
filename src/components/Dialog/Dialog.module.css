@@ -26,9 +26,18 @@
   flex-direction: column;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 600px) {
   .dialog {
-    max-width: 90vh;
+    width: 100%;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid #333a;
+    margin: 0;
+    max-height: 90%;
+  }
+
+  .backdrop {
+    justify-content: flex-end;
   }
 }
 
@@ -52,7 +61,16 @@
 }
 
 .header button {
-  margin-right: 12px;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: #fff;
+  border: 0;
+  border-left: 2px solid #999a;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .content {
