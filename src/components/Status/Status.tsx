@@ -1,12 +1,10 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGameState } from "../GameState";
 import classes from "./Status.module.css";
 import {
   MdOutlineAutorenew,
-  MdOutlineContentCopy,
   MdOutlineDone,
   MdOutlineRestartAlt,
-  MdOutlineShare,
 } from "react-icons/md";
 import { useNavigate, useParams } from "react-router";
 import { useBoard } from "../BoardProvider";

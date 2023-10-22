@@ -1,8 +1,7 @@
 import classes from "./Header.module.css";
-import { MdHelpOutline, MdLink, MdOutlineInfo } from "react-icons/md";
+import { MdHelpOutline, MdOutlineInfo } from "react-icons/md";
 import { Link, useParams } from "react-router-dom";
 import { useDialog } from "../Dialogs";
-import { ShareButton } from "../ShareButton";
 
 type Props = {
   buttons?: React.ReactNode[] | React.ReactNode;
