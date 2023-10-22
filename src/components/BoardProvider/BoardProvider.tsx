@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { isLetters, neverGuard } from "../../types";
 import { BoardContext } from "./context";
-import { findSolutionById } from "../../logic";
 import { usePuzzleId } from "../PuzzleIdProvider";
 import { useWords } from "../WordsProvider";
 import { Loader } from "../Loader";
@@ -12,11 +11,7 @@ import { useStorage } from "../../useStorage";
 
 type Action =
   | { action: "set-board"; boardId: string; seeds?: string[] }
-  | { action: "shuffle" }
-  | { action: "add-solution"; solution: string[] }
-  | { action: "start-solving"; promise: State["solvingPromise"] }
-  | { action: "mark-solved"; solution: string[] }
-  | { action: "unsolveable" };
+  | { action: "shuffle" };
 
 const shuffle = <T extends unknown>(arr: T[]): T[] =>
   arr
@@ -61,39 +56,6 @@ const reducer = (state: State, update: Action): State => {
       };
     }
 
-    case "mark-solved": {
-      return {
-        ...state,
-        solution: update.solution,
-        state: "solved",
-      };
-    }
-
-    case "add-solution": {
-      return {
-        ...state,
-        solution: update.solution,
-        state: "solving",
-      };
-    }
-
-    case "start-solving": {
-      return {
-        ...state,
-        solution: [],
-        state: "solving",
-      };
-    }
-
-    case "unsolveable": {
-      return {
-        ...state,
-        solvingPromise: undefined,
-        state: "pending",
-        solution: [],
-      };
-    }
-
     default: {
       return neverGuard(action, state);
     }
@@ -110,17 +72,13 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
   const { words: wordBank } = useWords();
   const { puzzleId, random } = usePuzzleId();
 
-  const [{ id, display, solution, state }, dispatch] = useReducer(reducer, {
+  const [{ id, display }, dispatch] = useReducer(reducer, {
     id: "",
     display: "",
-    solution: [],
-    state: "pending",
-    solvingPromise: undefined,
     ...initialState,
   } satisfies State);
 
   const ids = useStorage("ids");
-  const solutionStore = useStorage("solutions");
 
   const prevPuzzleId = useRef<string>();
   useEffect(() => {
@@ -162,43 +120,6 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
     dispatch({ action: "shuffle" });
   }, []);
 
-  const solve = useCallback(() => {
-    if (solution && solution.length > 0) {
-      return;
-    }
-
-    if (!isLetters(id)) {
-      throw new Error("I don't know what's going on.");
-    }
-
-    const addSolution = (solution: string[]) =>
-      dispatch({ action: "add-solution", solution });
-
-    const promise = findSolutionById(wordBank, id, addSolution)
-      .then((foundSolution) => {
-        dispatch({ action: "mark-solved", solution: foundSolution });
-        solutionStore.setItem(id, foundSolution);
-      })
-      .catch((e) => {
-        // TODO
-      });
-    dispatch({ action: "start-solving", promise });
-  }, [solution, id, wordBank, solutionStore]);
-
-  useEffect(() => {
-    solutionStore.getItem(id).then((value) => {
-      if (
-        !value ||
-        !Array.isArray(value) ||
-        !value.every((v) => isLetters(v))
-      ) {
-        return;
-      }
-
-      dispatch({ action: "mark-solved", solution: value });
-    });
-  }, [id, solutionStore]);
-
   if (!display) {
     return <Loader text="generere puslespill ..." />;
   }
@@ -206,7 +127,13 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
   return (
     <BoardContext.Provider
       key={id}
-      value={{ id, shuffle, solve, display, solution, randomize, url, state }}
+      value={{
+        id,
+        shuffle,
+        display,
+        randomize,
+        url,
+      }}
     >
       {children}
     </BoardContext.Provider>

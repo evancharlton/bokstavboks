@@ -1,4 +1,5 @@
 import { Board, Letter } from "./types";
+import { normalizeId } from "./utils";
 
 export const createBoard = (start: Letter): Board => {
   return {
@@ -142,7 +143,8 @@ export const findSolution = async (
 ): Promise<string[]> => {
   return findSolutionById(
     words,
-    [...board.sideA, ...board.sideB, ...board.sideC, ...board.sideD].join("")
+    [...board.sideA, ...board.sideB, ...board.sideC, ...board.sideD].join(""),
+    null as unknown as AbortSignal
   );
 };
 
@@ -177,19 +179,25 @@ const canPlay2 = (sides: Record<string, string>, word: string): boolean => {
 //       clean this up with some better structures.
 export const bfs = async (
   words: string[],
+  id: string,
+  abortSignal: AbortSignal,
   onSolution: (solution: string[]) => void
 ): Promise<string[]> => {
-  const letters = new Map<string, number>();
-  const wordsByLetter = new Map<string, string[]>();
+  const translate = (ids: number[]): string[] => ids.map((id) => words[id]);
+
+  const finalLetters = new Uint8Array(
+    words.map((w) => w.charCodeAt(w.length - 1))
+  );
+  const wordsByStartLetter = new Map<number, number[]>();
   const singleWordSolutions: string[] = [];
-  for (const word of words) {
-    const a = word[0];
-    if (!wordsByLetter.has(a)) {
-      wordsByLetter.set(a, []);
+  for (let i = 0; i < words.length; i += 1) {
+    const word = words[i];
+    const a = word.charCodeAt(0);
+    if (!wordsByStartLetter.has(a)) {
+      wordsByStartLetter.set(a, []);
     }
-    wordsByLetter.get(a)?.push(word);
+    wordsByStartLetter.get(a)?.push(i);
     const length = new Set(word).size;
-    letters.set(word, length);
 
     if (length === 12) {
       // We found a single-word solution - awesome!
@@ -197,34 +205,38 @@ export const bfs = async (
     }
   }
 
+  const bits = new Uint16Array(
+    words.map((word) => {
+      let mask: number = 0;
+      for (let i = 0; i < id.length; i += 1) {
+        if (word.includes(id[i])) {
+          mask |= 1 << i;
+        }
+      }
+      return mask;
+    })
+  );
+
   // See if we can short-cut the larger BFS.
   if (singleWordSolutions.length > 0) {
     const shortest = singleWordSolutions.sort((a, b) => a.length - b.length);
     return [shortest[0]];
   }
 
-  wordsByLetter.forEach((words, k) => {
-    wordsByLetter.set(
-      k,
-      words.sort(
-        (a, b) =>
-          (letters.get(b) ?? Number.MAX_SAFE_INTEGER) -
-          (letters.get(a) ?? Number.MAX_SAFE_INTEGER)
-      )
-    );
-  });
-
-  const queue: string[][] = words.map((w) => [w]);
-  const solutions: string[][] = [];
+  const queue: number[][] = words.map((_, i) => [i]);
+  const solutions: number[][] = [];
   let i = 0;
-  let maxSolutionLength = Number.MAX_SAFE_INTEGER;
   while (queue.length > 0) {
+    if (abortSignal?.aborted) {
+      throw new Error("Aborted");
+    }
+
     const path = queue.shift();
     if (!path) {
       break; // We're done
     }
 
-    if (i++ % 5_000 === 0) {
+    if (i++ % 1_000 === 0) {
       await new Promise((resolve) => setTimeout(resolve, 0));
     }
 
@@ -238,32 +250,33 @@ export const bfs = async (
       }
     }
 
-    const finalWord = path[path.length - 1];
-    const finalLetter = finalWord[finalWord.length - 1];
+    const finalWordId = path[path.length - 1];
+    const finalLetter = finalLetters.at(finalWordId);
+    if (!finalLetter) {
+      throw new Error("Last letter couldn't be found");
+    }
 
-    const nextWords = wordsByLetter.get(finalLetter);
-    if (!nextWords) {
+    const nextWordIds = wordsByStartLetter.get(finalLetter);
+    if (!nextWordIds) {
       continue;
     }
 
-    for (const nextWord of nextWords) {
-      const nextPath = [...path, nextWord];
-      const joined = nextPath.join("");
-      const numChars = new Set(joined).size;
-      if (numChars === 12) {
-        // Is this a solution worth worrying about?
-        if (joined.length < maxSolutionLength) {
-          solutions.push(nextPath);
-          onSolution(nextPath);
-          maxSolutionLength = joined.length;
+    let currentMask = 0;
+    for (const wordIndex of path) {
+      currentMask |= bits.at(wordIndex) ?? 0;
+    }
+
+    for (const nextWordId of nextWordIds) {
+      const nextMask = bits.at(nextWordId) ?? 0;
+      if ((currentMask | nextMask) === 0b111111111111) {
+        const nextPath = [...path, nextWordId];
+        solutions.push(nextPath);
+        onSolution(translate(nextPath));
+      } else {
+        if (solutions.length === 0) {
+          const nextPath = [...path, nextWordId];
+          queue.push(nextPath);
         }
-      } else if (numChars > 12) {
-        throw new Error(
-          "This doesn't make sense - how could we have more than 12 chars?"
-        );
-      } else if (numChars < 12) {
-        // console.log(nextPath);
-        queue.push(nextPath);
       }
     }
   }
@@ -272,19 +285,21 @@ export const bfs = async (
     throw new Error("no solution found");
   }
 
-  const bestSolutions = solutions.sort((a, b) => {
-    return a.join("").length - b.join("").length;
-  });
-  console.log(bestSolutions.slice(0, 3));
+  const [shortest] = solutions
+    .map(translate)
+    .sort((a, b) => a.join("").length - b.join("").length);
 
-  return bestSolutions[0];
+  return shortest;
 };
 
 export const findSolutionById = (
   words: readonly string[],
-  boardId: string,
+  rawBoardId: string,
+  abortSignal: AbortSignal,
   onSolution: (solution: string[]) => void = () => undefined
 ) => {
+  const boardId = normalizeId(rawBoardId);
+
   const sides = {
     [boardId[0]]: "a",
     [boardId[1]]: "a",
@@ -304,5 +319,5 @@ export const findSolutionById = (
     return canPlay2(sides, word);
   });
 
-  return bfs(contenders, onSolution);
+  return bfs(contenders, boardId, abortSignal, onSolution);
 };

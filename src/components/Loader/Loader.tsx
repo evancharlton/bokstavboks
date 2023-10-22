@@ -3,10 +3,12 @@ import "./Loader.css";
 
 type Props = {
   text?: string;
+  children?: React.ReactNode;
+  className?: string;
 };
 
-export const Loader = ({ text }: Props) => (
-  <div className={classes.container}>
+export const Loader = ({ text, children, className }: Props) => (
+  <div className={[classes.container, className].filter(Boolean).join(" ")}>
     <div className="lds-ellipsis">
       <div></div>
       <div></div>
@@ -14,5 +16,6 @@ export const Loader = ({ text }: Props) => (
       <div></div>
     </div>
     {text && <span className={classes.text}>{text}</span>}
+    {children}
   </div>
 );

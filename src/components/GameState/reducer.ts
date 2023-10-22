@@ -9,7 +9,7 @@ type Update =
   | { action: "reset" }
   | { action: "clear-error" }
   | { action: "reveal" }
-  | ({ action: "restore-complete" } & SavedState);
+  | ({ action: "restore-complete" } & Partial<SavedState>);
 
 export const reducer =
   (dictionary: Set<string>, isValid: (input: string) => boolean) =>
@@ -197,9 +197,9 @@ export const reducer =
           ...state,
           error: undefined,
           current: "",
-          words: update.words,
-          solved: !!update.solved,
-          revealed: !!update.revealed,
+          words: update.words ?? state.words,
+          solved: update.solved ?? state.solved,
+          revealed: update.revealed ?? state.revealed,
           restoreComplete: true,
         };
       }

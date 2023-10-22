@@ -7,6 +7,18 @@ import { PuzzleIdProvider } from "../src/components/PuzzleIdProvider";
 import { GameState } from "../src/components/GameState";
 import { Dialogs } from "../src/components/Dialogs";
 
+const withStorage = makeDecorator({
+  name: "withStorage",
+  parameterName: "storage",
+  wrapper: (storyFn, context, { parameters }) => {
+    return (
+      <StorageSandbox version={Date.now().toString()}>
+        <>{storyFn(context)}</>
+      </StorageSandbox>
+    );
+  },
+});
+
 const withPuzzleId = makeDecorator({
   name: "withPuzzleId",
   parameterName: "puzzleId",
@@ -43,6 +55,18 @@ const withBoard = makeDecorator({
   },
 });
 
+const withSolutions = makeDecorator({
+  name: "withSolutions",
+  parameterName: "solution",
+  wrapper: (storyFn, context, { parameters }) => {
+    return (
+      <SolutionProvider {...parameters}>
+        <>{storyFn(context)}</>
+      </SolutionProvider>
+    );
+  },
+});
+
 const withGameState = makeDecorator({
   name: "withGameState",
   parameterName: "gameState",
@@ -68,15 +92,19 @@ const withDialogs = makeDecorator({
 });
 
 import { withRouter } from "storybook-addon-react-router-v6";
+import { SolutionProvider } from "../src/components/SolutionProvider";
+import { StorageSandbox } from "../src/useStorage";
 
 const preview: Preview = {
   decorators: [
     withDialogs,
     withGameState,
+    withSolutions,
     withBoard,
     withWords,
     withPuzzleId,
     withRouter,
+    withStorage,
   ],
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },

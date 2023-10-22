@@ -6,6 +6,7 @@ import { useBoard } from "../BoardProvider";
 import { SavedState, State, isSavedState } from "./types";
 import { reducer } from "./reducer";
 import { useStorage } from "../../useStorage";
+import { useSolution } from "../SolutionProvider";
 
 type Props = {
   children: React.ReactNode;
@@ -13,7 +14,8 @@ type Props = {
 
 export const GameState = ({ children, ...initialState }: Props) => {
   const { dictionary } = useWords();
-  const { id: boardId, solve: solveBoard } = useBoard();
+  const { id: boardId } = useBoard();
+  const { solve: solveBoard } = useSolution();
 
   const games = useStorage("games");
 
@@ -83,7 +85,11 @@ export const GameState = ({ children, ...initialState }: Props) => {
   useEffect(() => {
     games
       .getItem(boardId)
-      .then((value): SavedState => {
+      .then((value): SavedState | undefined => {
+        console.log(`TCL ~ file: GameState.tsx:90 ~ .then ~ value:`, value);
+        if (!value) {
+          return undefined;
+        }
         if (!isSavedState(value)) {
           throw new Error("Invalid content");
         }
@@ -146,13 +152,6 @@ export const GameState = ({ children, ...initialState }: Props) => {
     throw new Error("Impossible input");
   }
   const usedLetters = new Set(combined);
-
-  const { solution } = useBoard();
-  useEffect(() => {
-    if (revealed && solution.length === 0) {
-      solveBoard();
-    }
-  }, [revealed, solution, solveBoard]);
 
   return (
     <GameStateContext.Provider

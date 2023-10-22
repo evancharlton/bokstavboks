@@ -1,12 +1,9 @@
 export type State = {
   id: string;
-  solution: string[]; // Shortest solution
   display: string;
-  state: "solving" | "solved" | "pending";
-  solvingPromise: Promise<unknown> | undefined;
 };
 
-export type SavedState = Pick<State, "id" | "solution">;
+export type SavedState = Pick<State, "id">;
 
 export const isSavedState = (v: unknown): v is SavedState => {
   if (!v) {

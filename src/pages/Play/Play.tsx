@@ -11,6 +11,7 @@ import { Page } from "../../components/Page";
 import { PuzzleIdProvider } from "../../components/PuzzleIdProvider";
 import { WordsProvider } from "../../components/WordsProvider";
 import { Dialogs, useDialog } from "../../components/Dialogs";
+import { SolutionProvider } from "../../components/SolutionProvider";
 
 const HeaderButtons = () => {
   const { randomize } = useBoard();
@@ -36,18 +37,20 @@ export const Play = () => {
     <PuzzleIdProvider>
       <WordsProvider>
         <BoardProvider>
-          <GameState>
-            <Dialogs>
-              <Page header={<Header buttons={<HeaderButtons />} />}>
-                <div className={classes.container}>
-                  <Status />
-                  <Grid />
-                  <Buttons />
-                  <Toast />
-                </div>
-              </Page>
-            </Dialogs>
-          </GameState>
+          <SolutionProvider>
+            <GameState>
+              <Dialogs>
+                <Page header={<Header buttons={<HeaderButtons />} />}>
+                  <div className={classes.container}>
+                    <Status />
+                    <Grid />
+                    <Buttons />
+                    <Toast />
+                  </div>
+                </Page>
+              </Dialogs>
+            </GameState>
+          </SolutionProvider>
         </BoardProvider>
       </WordsProvider>
     </PuzzleIdProvider>

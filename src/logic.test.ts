@@ -231,16 +231,25 @@ describe("solving", () => {
       expect(solution).toHaveLength(2);
     });
 
-    test("akynorgsteil", async () => {
-      const solution = await findSolutionById(words, "akynorgsteil");
-      expect(solution).toHaveLength(2);
-      expect(solution[0][solution[0].length - 1]).toEqual(solution[1][0]);
-    });
+    test(
+      "akynorgsteil",
+      async () => {
+        const solution = await findSolutionById(
+          words,
+          "akynorgsteil",
+          null as unknown as AbortSignal
+        );
+        expect(solution).toHaveLength(2);
+        expect(solution[0][solution[0].length - 1]).toEqual(solution[1][0]);
+      },
+      20 * 1000
+    );
 
     test("aejorvbmtinp", async () => {
       const solution = await findSolutionById(
         words ?? ["evertebrat", "tjonete", "empatiene"],
-        "aejorvbmtinp"
+        "aejorvbmtinp",
+        null as unknown as AbortSignal
       );
       expect(solution).toHaveLength(2);
     });

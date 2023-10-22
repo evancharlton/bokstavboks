@@ -1,26 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PuzzleIdProvider } from "../../../components/PuzzleIdProvider";
-import { BoardProvider, useBoard } from "../../../components/BoardProvider";
+import { BoardProvider } from "../../../components/BoardProvider";
 import { GameState } from "../../../components/GameState";
 import { StorageSandbox } from "../../../useStorage";
-import { WordList } from "../../../components/WordList";
 import { isLetters } from "../../../types";
-import { Loader } from "../../../components/Loader";
+import { Solution } from "../../../components/Solution";
+import {
+  SolutionProvider,
+  useSolution,
+} from "../../../components/SolutionProvider";
 
-const Solution = () => {
-  const { id, solve, solution, state } = useBoard();
+const StartSolving = () => {
+  const { solve } = useSolution();
 
-  useEffect(() => {
-    solve();
-  }, [id, solve]);
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      {state === "solving" && <Loader text="finne den optimale løsningen..." />}
-      <code>{state}</code>
-      <WordList path={solution} />
-    </div>
-  );
+  return <button onClick={solve}>Solve</button>;
 };
 
 export const BuildById = () => {
@@ -47,7 +40,10 @@ export const BuildById = () => {
           <PuzzleIdProvider puzzleId={id}>
             <BoardProvider>
               <GameState>
-                <Solution />
+                <SolutionProvider>
+                  <StartSolving />
+                  <Solution />
+                </SolutionProvider>
               </GameState>
             </BoardProvider>
           </PuzzleIdProvider>

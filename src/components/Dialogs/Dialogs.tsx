@@ -8,6 +8,7 @@ import { GameState, useGameState } from "../GameState";
 import { Grid } from "../Grid";
 import { WordsProvider } from "../WordsProvider";
 import classes from "./Dialogs.module.css";
+import { SolutionProvider } from "../SolutionProvider";
 
 type Props = {
   children: React.ReactNode;
@@ -71,10 +72,12 @@ export const Dialogs = ({ children }: Props) => {
             </p>
             <WordsProvider words={["bokstav"]}>
               <PuzzleIdProvider puzzleId="bkaotnsvmepr">
-                <BoardProvider solution={["bokstav"]}>
-                  <GameState words={[]} current="bokstav">
-                    <Grid />
-                  </GameState>
+                <BoardProvider>
+                  <SolutionProvider solution={["bokstav"]}>
+                    <GameState words={[]} current="bokstav">
+                      <Grid />
+                    </GameState>
+                  </SolutionProvider>
                 </BoardProvider>
               </PuzzleIdProvider>
             </WordsProvider>

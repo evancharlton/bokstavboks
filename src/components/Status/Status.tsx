@@ -8,32 +8,12 @@ import {
   MdOutlineRestartAlt,
   MdOutlineShare,
 } from "react-icons/md";
-import { TbExternalLink } from "react-icons/tb";
 import { useNavigate, useParams } from "react-router";
 import { useBoard } from "../BoardProvider";
 import { useDialog } from "../Dialogs";
-
-const WordList = ({ path }: { path: string[] }) => {
-  return (
-    <div className={classes.words}>
-      {path.map((word, i) => (
-        <Fragment key={word}>
-          {i > 0 && <div className={classes.spacer} />}
-          <h3 key={word} className={classes.word}>
-            <a
-              href={`https://naob.no/s%C3%B8k/${word}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {word}
-              <TbExternalLink />
-            </a>
-          </h3>
-        </Fragment>
-      ))}
-    </div>
-  );
-};
+import { useSolution } from "../SolutionProvider";
+import { Solution } from "../Solution";
+import { WordList } from "../WordList";
 
 const EMOJI = {
   revealed: "💥",
@@ -42,7 +22,8 @@ const EMOJI = {
 } as const;
 
 const ShareButton = ({ children }: { children?: React.ReactNode }) => {
-  const { solution, url } = useBoard();
+  const { url } = useBoard();
+  const { solution } = useSolution();
   const { words, solved, revealed } = useGameState();
 
   const header = (() => {
@@ -106,7 +87,7 @@ const ShareButton = ({ children }: { children?: React.ReactNode }) => {
 };
 
 export const Status = () => {
-  const { solution } = useBoard();
+  const { randomize } = useBoard();
   const { words, current, solved, revealed } = useGameState();
   const navigate = useNavigate();
   const { lang } = useParams();
@@ -126,7 +107,7 @@ export const Status = () => {
               Løsningen med <strong>færrest ord</strong> for dette puslespillet
               er:
             </p>
-            <WordList path={solution} />
+            <Solution />
             <p>
               Hvert puslespill har <strong>mange</strong> forskjellige
               løsninger. Du løste det med <strong>{words.length} ord</strong>,
@@ -134,7 +115,7 @@ export const Status = () => {
             </p>
             <div className={classes.buttons}>
               <ShareButton>Del</ShareButton>
-              <button onClick={() => undefined}>
+              <button onClick={randomize}>
                 <MdOutlineAutorenew /> Prøv på nytt
               </button>
             </div>
@@ -150,10 +131,10 @@ export const Status = () => {
               Løsningen med <strong>færrest ord</strong> for dette puslespillet
               er:
             </p>
-            <WordList path={solution} />
+            <Solution />
             <div className={classes.buttons}>
               <ShareButton>Del</ShareButton>
-              <button onClick={() => undefined}>
+              <button onClick={randomize}>
                 <MdOutlineAutorenew /> Prøv på nytt
               </button>
             </div>
@@ -180,7 +161,7 @@ export const Status = () => {
                 <MdOutlineDone />
                 Vis løsningen
               </button>
-              <button onClick={() => undefined}>
+              <button onClick={randomize}>
                 <MdOutlineAutorenew /> Prøv på nytt
               </button>
             </div>
@@ -188,7 +169,7 @@ export const Status = () => {
         ),
       });
     }
-  }, [solved, revealed, showDialog, solution, words.length, hide, show]);
+  }, [hide, randomize, revealed, show, showDialog, solved, words.length]);
 
   return (
     <div className={classes.container}>
@@ -210,7 +191,7 @@ export const Status = () => {
           <div className={classes.caret} />
         </div>
       )}
-      {revealed && <WordList path={solution} />}
+      <Solution />
       <WordList path={words} />
     </div>
   );
