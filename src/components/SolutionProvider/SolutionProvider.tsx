@@ -106,7 +106,9 @@ export const SolutionProvider = ({ children, ...initialState }: Props) => {
       })
       .then((solution: string[]) => {
         dispatch({ action: "finish", solution });
-        return store.setItem(id, solution);
+        if (solution.length > 0) {
+          return store.setItem(id, solution);
+        }
       })
       .catch(() => dispatch({ action: "impossible" }));
 

@@ -12,7 +12,7 @@ export const Solution = () => {
   if (status === "pending") {
     if (revealed) {
       return (
-        <button className={classes.solve} onClick={solve}>
+        <button className={classes.solve} style={{ margin: 8 }} onClick={solve}>
           <MdFilterList /> Finn løsning
         </button>
       );
@@ -26,7 +26,11 @@ export const Solution = () => {
 
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
     >
       {status === "solving" && (
         <Loader

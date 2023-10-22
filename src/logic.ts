@@ -228,7 +228,7 @@ export const bfs = async (
   let i = 0;
   while (queue.length > 0) {
     if (abortSignal?.aborted) {
-      throw new Error("Aborted");
+      return [];
     }
 
     const path = queue.shift();
