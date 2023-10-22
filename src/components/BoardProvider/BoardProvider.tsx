@@ -8,6 +8,7 @@ import { State } from "./types";
 import { useNavigate, useParams } from "react-router";
 import { extractBoardId } from "./extractBoardId";
 import { useStorage } from "../../useStorage";
+import { normalizeId } from "../../utils";
 
 type Action =
   | { action: "set-board"; boardId: string; seeds?: string[] }
@@ -44,7 +45,7 @@ const reducer = (state: State, update: Action): State => {
 
       return {
         ...state,
-        id: boardId,
+        id: normalizeId(boardId),
         display: shuffleId(boardId),
       };
     }

@@ -14,6 +14,7 @@ import { useDialog } from "../Dialogs";
 import { useSolution } from "../SolutionProvider";
 import { Solution } from "../Solution";
 import { WordList } from "../WordList";
+import { ShareButton } from "../ShareButton";
 
 const EMOJI = {
   revealed: "💥",
@@ -21,7 +22,7 @@ const EMOJI = {
   none: "",
 } as const;
 
-const ShareButton = ({ children }: { children?: React.ReactNode }) => {
+const LocalShareButton = ({ children }: { children?: React.ReactNode }) => {
   const { url } = useBoard();
   const { solution } = useSolution();
   const { words, solved, revealed } = useGameState();
@@ -57,33 +58,8 @@ const ShareButton = ({ children }: { children?: React.ReactNode }) => {
           url,
         ].join("\n")
       : "";
-  const [canShare, setCanShare] = useState(!!navigator.canShare?.({ text }));
 
-  const onShare = useCallback(() => {
-    if (!solved && !revealed) {
-      return;
-    }
-
-    if (canShare) {
-      navigator
-        .share({ text })
-        .catch(() => {
-          navigator.clipboard.writeText(text);
-        })
-        .catch((_) => {
-          setCanShare(false);
-        });
-    } else if (navigator.clipboard && !!navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text);
-    }
-  }, [solved, revealed, canShare, text]);
-
-  return (
-    <button onClick={onShare}>
-      {canShare ? <MdOutlineShare /> : <MdOutlineContentCopy />}
-      {children}
-    </button>
-  );
+  return <ShareButton text={() => text}>{children}</ShareButton>;
 };
 
 export const Status = () => {
@@ -114,7 +90,7 @@ export const Status = () => {
               som er flott!
             </p>
             <div className={classes.buttons}>
-              <ShareButton>Del</ShareButton>
+              <LocalShareButton>Del</LocalShareButton>
               <button onClick={randomize}>
                 <MdOutlineAutorenew /> Prøv på nytt
               </button>
@@ -133,7 +109,7 @@ export const Status = () => {
             </p>
             <Solution />
             <div className={classes.buttons}>
-              <ShareButton>Del</ShareButton>
+              <LocalShareButton>Del</LocalShareButton>
               <button onClick={randomize}>
                 <MdOutlineAutorenew /> Prøv på nytt
               </button>
@@ -152,7 +128,7 @@ export const Status = () => {
               løsning være mulig!
             </p>
             <div className={classes.buttons}>
-              <ShareButton>Del</ShareButton>
+              <LocalShareButton>Del</LocalShareButton>
               <button onClick={hide}>
                 <MdOutlineRestartAlt />
                 Fortsett å spille
@@ -176,7 +152,7 @@ export const Status = () => {
       {(solved || revealed) && (
         <div className={classes.complete}>
           <h1>{emoji}</h1>
-          <ShareButton />
+          <LocalShareButton />
           <button disabled={revealed} onClick={() => show("solve")}>
             <MdOutlineDone />
           </button>

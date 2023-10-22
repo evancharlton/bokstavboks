@@ -5,13 +5,14 @@ import { Status } from "../../components/Status";
 import classes from "./Play.module.css";
 import { Toast } from "../../components/Toast";
 import { Buttons } from "../../components/Buttons";
-import { MdOutlineDone, MdOutlineAutorenew } from "react-icons/md";
+import { MdOutlineDone, MdOutlineAutorenew, MdLink } from "react-icons/md";
 import { Header } from "../../components/Header";
 import { Page } from "../../components/Page";
 import { PuzzleIdProvider } from "../../components/PuzzleIdProvider";
 import { WordsProvider } from "../../components/WordsProvider";
 import { Dialogs, useDialog } from "../../components/Dialogs";
 import { SolutionProvider } from "../../components/SolutionProvider";
+import { ShareButton } from "../../components/ShareButton";
 
 const HeaderButtons = () => {
   const { randomize } = useBoard();
@@ -32,6 +33,12 @@ const HeaderButtons = () => {
   );
 };
 
+const ShareUrl = () => {
+  const { url } = useBoard();
+
+  return <ShareButton text={() => url} CopyIcon={MdLink} />;
+};
+
 export const Play = () => {
   return (
     <PuzzleIdProvider>
@@ -40,7 +47,14 @@ export const Play = () => {
           <SolutionProvider>
             <GameState>
               <Dialogs>
-                <Page header={<Header buttons={<HeaderButtons />} />}>
+                <Page
+                  header={
+                    <Header
+                      leftButtons={<ShareUrl />}
+                      buttons={<HeaderButtons />}
+                    />
+                  }
+                >
                   <div className={classes.container}>
                     <Status />
                     <Grid />
