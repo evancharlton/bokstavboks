@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/bokstavboks/static/css/main.f5dd0b0c.css",
-    "main.js": "/bokstavboks/static/js/main.984d7cc8.js",
+    "main.css": "/bokstavboks/static/css/main.f8b01b70.css",
+    "main.js": "/bokstavboks/static/js/main.597d4e1e.js",
     "static/js/111.c579293d.chunk.js": "/bokstavboks/static/js/111.c579293d.chunk.js",
     "index.html": "/bokstavboks/index.html",
-    "main.f5dd0b0c.css.map": "/bokstavboks/static/css/main.f5dd0b0c.css.map",
-    "main.984d7cc8.js.map": "/bokstavboks/static/js/main.984d7cc8.js.map",
+    "main.f8b01b70.css.map": "/bokstavboks/static/css/main.f8b01b70.css.map",
+    "main.597d4e1e.js.map": "/bokstavboks/static/js/main.597d4e1e.js.map",
     "111.c579293d.chunk.js.map": "/bokstavboks/static/js/111.c579293d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f5dd0b0c.css",
-    "static/js/main.984d7cc8.js"
+    "static/css/main.f8b01b70.css",
+    "static/js/main.597d4e1e.js"
   ]
 }
