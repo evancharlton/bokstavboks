@@ -10,6 +10,7 @@ import { WordsProvider } from "../WordsProvider";
 import classes from "./Dialogs.module.css";
 import { SolutionProvider } from "../SolutionProvider";
 import { StorageSandbox } from "../../useStorage";
+import { useSettings } from "../SettingsProvider";
 
 type Props = {
   children: React.ReactNode;
@@ -37,6 +38,39 @@ const SolveDialog = () => {
           >
             Ja, takk!
           </button>
+        </div>
+      </div>
+    </Dialog>
+  );
+};
+
+const SettingsDialog = () => {
+  const { hide } = useDialog();
+  const { settings, update } = useSettings();
+
+  return (
+    <Dialog
+      title="Instillinger"
+      onClose={() => {
+        hide();
+      }}
+    >
+      <div>
+        <h3>Guidet utforskning</h3>
+        <div className={classes.entry}>
+          <label className={classes.switch}>
+            <input
+              id="hint-checkbox"
+              type="checkbox"
+              onChange={(e) => update({ enableHint: !!e.target.checked })}
+              checked={!!settings.enableHint}
+            />
+            <span className={[classes.slider, classes.round].join(" ")} />
+          </label>
+          <label htmlFor="hint-checkbox">
+            Angi merknader (<span style={{ fontSize: 10 }}>🔵</span>) på
+            bokstavene for gyldige bokstavvalg.
+          </label>
         </div>
       </div>
     </Dialog>
@@ -189,6 +223,10 @@ export const Dialogs = ({ children }: Props) => {
 
       case "solve": {
         return <SolveDialog />;
+      }
+
+      case "settings": {
+        return <SettingsDialog />;
       }
 
       default: {

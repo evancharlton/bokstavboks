@@ -12,7 +12,7 @@ const StorageContext = createContext<{ version?: string; driver?: string }>({
 const useStorageContext = () => useContext(StorageContext);
 
 export const useStorage = (database: string) => {
-  const { lang = "??" } = useParams();
+  const { lang = "global" } = useParams();
   const { version, driver } = useStorageContext();
 
   return useMemo(

@@ -4,7 +4,12 @@ import { BoardProvider, useBoard } from "../../components/BoardProvider";
 import { Status } from "../../components/Status";
 import classes from "./Play.module.css";
 import { Buttons } from "../../components/Buttons";
-import { MdOutlineDone, MdOutlineAutorenew, MdLink } from "react-icons/md";
+import {
+  MdOutlineDone,
+  MdOutlineAutorenew,
+  MdLink,
+  MdSettings,
+} from "react-icons/md";
 import { Header } from "../../components/Header";
 import { Page } from "../../components/Page";
 import { PuzzleIdProvider } from "../../components/PuzzleIdProvider";
@@ -38,6 +43,15 @@ const ShareUrl = () => {
   return <ShareButton text={() => url} CopyIcon={MdLink} />;
 };
 
+const SettingsButton = () => {
+  const { show } = useDialog();
+  return (
+    <button onClick={() => show("settings")}>
+      <MdSettings />
+    </button>
+  );
+};
+
 export const Play = () => {
   return (
     <PuzzleIdProvider>
@@ -49,7 +63,7 @@ export const Play = () => {
                 <Page
                   header={
                     <Header
-                      leftButtons={<ShareUrl />}
+                      leftButtons={[<ShareUrl />, <SettingsButton />]}
                       buttons={<HeaderButtons />}
                     />
                   }

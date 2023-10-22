@@ -35,6 +35,10 @@
   transition: 0.25s all;
 }
 
+button.letter {
+  border: 1px solid #000;
+}
+
 .filler {
   grid-row: 2 / 5;
   grid-column: 2 / 5;
@@ -51,4 +55,19 @@
 
 .mostRecent {
   color: var(--link-color);
+}
+
+button.active::after,
+button.active::before {
+  content: "🔵";
+  font-size: 10px;
+  padding-left: 4px;
+}
+
+button.active::before {
+  opacity: 0;
+}
+
+button.peer.active::after {
+  content: "⚪" !important;
 }

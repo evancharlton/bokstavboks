@@ -2,7 +2,7 @@ import { useCallback, useEffect, useReducer, useRef } from "react";
 import { isLetters, neverGuard } from "../../types";
 import { BoardContext } from "./context";
 import { usePuzzleId } from "../PuzzleIdProvider";
-import { useWords } from "../WordsProvider";
+import { WordsProvider, useWords } from "../WordsProvider";
 import { Loader } from "../Loader";
 import { State } from "./types";
 import { useNavigate, useParams } from "react-router";
@@ -125,6 +125,16 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
     return <Loader text="generere puslespill ..." />;
   }
 
+  const idLetters = new Set(id);
+  const relevantWords = wordBank.filter((word) => {
+    for (let i = 0; i < word.length; i += 1) {
+      if (!idLetters.has(word[i])) {
+        return false;
+      }
+    }
+    return true;
+  });
+
   return (
     <BoardContext.Provider
       key={id}
@@ -136,7 +146,9 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
         url,
       }}
     >
-      {children}
+      <WordsProvider key={id} words={relevantWords}>
+        {children}
+      </WordsProvider>
     </BoardContext.Provider>
   );
 };

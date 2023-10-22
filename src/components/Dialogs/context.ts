@@ -4,6 +4,7 @@ export type DialogType =
   | "help"
   | "about"
   | "solve"
+  | "settings"
   | { title: string; content: React.ReactNode };
 
 export const DialogContext = createContext<
