@@ -38,6 +38,8 @@ export const WordsProvider = ({ children, words: initialWords }: Props) => {
   }
 
   return (
-    <WordsContext.Provider value={value}>{children}</WordsContext.Provider>
+    <WordsContext.Provider key={lang} value={value}>
+      {children}
+    </WordsContext.Provider>
   );
 };

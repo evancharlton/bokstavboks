@@ -39,12 +39,12 @@ export const BuildById = () => {
         <StorageSandbox version="builder">
           <PuzzleIdProvider puzzleId={id}>
             <BoardProvider>
-              <GameState>
-                <SolutionProvider>
+              <SolutionProvider>
+                <GameState>
                   <StartSolving />
                   <Solution />
-                </SolutionProvider>
-              </GameState>
+                </GameState>
+              </SolutionProvider>
             </BoardProvider>
           </PuzzleIdProvider>
         </StorageSandbox>
