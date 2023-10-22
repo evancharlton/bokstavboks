@@ -196,7 +196,6 @@ export const reducer =
         return {
           ...state,
           error: undefined,
-          current: "",
           words: update.words ?? state.words,
           solved: update.solved ?? state.solved,
           revealed: update.revealed ?? state.revealed,

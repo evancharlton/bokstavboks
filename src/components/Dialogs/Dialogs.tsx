@@ -9,6 +9,7 @@ import { Grid } from "../Grid";
 import { WordsProvider } from "../WordsProvider";
 import classes from "./Dialogs.module.css";
 import { SolutionProvider } from "../SolutionProvider";
+import { StorageSandbox } from "../../useStorage";
 
 type Props = {
   children: React.ReactNode;
@@ -70,17 +71,19 @@ export const Dialogs = ({ children }: Props) => {
               taste inn i <strong>BOKSTAVENE</strong>, men{" "}
               <strong>BOKSTAVER</strong> er umulig.
             </p>
-            <WordsProvider words={["bokstav"]}>
-              <PuzzleIdProvider puzzleId="bkaotnsvmepr">
-                <BoardProvider>
-                  <SolutionProvider solution={["bokstav"]}>
-                    <GameState words={[]} current="bokstav">
-                      <Grid />
-                    </GameState>
-                  </SolutionProvider>
-                </BoardProvider>
-              </PuzzleIdProvider>
-            </WordsProvider>
+            <StorageSandbox version="demo">
+              <WordsProvider words={["bokstav"]}>
+                <PuzzleIdProvider puzzleId="bkaotnsvmepr">
+                  <BoardProvider>
+                    <SolutionProvider solution={["bokstav"]}>
+                      <GameState words={[]} current="bokstav">
+                        <Grid />
+                      </GameState>
+                    </SolutionProvider>
+                  </BoardProvider>
+                </PuzzleIdProvider>
+              </WordsProvider>
+            </StorageSandbox>
             <p>Lykke til!</p>
             <hr />
             <p>
