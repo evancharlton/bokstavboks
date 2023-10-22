@@ -7,6 +7,8 @@ import { SavedState, State, isSavedState } from "./types";
 import { reducer } from "./reducer";
 import { useStorage } from "../../useStorage";
 import { useSolution } from "../SolutionProvider";
+import { useToaster } from "../Toaster";
+import { ERRORS } from "./errors";
 
 type Props = {
   children: React.ReactNode;
@@ -16,6 +18,7 @@ export const GameState = ({ children, ...initialState }: Props) => {
   const { dictionary } = useWords();
   const { id: boardId } = useBoard();
   const { solve: solveBoard } = useSolution();
+  const { show: showToast, hide: hideToast } = useToaster();
 
   const games = useStorage("games");
 
@@ -86,7 +89,6 @@ export const GameState = ({ children, ...initialState }: Props) => {
     games
       .getItem(boardId)
       .then((value): SavedState | undefined => {
-        console.log(`TCL ~ file: GameState.tsx:90 ~ .then ~ value:`, value);
         if (!value) {
           return undefined;
         }
@@ -152,6 +154,16 @@ export const GameState = ({ children, ...initialState }: Props) => {
     throw new Error("Impossible input");
   }
   const usedLetters = new Set(combined);
+
+  useEffect(() => {
+    if (error) {
+      const errorText = ERRORS[error];
+      if (errorText) {
+        showToast({ text: errorText, level: "warning" });
+      }
+    }
+    clearError();
+  }, [clearError, error, hideToast, showToast]);
 
   return (
     <GameStateContext.Provider

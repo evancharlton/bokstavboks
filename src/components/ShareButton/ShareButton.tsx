@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { IconType } from "react-icons";
 import { MdOutlineShare, MdOutlineContentCopy } from "react-icons/md";
+import { useToaster } from "../Toaster";
 
 type Props = {
   text: () => string;
@@ -15,6 +16,7 @@ export const ShareButton = ({
 }: Props) => {
   const text = getText();
   const [canShare, setCanShare] = useState(!!navigator.canShare?.({ text }));
+  const { show } = useToaster();
 
   const onShare = useCallback(() => {
     if (canShare) {
@@ -28,8 +30,9 @@ export const ShareButton = ({
         });
     } else if (navigator.clipboard && !!navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text);
+      show({ text: "kopiert", level: "info" });
     }
-  }, [canShare, text]);
+  }, [canShare, show, text]);
 
   return (
     <button onClick={onShare}>

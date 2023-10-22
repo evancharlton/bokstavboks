@@ -3,7 +3,7 @@ import { GameState, useGameState } from "../../components/GameState";
 import { BoardProvider, useBoard } from "../../components/BoardProvider";
 import { Status } from "../../components/Status";
 import classes from "./Play.module.css";
-import { Toast } from "../../components/Toast";
+import { Toast } from "../../components/Toaster/Toast";
 import { Buttons } from "../../components/Buttons";
 import { MdOutlineDone, MdOutlineAutorenew, MdLink } from "react-icons/md";
 import { Header } from "../../components/Header";
@@ -59,7 +59,6 @@ export const Play = () => {
                     <Status />
                     <Grid />
                     <Buttons />
-                    <Toast />
                   </div>
                 </Page>
               </Dialogs>
