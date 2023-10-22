@@ -19,6 +19,18 @@ const withStorage = makeDecorator({
   },
 });
 
+const withToaster = makeDecorator({
+  name: "withToaster",
+  parameterName: "toaster",
+  wrapper: (storyFn, context, { parameters }) => {
+    return (
+      <Toaster {...parameters}>
+        <>{storyFn(context)}</>
+      </Toaster>
+    );
+  },
+});
+
 const withPuzzleId = makeDecorator({
   name: "withPuzzleId",
   parameterName: "puzzleId",
@@ -94,6 +106,7 @@ const withDialogs = makeDecorator({
 import { withRouter } from "storybook-addon-react-router-v6";
 import { SolutionProvider } from "../src/components/SolutionProvider";
 import { StorageSandbox } from "../src/useStorage";
+import { Toaster } from "../src/components/Toaster";
 
 const preview: Preview = {
   decorators: [
@@ -105,6 +118,7 @@ const preview: Preview = {
     withPuzzleId,
     withRouter,
     withStorage,
+    withToaster,
   ],
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },

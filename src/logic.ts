@@ -181,7 +181,8 @@ export const bfs = async (
   words: string[],
   id: string,
   abortSignal: AbortSignal,
-  onSolution: (solution: string[]) => void
+  onSolution: (solution: string[]) => void,
+  onProgress: (queueSize: number) => void
 ): Promise<string[]> => {
   const translate = (ids: number[]): string[] => ids.map((id) => words[id]);
 
@@ -237,6 +238,7 @@ export const bfs = async (
     }
 
     if (i++ % 1_000 === 0) {
+      onProgress(queue.length);
       await new Promise((resolve) => setTimeout(resolve, 0));
     }
 
@@ -296,7 +298,8 @@ export const findSolutionById = (
   words: readonly string[],
   rawBoardId: string,
   abortSignal: AbortSignal,
-  onSolution: (solution: string[]) => void = () => undefined
+  onSolution: (solution: string[]) => void = () => undefined,
+  onProgress: (queueSize: number) => void = () => undefined
 ) => {
   const boardId = normalizeId(rawBoardId);
 
@@ -319,5 +322,5 @@ export const findSolutionById = (
     return canPlay2(sides, word);
   });
 
-  return bfs(contenders, boardId, abortSignal, onSolution);
+  return bfs(contenders, boardId, abortSignal, onSolution, onProgress);
 };

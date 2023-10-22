@@ -4,7 +4,7 @@
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
     "loader text"
-    "loader button";
+    "loader info";
 
   width: min-content;
 }
@@ -19,9 +19,8 @@
   width: max-content;
 }
 
-.loader > button,
+.loader button,
 .solve {
-  grid-area: button;
   width: max-content;
   font-size: 18px;
   border: 1px solid black;
@@ -33,4 +32,15 @@
   flex-direction: row;
   gap: 4px;
   align-items: center;
+}
+
+.info {
+  width: max-content;
+  grid-area: info !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+
+  font-variant-numeric: tabular-nums;
 }

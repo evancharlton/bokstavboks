@@ -4,7 +4,7 @@ import { State } from "./types";
 export const SolutionContext = createContext<
   | ({ solve: () => void; abort: () => void } & Pick<
       State,
-      "status" | "solution"
+      "status" | "solution" | "queueSize"
     >)
   | undefined
 >(undefined);

@@ -31,6 +31,7 @@ export const Solving = {
   parameters: {
     solution: {
       status: "solving",
+      queueSize: 1234567,
     },
   },
 } satisfies T;

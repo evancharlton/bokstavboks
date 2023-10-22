@@ -10,6 +10,7 @@ import { useStorage } from "../../useStorage";
 type Update =
   | { action: "start-solving"; controller: AbortController }
   | { action: "add-solution"; solution: string[] }
+  | { action: "progress-update"; queueSize: number }
   | { action: "finish"; solution: string[] }
   | { action: "impossible" }
   | { action: "abort" };
@@ -28,6 +29,11 @@ const reducer = (state: State, update: Update): State => {
       return {
         ...state,
         solution: update.solution,
+      };
+    case "progress-update":
+      return {
+        ...state,
+        queueSize: update.queueSize,
       };
     case "finish":
       return {
@@ -74,10 +80,11 @@ export const SolutionProvider = ({ children, ...initialState }: Props) => {
   const { id } = useBoard();
   const store = useStorage("solutions");
 
-  const [{ status, solution }, dispatch] = useReducer(reducer, {
+  const [{ status, solution, queueSize }, dispatch] = useReducer(reducer, {
     status: "pending",
     solution: [],
     controller: undefined,
+    queueSize: 0,
     ...initialState,
   });
 
@@ -95,6 +102,9 @@ export const SolutionProvider = ({ children, ...initialState }: Props) => {
     const onSolution = (solution: string[]) =>
       dispatch({ action: "add-solution", solution });
 
+    const onProgress = (queueSize: number) =>
+      dispatch({ action: "progress-update", queueSize });
+
     dispatch({ action: "start-solving", controller });
     store
       .getItem(id)
@@ -102,7 +112,13 @@ export const SolutionProvider = ({ children, ...initialState }: Props) => {
         if (isSolution(storedSolution)) {
           return storedSolution;
         }
-        return findSolutionById(words, id, controller.signal, onSolution);
+        return findSolutionById(
+          words,
+          id,
+          controller.signal,
+          onSolution,
+          onProgress
+        );
       })
       .then((solution: string[]) => {
         dispatch({ action: "finish", solution });
@@ -122,7 +138,9 @@ export const SolutionProvider = ({ children, ...initialState }: Props) => {
   }, []);
 
   return (
-    <SolutionContext.Provider value={{ solve, abort, status, solution }}>
+    <SolutionContext.Provider
+      value={{ solve, abort, status, solution, queueSize }}
+    >
       {children}
     </SolutionContext.Provider>
   );
