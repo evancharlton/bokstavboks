@@ -75,6 +75,8 @@
   align-items: center;
   opacity: 0;
   transition: 0.25s all;
+
+  pointer-events: none;
 }
 
 .letterContainer.right .dot {
