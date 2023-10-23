@@ -31,3 +31,7 @@ button.primary {
 button {
   color: #000;
 }
+
+button:disabled {
+  color: #999;
+}
