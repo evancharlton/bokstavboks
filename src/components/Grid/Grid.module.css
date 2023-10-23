@@ -94,7 +94,11 @@
 }
 
 .letterContainer.peer .dot {
-  filter: saturate(0) opacity(0.5);
+  filter: saturate(0);
+}
+
+.letterContainer.peer {
+  opacity: 0.3;
 }
 
 .active {

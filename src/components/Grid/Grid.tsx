@@ -30,9 +30,7 @@ const Button = ({
       className={[
         classes.letterContainer,
         className,
-        settings.enableHint &&
-          (lastLetter === a || lastLetter === b) &&
-          classes.peer,
+        (lastLetter === a || lastLetter === b) && classes.peer,
       ]
         .filter(Boolean)
         .join(" ")}
