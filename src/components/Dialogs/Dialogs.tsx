@@ -11,6 +11,10 @@ import classes from "./Dialogs.module.css";
 import { SolutionProvider } from "../SolutionProvider";
 import { StorageSandbox } from "../../useStorage";
 import { useSettings } from "../SettingsProvider";
+import { WordsContext } from "../WordsProvider/context";
+import { PuzzleIdContext } from "../PuzzleIdProvider/context";
+import { BoardContext } from "../BoardProvider/context";
+import { SolutionContext } from "../SolutionProvider/context";
 
 type Props = {
   children: React.ReactNode;
@@ -106,17 +110,41 @@ export const Dialogs = ({ children }: Props) => {
               <strong>BOKSTAVER</strong> er umulig.
             </p>
             <StorageSandbox version="demo">
-              <WordsProvider words={["bokstav"]}>
-                <PuzzleIdProvider puzzleId="bkaotnsvmepr">
-                  <BoardProvider>
-                    <SolutionProvider solution={["bokstav"]}>
+              <WordsContext.Provider
+                value={{ words: ["bokstav"], dictionary: new Set() }}
+              >
+                <PuzzleIdContext.Provider
+                  value={{
+                    puzzleId: "bkaotnsvmepr",
+                    puzzleHash: 0,
+                    random: () => 0,
+                  }}
+                >
+                  <BoardContext.Provider
+                    value={{
+                      id: "bkaotnsvmepr",
+                      display: "bkaotnsvmepr",
+                      shuffle: () => undefined,
+                      randomize: () => undefined,
+                      url: "",
+                    }}
+                  >
+                    <SolutionContext.Provider
+                      value={{
+                        solve: () => undefined,
+                        abort: () => undefined,
+                        solution: [],
+                        status: "pending",
+                        queueSize: 0,
+                      }}
+                    >
                       <GameState words={[]} current="bokstav">
                         <Grid />
                       </GameState>
-                    </SolutionProvider>
-                  </BoardProvider>
-                </PuzzleIdProvider>
-              </WordsProvider>
+                    </SolutionContext.Provider>
+                  </BoardContext.Provider>
+                </PuzzleIdContext.Provider>
+              </WordsContext.Provider>
             </StorageSandbox>
             <p>Lykke til!</p>
             <hr />

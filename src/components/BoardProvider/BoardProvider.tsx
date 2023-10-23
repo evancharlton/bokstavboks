@@ -40,7 +40,7 @@ const reducer = (state: State, update: Action): State => {
       }
 
       if (!isLetters(boardId)) {
-        throw new Error("Invalid board ID");
+        throw new Error("Invalid board ID:" + boardId);
       }
 
       return {
