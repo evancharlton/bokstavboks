@@ -8,6 +8,10 @@ body,
   --link-color: #21c294;
 }
 
+* {
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+}
+
 .App {
   display: flex;
   flex-direction: column;

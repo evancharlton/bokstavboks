@@ -63,7 +63,10 @@ export const Play = () => {
                 <Page
                   header={
                     <Header
-                      leftButtons={[<ShareUrl />, <SettingsButton />]}
+                      leftButtons={[
+                        <ShareUrl key="share" />,
+                        <SettingsButton key="settings" />,
+                      ]}
                       buttons={<HeaderButtons />}
                     />
                   }
