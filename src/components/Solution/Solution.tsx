@@ -37,13 +37,7 @@ export const Solution = () => {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
+    <div className={classes.container}>
       {status === "solving" && (
         <Loader
           className={classes.loader}

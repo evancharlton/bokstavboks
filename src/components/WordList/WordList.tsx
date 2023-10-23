@@ -7,8 +7,8 @@ export const WordList = ({ path }: { path: string[] }) => {
     <div className={classes.words}>
       {path.map((word, i) => (
         <Fragment key={word}>
-          {i > 0 && <div className={classes.spacer} />}
           <h3 key={word} className={classes.word}>
+            {i > 0 && <div className={classes.spacer} />}
             <a
               href={`https://naob.no/s%C3%B8k/${word}`}
               target="_blank"

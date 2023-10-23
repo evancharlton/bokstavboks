@@ -44,3 +44,11 @@
 
   font-variant-numeric: tabular-nums;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 2px solid #999a;
+  width: 100%;
+}
