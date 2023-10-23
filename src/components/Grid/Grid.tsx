@@ -7,7 +7,17 @@ import { useEffect } from "react";
 import { useWords } from "../WordsProvider";
 import { useSettings } from "../SettingsProvider";
 
-const Button = ({ letter, a, b }: { letter: Letter; a: Letter; b: Letter }) => {
+const Button = ({
+  letter,
+  a,
+  b,
+  className,
+}: {
+  letter: Letter;
+  a: Letter;
+  b: Letter;
+  className: string;
+}) => {
   const { add, remove, current, usedLetters, revealed } = useGameState();
   const { words } = useWords();
   const { settings } = useSettings();
@@ -16,33 +26,52 @@ const Button = ({ letter, a, b }: { letter: Letter; a: Letter; b: Letter }) => {
   const prefix = `${current}${letter}`;
 
   return (
-    <button
-      disabled={revealed}
+    <div
       className={[
-        classes.letter,
-        usedLetters.has(letter) && classes.used,
-        current.includes(letter) && classes.current,
-        letter === lastLetter && classes.mostRecent,
-        settings.enableHint &&
-          current.length > 0 &&
-          words.find((word) => word.startsWith(prefix)) &&
-          classes.active,
+        classes.letterContainer,
+        className,
         settings.enableHint &&
           (lastLetter === a || lastLetter === b) &&
           classes.peer,
       ]
         .filter(Boolean)
         .join(" ")}
-      onClick={() => {
-        if (letter === lastLetter) {
-          remove();
-        } else {
-          add(letter);
-        }
-      }}
     >
-      {letter}
-    </button>
+      <button
+        disabled={revealed}
+        className={[
+          classes.letter,
+          usedLetters.has(letter) && classes.used,
+          current.includes(letter) && classes.current,
+          letter === lastLetter && classes.mostRecent,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        onClick={() => {
+          if (letter === lastLetter) {
+            remove();
+          } else {
+            add(letter);
+          }
+        }}
+      >
+        {letter}
+      </button>
+      {settings.enableHint && (
+        <div
+          className={[
+            current.length > 0 &&
+              words.find((word) => word.startsWith(prefix)) &&
+              classes.active,
+            classes.dot,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          🔵
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -110,25 +139,25 @@ export const Grid = () => {
     <div>
       <div className={classes.box}>
         <div className={classes.letter} />
-        <Button letter={t[0]} a={t[1]} b={t[2]} />
-        <Button letter={t[1]} a={t[0]} b={t[2]} />
-        <Button letter={t[2]} a={t[0]} b={t[1]} />
+        <Button className={classes.top} letter={t[0]} a={t[1]} b={t[2]} />
+        <Button className={classes.top} letter={t[1]} a={t[0]} b={t[2]} />
+        <Button className={classes.top} letter={t[2]} a={t[0]} b={t[1]} />
         <div className={classes.letter} />
 
-        <Button letter={l[0]} a={l[1]} b={l[2]} />
+        <Button className={classes.left} letter={l[0]} a={l[1]} b={l[2]} />
         <Nest className={classes.filler} />
-        <Button letter={r[0]} a={r[1]} b={r[2]} />
+        <Button className={classes.right} letter={r[0]} a={r[1]} b={r[2]} />
 
-        <Button letter={l[1]} a={l[0]} b={l[2]} />
-        <Button letter={r[1]} a={r[0]} b={r[2]} />
+        <Button className={classes.left} letter={l[1]} a={l[0]} b={l[2]} />
+        <Button className={classes.right} letter={r[1]} a={r[0]} b={r[2]} />
 
-        <Button letter={l[2]} a={l[0]} b={l[1]} />
-        <Button letter={r[2]} a={r[0]} b={r[1]} />
+        <Button className={classes.left} letter={l[2]} a={l[0]} b={l[1]} />
+        <Button className={classes.right} letter={r[2]} a={r[0]} b={r[1]} />
 
         <div className={classes.letter} />
-        <Button letter={b[0]} a={b[1]} b={b[2]} />
-        <Button letter={b[1]} a={b[0]} b={b[2]} />
-        <Button letter={b[2]} a={b[0]} b={b[1]} />
+        <Button className={classes.bottom} letter={b[0]} a={b[1]} b={b[2]} />
+        <Button className={classes.bottom} letter={b[1]} a={b[0]} b={b[2]} />
+        <Button className={classes.bottom} letter={b[2]} a={b[0]} b={b[1]} />
         <div className={classes.letter} />
       </div>
     </div>
