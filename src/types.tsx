@@ -24,6 +24,7 @@ export type Letter =
   | "w"
   | "x"
   | "y"
+  | "z"
   | "ø"
   | "æ"
   | "å";
@@ -54,6 +55,7 @@ export const LETTERS: Record<string, true> = {
   w: true,
   x: true,
   y: true,
+  z: true,
   ø: true,
   æ: true,
   å: true,
