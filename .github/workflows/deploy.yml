@@ -14,10 +14,11 @@ jobs:
 
       - name: Install and Build 🔧
         env:
-          PUBLIC_URL: /bokstavboks
+          PUBLIC_URL: /
         run: |
           yarn install --frozen-lockfile
           yarn build
+          echo "bokstavboks.no" > build/CNAME
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
