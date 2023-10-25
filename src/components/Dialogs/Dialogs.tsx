@@ -223,7 +223,7 @@ export const Dialogs = ({ children }: Props) => {
               <li>
                 <a
                   target="_blank"
-                  href="https://evancharlton.github.io/stavehumle"
+                  href="https://stavehumle.no/"
                   rel="noreferrer"
                 >
                   Stavehumle
