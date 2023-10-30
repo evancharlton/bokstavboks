@@ -80,19 +80,21 @@
 }
 
 .letterContainer.right .dot {
-  left: 30%;
+  left: 18px;
 }
 
 .letterContainer.left .dot {
-  left: 70%;
+  left: unset;
+  right: 4px;
 }
 
 .letterContainer.top .dot {
-  top: 70%;
+  top: unset;
+  bottom: 6px;
 }
 
 .letterContainer.bottom .dot {
-  top: 30%;
+  top: 16px;
 }
 
 .letterContainer.peer .dot {
