@@ -144,7 +144,16 @@ export const Status = () => {
         ),
       });
     }
-  }, [hide, randomize, revealed, show, showDialog, solved, words.length]);
+  }, [
+    hide,
+    randomize,
+    revealed,
+    show,
+    showDialog,
+    solved,
+    words,
+    words.length,
+  ]);
 
   return (
     <div className={classes.container}>
