@@ -19,9 +19,7 @@ export const Header = ({ buttons, leftButtons }: Props) => {
           className={classes.buttons}
           style={{ justifyContent: "flex-start", gridArea: "left" }}
         >
-          <Link className={classes.button} to="/">
-            🇳🇴
-          </Link>
+          <Link to="/">🇳🇴</Link>
           {leftButtons}
         </div>
         <h1>

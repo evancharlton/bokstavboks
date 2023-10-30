@@ -47,7 +47,7 @@
 }
 
 .buttons button,
-.button {
+.buttons a {
   font-size: 30px;
   margin: 8px -4px;
   padding: 8px;
@@ -68,10 +68,15 @@
   text-decoration: none;
 }
 
+.buttons a {
+  font-size: 25px;
+  height: 30px;
+}
+
 .buttons button:hover,
 .buttons button:focus,
-.button:hover,
-.button:focus {
+.buttons a:hover,
+.buttons a:focus {
   background-color: #666a;
   color: #fff;
   filter: grayscale(0);
