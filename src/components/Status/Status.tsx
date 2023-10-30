@@ -82,11 +82,12 @@ export const Status = () => {
               er:
             </p>
             <Solution />
-            <p>
+            <div style={{ padding: 8 }}>
               Hvert puslespill har <strong>mange</strong> forskjellige
               løsninger. Du løste det med <strong>{words.length} ord</strong>,
               som er flott!
-            </p>
+              <WordList path={words} />
+            </div>
             <div className={classes.buttons}>
               <LocalShareButton>Del</LocalShareButton>
               <button onClick={randomize}>

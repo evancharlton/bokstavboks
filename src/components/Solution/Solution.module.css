@@ -49,6 +49,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-bottom: 2px solid #999a;
+  border-bottom: 2px solid transparent;
   width: 100%;
+}
+
+.container.solved {
+  border-bottom: 2px solid #999a;
 }

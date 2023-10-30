@@ -4,6 +4,7 @@ import { Loader } from "../Loader";
 import { useSolution } from "../SolutionProvider";
 import { WordList } from "../WordList";
 import classes from "./Solution.module.css";
+import { CSSProperties } from "react";
 
 const format = (n: number): string => {
   const out: string[] = [];
@@ -17,9 +18,14 @@ const format = (n: number): string => {
   return out.join("");
 };
 
-export const Solution = () => {
+type Props = {
+  className?: string;
+  style?: CSSProperties;
+};
+
+export const Solution = ({ className, style }: Props) => {
   const { solution, status, solve, abort, queueSize } = useSolution();
-  const { revealed } = useGameState();
+  const { revealed, solved } = useGameState();
 
   if (status === "pending") {
     if (revealed) {
@@ -37,7 +43,12 @@ export const Solution = () => {
   }
 
   return (
-    <div className={classes.container}>
+    <div
+      className={[classes.container, solved && classes.solved]
+        .filter(Boolean)
+        .join(" ")}
+      style={style}
+    >
       {status === "solving" && (
         <Loader
           className={classes.loader}
