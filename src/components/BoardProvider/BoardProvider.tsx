@@ -97,7 +97,7 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
           value.length === 12 &&
           isLetters(value)
         ) {
-          return Promise.resolve(value);
+          return value;
         }
         return extractBoardId(puzzleId, random, wordBank);
       })
