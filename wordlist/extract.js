@@ -18,6 +18,7 @@ const isValidLetter = (letter) => {
 };
 
 const ADJACENT_LETTERS = /(.)\1+/;
+const VOWELS = new Set("aeiouyåøæ");
 
 const loadWords = (file) => {
   return new Promise((resolve, reject) => {
@@ -58,6 +59,12 @@ const loadWords = (file) => {
         return;
       }
 
+      // There are some weird non-words in there for some reason, like "ng"
+      // and "lx" -- let's filter those out.
+      if (!letters.some((letter) => VOWELS.has(letter))) {
+        return;
+      }
+
       words.add(word);
     };
 
@@ -78,7 +85,7 @@ Promise.all([
     }
     fs.writeFileSync(
       path.resolve(path.join(folder, "words.json")),
-      JSON.stringify(words, null, 2)
+      JSON.stringify(words)
     );
     return words;
   }),
@@ -90,7 +97,7 @@ Promise.all([
     }
     fs.writeFileSync(
       path.resolve(path.join(folder, "words.json")),
-      JSON.stringify(words, null, 2)
+      JSON.stringify(words)
     );
     return words;
   }),
@@ -127,6 +134,6 @@ Promise.all([
   }
   fs.writeFileSync(
     path.resolve(path.join(folder, "words.json")),
-    JSON.stringify([...knownWords].sort(), null, 2)
+    JSON.stringify([...knownWords].sort())
   );
 });
