@@ -68,11 +68,6 @@
   text-decoration: none;
 }
 
-.buttons a {
-  font-size: 25px;
-  height: 30px;
-}
-
 .buttons button:hover,
 .buttons button:focus,
 .buttons a:hover,

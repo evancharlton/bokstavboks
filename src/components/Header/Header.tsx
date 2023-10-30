@@ -1,5 +1,5 @@
 import classes from "./Header.module.css";
-import { MdHelpOutline, MdOutlineInfo } from "react-icons/md";
+import { MdHelpOutline, MdLanguage, MdOutlineInfo } from "react-icons/md";
 import { Link, useParams } from "react-router-dom";
 import { useDialog } from "../Dialogs";
 
@@ -19,7 +19,9 @@ export const Header = ({ buttons, leftButtons }: Props) => {
           className={classes.buttons}
           style={{ justifyContent: "flex-start", gridArea: "left" }}
         >
-          <Link to="/">🇳🇴</Link>
+          <Link to="/">
+            <MdLanguage />
+          </Link>
           {leftButtons}
         </div>
         <h1>
