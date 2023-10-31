@@ -3,4 +3,5 @@ export type State = {
   solution: string[];
   controller: AbortController | undefined;
   queueSize: number;
+  maxQueueSize: number;
 };

@@ -6,6 +6,7 @@ import { BoardProvider } from "../src/components/BoardProvider";
 import { PuzzleIdProvider } from "../src/components/PuzzleIdProvider";
 import { GameState } from "../src/components/GameState";
 import { Dialogs } from "../src/components/Dialogs";
+import "../src/App.css";
 
 const withStorage = makeDecorator({
   name: "withStorage",

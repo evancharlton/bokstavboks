@@ -127,11 +127,7 @@ export const Dialogs = ({ children }: Props) => {
                   >
                     <SolutionContext.Provider
                       value={{
-                        solve: () => undefined,
-                        abort: () => undefined,
                         solution: [],
-                        status: "pending",
-                        queueSize: 0,
                       }}
                     >
                       <GameState words={[]} current="bokstav">

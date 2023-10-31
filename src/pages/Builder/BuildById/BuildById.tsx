@@ -5,16 +5,7 @@ import { GameState } from "../../../components/GameState";
 import { StorageSandbox } from "../../../useStorage";
 import { isLetters } from "../../../types";
 import { Solution } from "../../../components/Solution";
-import {
-  SolutionProvider,
-  useSolution,
-} from "../../../components/SolutionProvider";
-
-const StartSolving = () => {
-  const { solve } = useSolution();
-
-  return <button onClick={solve}>Solve</button>;
-};
+import { SolutionProvider } from "../../../components/SolutionProvider";
 
 export const BuildById = () => {
   const [id, setId] = useState("");
@@ -41,7 +32,6 @@ export const BuildById = () => {
             <BoardProvider>
               <SolutionProvider>
                 <GameState>
-                  <StartSolving />
                   <Solution />
                 </GameState>
               </SolutionProvider>

@@ -2,11 +2,7 @@ import { createContext, useContext } from "react";
 import { State } from "./types";
 
 export const SolutionContext = createContext<
-  | ({ solve: () => void; abort: () => void } & Pick<
-      State,
-      "status" | "solution" | "queueSize"
-    >)
-  | undefined
+  Pick<State, "solution"> | undefined
 >(undefined);
 
 export const useSolution = () => {

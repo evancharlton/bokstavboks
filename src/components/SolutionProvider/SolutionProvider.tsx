@@ -6,6 +6,7 @@ import { findSolutionById } from "../../logic";
 import { useWords } from "../WordsProvider";
 import { useBoard } from "../BoardProvider";
 import { useStorage } from "../../useStorage";
+import { Solving } from "./Solving";
 
 type Update =
   | { action: "start-solving"; controller: AbortController }
@@ -34,6 +35,7 @@ const reducer = (state: State, update: Update): State => {
       return {
         ...state,
         queueSize: update.queueSize,
+        maxQueueSize: Math.max(state.maxQueueSize, update.queueSize),
       };
     case "finish":
       return {
@@ -77,16 +79,20 @@ const isSolution = (v: unknown): v is State["solution"] => {
 
 export const SolutionProvider = ({ children, ...initialState }: Props) => {
   const { words } = useWords();
-  const { id } = useBoard();
+  const { id, randomize } = useBoard();
   const store = useStorage("solutions");
 
-  const [{ status, solution, queueSize }, dispatch] = useReducer(reducer, {
-    status: "pending",
-    solution: [],
-    controller: undefined,
-    queueSize: 0,
-    ...initialState,
-  });
+  const [{ status, solution, queueSize, maxQueueSize }, dispatch] = useReducer(
+    reducer,
+    {
+      status: "pending",
+      solution: [],
+      controller: undefined,
+      queueSize: 0,
+      maxQueueSize: 0,
+      ...initialState,
+    }
+  );
 
   useEffect(() => {
     store.getItem(id).then((storedSolution) => {
@@ -121,8 +127,8 @@ export const SolutionProvider = ({ children, ...initialState }: Props) => {
         );
       })
       .then((solution: string[]) => {
-        dispatch({ action: "finish", solution });
         if (solution.length > 0) {
+          dispatch({ action: "finish", solution });
           return store.setItem(id, solution);
         }
       })
@@ -137,11 +143,32 @@ export const SolutionProvider = ({ children, ...initialState }: Props) => {
     dispatch({ action: "abort" });
   }, []);
 
-  return (
-    <SolutionContext.Provider
-      value={{ solve, abort, status, solution, queueSize }}
-    >
-      {children}
-    </SolutionContext.Provider>
-  );
+  useEffect(() => {
+    solve();
+    return () => {
+      abort();
+    };
+  }, [abort, id, solve]);
+
+  if (status === "pending" || status === "solving") {
+    return (
+      <Solving
+        progress={(maxQueueSize - queueSize) / maxQueueSize}
+        onNewPuzzle={() => {
+          abort();
+          randomize();
+        }}
+      />
+    );
+  } else if (status === "impossible") {
+    return null; // TODO
+  } else if (status === "solved") {
+    return (
+      <SolutionContext.Provider value={{ solution }}>
+        {children}
+      </SolutionContext.Provider>
+    );
+  } else {
+    return neverGuard(status, null);
+  }
 };

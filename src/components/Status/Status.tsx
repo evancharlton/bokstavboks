@@ -175,7 +175,7 @@ export const Status = () => {
           <div className={classes.caret} />
         </div>
       )}
-      <Solution />
+      {revealed && <Solution />}
       <WordList path={words} />
     </div>
   );

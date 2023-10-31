@@ -1,0 +1,22 @@
+.outerContainer {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.container button {
+  border-radius: 4px;
+  background-color: transparent;
+  border: 1px solid #333a;
+  padding: 4px 8px;
+}

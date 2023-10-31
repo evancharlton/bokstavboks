@@ -6,7 +6,6 @@ import { useBoard } from "../BoardProvider";
 import { SavedState, State, isSavedState } from "./types";
 import { reducer } from "./reducer";
 import { useStorage } from "../../useStorage";
-import { useSolution } from "../SolutionProvider";
 import { useToaster } from "../Toaster";
 import { ERRORS } from "./errors";
 
@@ -17,7 +16,6 @@ type Props = {
 export const GameState = ({ children, ...initialState }: Props) => {
   const { dictionary } = useWords();
   const { id: boardId } = useBoard();
-  const { solve: solveBoard } = useSolution();
   const { show: showToast, hide: hideToast } = useToaster();
 
   const games = useStorage("games");
@@ -145,9 +143,8 @@ export const GameState = ({ children, ...initialState }: Props) => {
   }, []);
 
   const solve = useCallback(() => {
-    solveBoard();
     dispatch({ action: "reveal" });
-  }, [solveBoard]);
+  }, []);
 
   const combined = `${words.join("")}`;
   if (!isLetters(combined)) {
