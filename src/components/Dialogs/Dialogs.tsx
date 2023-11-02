@@ -11,14 +11,56 @@ import { WordsContext } from "../WordsProvider/context";
 import { PuzzleIdContext } from "../PuzzleIdProvider/context";
 import { BoardContext } from "../BoardProvider/context";
 import { SolutionContext } from "../SolutionProvider/context";
+import { Reveal } from "../GameState";
 
 type Props = {
   children: React.ReactNode;
 };
 
+const HINT_BUTTON: {
+  [K in Reveal]: {
+    shown: boolean;
+    disabled: boolean;
+    text: string;
+    className: string | undefined;
+  };
+} = {
+  hidden: {
+    shown: true,
+    disabled: false,
+    text: "Gi meg et hint",
+    className: "primary",
+  },
+  blocks: {
+    shown: true,
+    disabled: false,
+    text: "Et annet hint",
+    className: "primary",
+  },
+  "first-letters": {
+    shown: true,
+    disabled: true,
+    text: "Ingen hint gjenstår",
+    className: undefined,
+  },
+  full: {
+    shown: false,
+    disabled: true,
+    text: "",
+    className: undefined,
+  },
+} as const;
+
 const SolveDialog = () => {
   const { hide } = useDialog();
-  const { solve } = useGameState();
+  const { hint, show, reveal } = useGameState();
+
+  const giveHint = () => {
+    hint();
+    hide();
+  };
+
+  const { shown, disabled, text, className } = HINT_BUTTON[reveal];
 
   return (
     <Dialog title="Vis løsning?" onClose={() => hide()}>
@@ -28,16 +70,25 @@ const SolveDialog = () => {
           løsninger - dette er bare den korteste!)
         </p>
         <div className={classes.buttonBar}>
-          <button onClick={() => hide()}>Nei, jeg vil fortsette å prøve</button>
+          <button onClick={() => hide()}>Nei, jeg skal prøve</button>
           <button
-            className="primary"
+            className={!className ? "primary" : undefined}
             onClick={() => {
-              solve();
+              show();
               hide();
             }}
           >
-            Ja, takk!
+            Vis meg løsningen
           </button>
+          {shown && (
+            <button
+              className={className}
+              disabled={disabled}
+              onClick={giveHint}
+            >
+              {text}
+            </button>
+          )}
         </div>
       </div>
     </Dialog>

@@ -7,18 +7,18 @@ import { useGameState } from "../GameState";
 import classes from "./Buttons.module.css";
 
 export const Buttons = () => {
-  const { remove, reset, commit, revealed } = useGameState();
+  const { remove, reset, commit, reveal } = useGameState();
 
   return (
     <div className={classes.container}>
       <div className={classes.row}>
-        <button disabled={revealed} onClick={() => reset()}>
+        <button disabled={reveal === "full"} onClick={() => reset()}>
           <MdOutlineRestartAlt />
         </button>
-        <button disabled={revealed} onClick={() => remove()}>
+        <button disabled={reveal === "full"} onClick={() => remove()}>
           <MdOutlineBackspace />
         </button>
-        <button disabled={revealed} onClick={() => commit()}>
+        <button disabled={reveal === "full"} onClick={() => commit()}>
           <MdKeyboardReturn />
         </button>
       </div>

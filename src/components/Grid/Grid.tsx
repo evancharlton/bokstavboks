@@ -18,7 +18,7 @@ const Button = ({
   b: Letter;
   className: string;
 }) => {
-  const { add, remove, current, usedLetters, revealed } = useGameState();
+  const { add, remove, current, usedLetters, reveal } = useGameState();
   const { words } = useWords();
   const { settings } = useSettings();
 
@@ -36,7 +36,7 @@ const Button = ({
         .join(" ")}
     >
       <button
-        disabled={revealed}
+        disabled={reveal === "full"}
         className={[
           classes.letter,
           usedLetters.has(letter) && classes.used,
@@ -74,7 +74,7 @@ const Button = ({
 };
 
 export const Grid = () => {
-  const { solved, revealed, commit, remove, add } = useGameState();
+  const { solved, reveal, commit, remove, add } = useGameState();
   const { display } = useBoard();
   const t = display.substring(0, 3);
   const r = display.substring(3, 6);
@@ -101,18 +101,22 @@ export const Grid = () => {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent): void => {
-      if (revealed || solved) {
-        return;
-      }
-
       const key = e.key;
-      if (key === "Enter") {
-        commit();
+      if (reveal === "full") {
         return;
       }
 
       if (key === "Backspace" || key === "Delete") {
         remove();
+        return;
+      }
+
+      if (solved) {
+        return;
+      }
+
+      if (key === "Enter") {
+        commit();
         return;
       }
 
@@ -131,7 +135,7 @@ export const Grid = () => {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [add, commit, revealed, solved, display, remove]);
+  }, [add, commit, reveal, solved, display, remove]);
 
   return (
     <div>

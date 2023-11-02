@@ -20,12 +20,12 @@ import { ShareButton } from "../../components/ShareButton";
 
 const HeaderButtons = () => {
   const { randomize } = useBoard();
-  const { revealed } = useGameState();
+  const { reveal } = useGameState();
   const { show } = useDialog();
 
   return (
     <>
-      {!revealed && (
+      {reveal !== "full" && (
         <button onClick={() => show("solve")}>
           <MdOutlineDone />
         </button>

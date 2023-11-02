@@ -8,8 +8,9 @@ type Update =
   | { action: "commit" }
   | { action: "reset" }
   | { action: "clear-error" }
-  | { action: "reveal" }
-  | ({ action: "restore-complete" } & Partial<SavedState>);
+  | ({ action: "restore-complete" } & Partial<SavedState>)
+  | { action: "show" }
+  | { action: "hint" };
 
 export const reducer =
   (dictionary: Set<string>, isValid: (input: string) => boolean) =>
@@ -101,7 +102,6 @@ export const reducer =
             current: state.current.substring(0, state.current.length - 1),
             error: undefined,
             solved: false,
-            revealed: false,
           };
         }
 
@@ -111,7 +111,6 @@ export const reducer =
             current: "",
             error: undefined,
             solved: false,
-            revealed: false,
           };
         }
 
@@ -122,7 +121,6 @@ export const reducer =
           current: previousWord,
           error: undefined,
           solved: false,
-          revealed: false,
         };
       }
 
@@ -184,12 +182,42 @@ export const reducer =
         };
       }
 
-      case "reveal": {
+      case "show": {
         return {
           ...state,
           current: "",
-          revealed: true,
+          reveal: "full",
         };
+      }
+
+      case "hint": {
+        const { reveal: currentReveal } = state;
+        switch (currentReveal) {
+          case "hidden": {
+            return {
+              ...state,
+              reveal: "blocks",
+            };
+          }
+          case "blocks": {
+            return {
+              ...state,
+              reveal: "first-letters",
+            };
+          }
+          case "first-letters": {
+            return {
+              ...state,
+              reveal: "full",
+            };
+          }
+          case "full": {
+            return state;
+          }
+          default: {
+            return neverGuard(currentReveal, state);
+          }
+        }
       }
 
       case "restore-complete": {
@@ -198,7 +226,7 @@ export const reducer =
           error: undefined,
           words: update.words ?? state.words,
           solved: update.solved ?? state.solved,
-          revealed: update.revealed ?? state.revealed,
+          reveal: update.reveal ?? state.reveal,
           restoreComplete: true,
         };
       }

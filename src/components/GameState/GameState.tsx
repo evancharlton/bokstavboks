@@ -70,18 +70,16 @@ export const GameState = ({ children, ...initialState }: Props) => {
     [sides]
   );
 
-  const [
-    { restoreComplete, words, current, error, solved, revealed },
-    dispatch,
-  ] = useReducer(reducer(dictionary, isValid), {
-    words: [],
-    current: "",
-    error: undefined,
-    solved: false,
-    revealed: false,
-    restoreComplete: false,
-    ...initialState,
-  } satisfies State);
+  const [{ restoreComplete, words, current, error, solved, reveal }, dispatch] =
+    useReducer(reducer(dictionary, isValid), {
+      words: [],
+      current: "",
+      error: undefined,
+      solved: false,
+      reveal: "hidden",
+      restoreComplete: false,
+      ...initialState,
+    } satisfies State);
 
   useEffect(() => {
     games
@@ -113,10 +111,10 @@ export const GameState = ({ children, ...initialState }: Props) => {
       games.setItem(boardId, {
         words,
         solved,
-        revealed,
+        reveal,
       });
     }
-  }, [boardId, restoreComplete, revealed, solved, games, words]);
+  }, [boardId, restoreComplete, reveal, solved, games, words]);
 
   const setInput = useCallback((input: string) => {
     dispatch({ action: "set-current", input });
@@ -142,8 +140,12 @@ export const GameState = ({ children, ...initialState }: Props) => {
     dispatch({ action: "clear-error" });
   }, []);
 
-  const solve = useCallback(() => {
-    dispatch({ action: "reveal" });
+  const show = useCallback(() => {
+    dispatch({ action: "show" });
+  }, []);
+
+  const hint = useCallback(() => {
+    dispatch({ action: "hint" });
   }, []);
 
   const combined = `${words.join("")}`;
@@ -167,7 +169,7 @@ export const GameState = ({ children, ...initialState }: Props) => {
       value={{
         words,
         current,
-        revealed,
+        reveal,
         solved,
         setInput,
         add,
@@ -177,7 +179,8 @@ export const GameState = ({ children, ...initialState }: Props) => {
         usedLetters,
         error,
         clearError,
-        solve,
+        show,
+        hint,
       }}
     >
       {children}

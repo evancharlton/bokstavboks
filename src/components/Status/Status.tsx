@@ -23,7 +23,9 @@ const EMOJI = {
 const LocalShareButton = ({ children }: { children?: React.ReactNode }) => {
   const { url } = useBoard();
   const { solution } = useSolution();
-  const { words, solved, revealed } = useGameState();
+  const { words, solved, reveal } = useGameState();
+
+  const revealed = reveal === "full";
 
   const header = (() => {
     if (revealed && solved) {
@@ -62,10 +64,12 @@ const LocalShareButton = ({ children }: { children?: React.ReactNode }) => {
 
 export const Status = () => {
   const { randomize } = useBoard();
-  const { words, current, solved, revealed } = useGameState();
+  const { words, current, solved, reveal } = useGameState();
   const navigate = useNavigate();
   const { lang } = useParams();
   const { show, hide } = useDialog();
+
+  const revealed = reveal === "full";
 
   const emoji = EMOJI[solved ? "solved" : revealed ? "revealed" : "none"];
 
@@ -175,7 +179,7 @@ export const Status = () => {
           <div className={classes.caret} />
         </div>
       )}
-      {revealed && <Solution />}
+      <Solution />
       <WordList path={words} />
     </div>
   );
