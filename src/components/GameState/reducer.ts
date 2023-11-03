@@ -171,6 +171,7 @@ export const reducer =
           ...state,
           words: [],
           current: "",
+          solved: false,
           error: undefined,
         };
       }
