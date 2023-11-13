@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { WordsContext } from "./context";
 import { Loader } from "../Loader";
 
@@ -40,6 +40,7 @@ export const WordsProvider = ({ children, words: initialWords }: Props) => {
   return (
     <WordsContext.Provider key={lang} value={value}>
       {children}
+      <Outlet />
     </WordsContext.Provider>
   );
 };

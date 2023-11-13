@@ -55,33 +55,31 @@ const SettingsButton = () => {
 export const Play = () => {
   return (
     <PuzzleIdProvider>
-      <WordsProvider>
-        <BoardProvider>
-          <SolutionProvider>
-            <GameState>
-              <Dialogs>
-                <Page
-                  header={
-                    <Header
-                      leftButtons={[
-                        <ShareUrl key="share" />,
-                        <SettingsButton key="settings" />,
-                      ]}
-                      buttons={<HeaderButtons />}
-                    />
-                  }
-                >
-                  <div className={classes.container}>
-                    <Status />
-                    <Grid />
-                    <Buttons />
-                  </div>
-                </Page>
-              </Dialogs>
-            </GameState>
-          </SolutionProvider>
-        </BoardProvider>
-      </WordsProvider>
+      <BoardProvider>
+        <SolutionProvider>
+          <GameState>
+            <Dialogs>
+              <Page
+                header={
+                  <Header
+                    leftButtons={[
+                      <ShareUrl key="share" />,
+                      <SettingsButton key="settings" />,
+                    ]}
+                    buttons={<HeaderButtons />}
+                  />
+                }
+              >
+                <div className={classes.container}>
+                  <Status />
+                  <Grid />
+                  <Buttons />
+                </div>
+              </Page>
+            </Dialogs>
+          </GameState>
+        </SolutionProvider>
+      </BoardProvider>
     </PuzzleIdProvider>
   );
 };
