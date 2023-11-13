@@ -13,7 +13,6 @@ import {
 import { Header } from "../../components/Header";
 import { Page } from "../../components/Page";
 import { PuzzleIdProvider } from "../../components/PuzzleIdProvider";
-import { WordsProvider } from "../../components/WordsProvider";
 import { Dialogs, useDialog } from "../../components/Dialogs";
 import { SolutionProvider } from "../../components/SolutionProvider";
 import { ShareButton } from "../../components/ShareButton";
