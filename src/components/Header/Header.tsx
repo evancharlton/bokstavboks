@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const Header = ({ buttons, leftButtons }: Props) => {
-  const { lang } = useParams();
+  const { lang = "" } = useParams();
   const { show } = useDialog();
 
   return (
