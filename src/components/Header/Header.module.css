@@ -33,7 +33,7 @@
 }
 
 .container h1 a:hover,
-.container h1 a:focus {
+.container h1 a:focus-visible {
   text-decoration: underline;
 }
 
@@ -69,9 +69,9 @@
 }
 
 .buttons button:hover,
-.buttons button:focus,
+.buttons button:focus-visible,
 .buttons a:hover,
-.buttons a:focus {
+.buttons a:focus-visible {
   background-color: #666a;
   color: #fff;
   filter: grayscale(0);

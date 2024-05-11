@@ -15,7 +15,7 @@
   color: var(--link-color);
 }
 
-.container a:focus,
+.container a:focus-visible,
 .container a:hover {
   background-color: var(--link-color);
   color: white;

@@ -21,7 +21,7 @@ body,
 a,
 a:link,
 a:hover,
-a:focus,
+a:focus-visible,
 a:active,
 a:visited {
   text-decoration: none;
