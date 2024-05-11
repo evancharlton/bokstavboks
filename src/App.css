@@ -6,6 +6,10 @@ body,
   flex-direction: column;
 
   --link-color: #21c294;
+  --top-color: #ffcc32;
+  --left-color: #f44336;
+  --right-color: #7cb342;
+  --bottom-color: #1976d2;
 }
 
 * {

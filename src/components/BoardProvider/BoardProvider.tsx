@@ -43,10 +43,19 @@ const reducer = (state: State, update: Action): State => {
         throw new Error("Invalid board ID:" + boardId);
       }
 
+      const id = normalizeId(boardId);
+      const display = shuffleId(boardId);
+
       return {
         ...state,
-        id: normalizeId(boardId),
-        display: shuffleId(boardId),
+        id,
+        display,
+        groups: [
+          id.indexOf(display[0]),
+          id.indexOf(display[3]),
+          id.indexOf(display[6]),
+          id.indexOf(display[9]),
+        ].map((i) => Math.floor(i / 3)) as unknown as State["groups"],
       };
     }
 
@@ -73,9 +82,10 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
   const { words: wordBank } = useWords();
   const { puzzleId, random } = usePuzzleId();
 
-  const [{ id, display }, dispatch] = useReducer(reducer, {
+  const [{ id, display, groups }, dispatch] = useReducer(reducer, {
     id: "",
     display: "",
+    groups: [0, 0, 0, 0],
     ...initialState,
   } satisfies State);
 
@@ -140,8 +150,9 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
       key={id}
       value={{
         id,
-        shuffle,
         display,
+        groups,
+        shuffle,
         randomize,
         url,
       }}

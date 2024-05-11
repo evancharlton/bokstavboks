@@ -1,7 +1,13 @@
 import { isLetters } from "../../types";
 import { ValidationError } from "./context";
 
-export type Reveal = "hidden" | "blocks" | "first-letters" | "full";
+export type Reveal = "hidden" | "full";
+
+export type Hints = {
+  blocks: boolean;
+  colors: boolean;
+  starts: number;
+};
 
 export type State = {
   words: string[];
@@ -9,11 +15,20 @@ export type State = {
   error: ValidationError | undefined;
   solved: boolean;
   reveal: Reveal;
+  hints: Hints;
 } & {
   restoreComplete: boolean;
 };
 
-export type SavedState = Pick<State, "words" | "solved" | "reveal">;
+export type SavedState = Pick<State, "words" | "solved" | "reveal" | "hints">;
+
+const KNOWN_REVEALED: Record<string, true> = {
+  hidden: true,
+  blocks: true,
+  colors: true,
+  "first-letters": true,
+  full: true,
+};
 
 export const isSavedState = (v: unknown): v is SavedState => {
   if (!v) {
@@ -39,12 +54,7 @@ export const isSavedState = (v: unknown): v is SavedState => {
 
   if (
     "revealed" in v &&
-    !(
-      v.revealed === "hidden" ||
-      v.revealed === "blocks" ||
-      v.revealed === "first-letters" ||
-      v.revealed === "full"
-    )
+    !KNOWN_REVEALED[v.revealed as keyof typeof KNOWN_REVEALED]
   ) {
     return false;
   }

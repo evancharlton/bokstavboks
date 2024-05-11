@@ -94,3 +94,13 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.solutions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.solutions > p {
+  margin: 0;
+}

@@ -4,3 +4,19 @@
 
   aspect-ratio: 1 / 1;
 }
+
+.left {
+  stroke: var(--left-color);
+}
+
+.top {
+  stroke: var(--top-color);
+}
+
+.right {
+  stroke: var(--right-color);
+}
+
+.bottom {
+  stroke: var(--bottom-color);
+}

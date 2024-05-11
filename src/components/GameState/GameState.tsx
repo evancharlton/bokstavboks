@@ -70,16 +70,23 @@ export const GameState = ({ children, ...initialState }: Props) => {
     [sides]
   );
 
-  const [{ restoreComplete, words, current, error, solved, reveal }, dispatch] =
-    useReducer(reducer(dictionary, isValid), {
-      words: [],
-      current: "",
-      error: undefined,
-      solved: false,
-      reveal: "hidden",
-      restoreComplete: false,
-      ...initialState,
-    } satisfies State);
+  const [
+    { restoreComplete, words, current, error, solved, reveal, hints },
+    dispatch,
+  ] = useReducer(reducer(dictionary, isValid), {
+    words: [],
+    current: "",
+    error: undefined,
+    solved: false,
+    reveal: "hidden",
+    restoreComplete: false,
+    hints: {
+      blocks: false,
+      colors: false,
+      starts: 0,
+    },
+    ...initialState,
+  } satisfies State);
 
   useEffect(() => {
     games
@@ -96,7 +103,9 @@ export const GameState = ({ children, ...initialState }: Props) => {
       .catch((e) => {
         console.warn("Failed to restore", e);
         games.removeItem(boardId);
-        return { words: [], solved: false, revealed: false };
+        return {
+          reveal: "hidden",
+        } satisfies Partial<SavedState>;
       })
       .then((update) => {
         dispatch({
@@ -112,9 +121,10 @@ export const GameState = ({ children, ...initialState }: Props) => {
         words,
         solved,
         reveal,
+        hints,
       });
     }
-  }, [boardId, restoreComplete, reveal, solved, games, words]);
+  }, [boardId, restoreComplete, reveal, solved, games, words, hints]);
 
   const setInput = useCallback((input: string) => {
     dispatch({ action: "set-current", input });
@@ -148,6 +158,10 @@ export const GameState = ({ children, ...initialState }: Props) => {
     dispatch({ action: "hint" });
   }, []);
 
+  const setHints = useCallback((delta: Partial<State["hints"]>) => {
+    dispatch({ action: "set-hint", ...delta });
+  }, []);
+
   const combined = `${words.join("")}`;
   if (!isLetters(combined)) {
     throw new Error("Impossible input");
@@ -171,6 +185,7 @@ export const GameState = ({ children, ...initialState }: Props) => {
         current,
         reveal,
         solved,
+        hints,
         setInput,
         add,
         remove,
@@ -181,6 +196,7 @@ export const GameState = ({ children, ...initialState }: Props) => {
         clearError,
         show,
         hint,
+        setHints,
       }}
     >
       {children}

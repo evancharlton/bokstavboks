@@ -73,9 +73,23 @@ const Button = ({
   );
 };
 
+const CLASSES = [
+  classes.idTop,
+  classes.idRight,
+  classes.idBottom,
+  classes.idLeft,
+] as const;
+
 export const Grid = () => {
-  const { solved, reveal, commit, remove, add } = useGameState();
-  const { display } = useBoard();
+  const {
+    solved,
+    reveal,
+    hints: { colors },
+    commit,
+    remove,
+    add,
+  } = useGameState();
+  const { display, groups } = useBoard();
   const t = display.substring(0, 3);
   const r = display.substring(3, 6);
   const b = display.substring(6, 9);
@@ -137,29 +151,94 @@ export const Grid = () => {
     };
   }, [add, commit, reveal, solved, display, remove]);
 
+  const topClass = CLASSES[groups[0]];
+  const rightClass = CLASSES[groups[1]];
+  const bottomClass = CLASSES[groups[2]];
+  const leftClass = CLASSES[groups[3]];
+
   return (
-    <div>
+    <div className={colors ? classes.colors : undefined}>
       <div className={classes.box}>
         <div className={classes.letter} />
-        <Button className={classes.top} letter={t[0]} a={t[1]} b={t[2]} />
-        <Button className={classes.top} letter={t[1]} a={t[0]} b={t[2]} />
-        <Button className={classes.top} letter={t[2]} a={t[0]} b={t[1]} />
+        <Button
+          className={[classes.top, topClass].join(" ")}
+          letter={t[0]}
+          a={t[1]}
+          b={t[2]}
+        />
+        <Button
+          className={[classes.top, topClass].join(" ")}
+          letter={t[1]}
+          a={t[0]}
+          b={t[2]}
+        />
+        <Button
+          className={[classes.top, topClass].join(" ")}
+          letter={t[2]}
+          a={t[0]}
+          b={t[1]}
+        />
         <div className={classes.letter} />
 
-        <Button className={classes.left} letter={l[0]} a={l[1]} b={l[2]} />
+        <Button
+          className={[classes.left, leftClass].join(" ")}
+          letter={l[0]}
+          a={l[1]}
+          b={l[2]}
+        />
         <Nest className={classes.filler} />
-        <Button className={classes.right} letter={r[0]} a={r[1]} b={r[2]} />
+        <Button
+          className={[classes.right, rightClass].join(" ")}
+          letter={r[0]}
+          a={r[1]}
+          b={r[2]}
+        />
 
-        <Button className={classes.left} letter={l[1]} a={l[0]} b={l[2]} />
-        <Button className={classes.right} letter={r[1]} a={r[0]} b={r[2]} />
+        <Button
+          className={[classes.left, leftClass].join(" ")}
+          letter={l[1]}
+          a={l[0]}
+          b={l[2]}
+        />
+        <Button
+          className={[classes.right, rightClass].join(" ")}
+          letter={r[1]}
+          a={r[0]}
+          b={r[2]}
+        />
 
-        <Button className={classes.left} letter={l[2]} a={l[0]} b={l[1]} />
-        <Button className={classes.right} letter={r[2]} a={r[0]} b={r[1]} />
+        <Button
+          className={[classes.left, leftClass].join(" ")}
+          letter={l[2]}
+          a={l[0]}
+          b={l[1]}
+        />
+        <Button
+          className={[classes.right, rightClass].join(" ")}
+          letter={r[2]}
+          a={r[0]}
+          b={r[1]}
+        />
 
         <div className={classes.letter} />
-        <Button className={classes.bottom} letter={b[0]} a={b[1]} b={b[2]} />
-        <Button className={classes.bottom} letter={b[1]} a={b[0]} b={b[2]} />
-        <Button className={classes.bottom} letter={b[2]} a={b[0]} b={b[1]} />
+        <Button
+          className={[classes.bottom, bottomClass].join(" ")}
+          letter={b[0]}
+          a={b[1]}
+          b={b[2]}
+        />
+        <Button
+          className={[classes.bottom, bottomClass].join(" ")}
+          letter={b[1]}
+          a={b[0]}
+          b={b[2]}
+        />
+        <Button
+          className={[classes.bottom, bottomClass].join(" ")}
+          letter={b[2]}
+          a={b[0]}
+          b={b[1]}
+        />
         <div className={classes.letter} />
       </div>
     </div>

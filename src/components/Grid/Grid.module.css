@@ -108,3 +108,19 @@
 .active {
   opacity: 1;
 }
+
+.colors .idLeft > button {
+  color: var(--left-color);
+}
+
+.colors .idTop > button {
+  color: var(--top-color);
+}
+
+.colors .idRight > button {
+  color: var(--right-color);
+}
+
+.colors .idBottom > button {
+  color: var(--bottom-color);
+}

@@ -1,7 +1,7 @@
 import { Fragment, useMemo } from "react";
 import { useGameState } from "../../GameState";
 import classes from "./Nest.module.css";
-import { useBoard } from "../../BoardProvider";
+import { GroupId, useBoard } from "../../BoardProvider";
 
 type Props = {
   className?: string;
@@ -11,10 +11,28 @@ const HALF_UNIT = 50;
 const UNIT = HALF_UNIT * 2;
 const EDGE = HALF_UNIT * 0.2;
 const SIZE = HALF_UNIT * 3 * 2;
+const STROKE_WIDTH = 5;
+
+const WIDTH = SIZE - 2 * EDGE;
+const HALF_STROKE = STROKE_WIDTH / 2;
+const TL = [EDGE, EDGE];
+const TR = [EDGE + WIDTH, EDGE];
+const BR = [EDGE + WIDTH, EDGE + WIDTH];
+const BL = [EDGE, EDGE + WIDTH];
+
+const CLASSES: { [k in GroupId]: string } = {
+  0: classes.top,
+  1: classes.right,
+  2: classes.bottom,
+  3: classes.left,
+};
 
 export const Nest = ({ className }: Props) => {
-  const { display } = useBoard();
-  const { usedLetters } = useGameState();
+  const { display, groups } = useBoard();
+  const {
+    hints: { colors },
+    usedLetters,
+  } = useGameState();
 
   const coords = useMemo(() => {
     const t = display.substring(0, 3);
@@ -95,6 +113,51 @@ export const Nest = ({ className }: Props) => {
     });
   }, [coords, current, usedLetters]);
 
+  const coloredLines = useMemo(() => {
+    if (!colors) {
+      return null;
+    }
+
+    return [
+      <line
+        key={`line-${groups[0]}`}
+        x1={TL[0] + HALF_STROKE}
+        y1={TL[1]}
+        x2={TR[0] + HALF_STROKE}
+        y2={TR[1]}
+        strokeWidth={STROKE_WIDTH}
+        className={CLASSES[groups[0]]}
+      />,
+      <line
+        key={`line-${groups[1]}`}
+        x1={TR[0]}
+        y1={TR[1] + HALF_STROKE}
+        x2={BR[0]}
+        y2={BR[1] + HALF_STROKE}
+        strokeWidth={STROKE_WIDTH}
+        className={CLASSES[groups[1]]}
+      />,
+      <line
+        key={`line-${groups[2]}`}
+        x1={BR[0] - HALF_STROKE}
+        y1={BR[1]}
+        x2={BL[0] - HALF_STROKE}
+        y2={BL[1]}
+        strokeWidth={STROKE_WIDTH}
+        className={CLASSES[groups[2]]}
+      />,
+      <line
+        key={`line-${groups[3]}`}
+        x1={BL[0]}
+        y1={BL[1] - HALF_STROKE}
+        x2={TL[0]}
+        y2={TL[1] - HALF_STROKE}
+        strokeWidth={STROKE_WIDTH}
+        className={CLASSES[groups[3]]}
+      />,
+    ];
+  }, [colors, groups]);
+
   return (
     <svg
       className={[className, classes.nest].filter(Boolean).join(" ")}
@@ -108,8 +171,9 @@ export const Nest = ({ className }: Props) => {
         height={SIZE - 2 * EDGE}
         stroke="#000"
         fill="transparent"
-        strokeWidth={5}
+        strokeWidth={STROKE_WIDTH}
       />
+      {coloredLines}
       {circles}
     </svg>
   );

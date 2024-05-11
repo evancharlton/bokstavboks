@@ -11,68 +11,55 @@ import { WordsContext } from "../WordsProvider/context";
 import { PuzzleIdContext } from "../PuzzleIdProvider/context";
 import { BoardContext } from "../BoardProvider/context";
 import { SolutionContext } from "../SolutionProvider/context";
-import { Reveal } from "../GameState";
 
 type Props = {
   children: React.ReactNode;
 };
 
-const HINT_BUTTON: {
-  [K in Reveal]: {
-    shown: boolean;
-    disabled: boolean;
-    text: string;
-    className: string | undefined;
-  };
-} = {
-  hidden: {
-    shown: true,
-    disabled: false,
-    text: "Gi meg et hint",
-    className: "primary",
-  },
-  blocks: {
-    shown: true,
-    disabled: false,
-    text: "Et annet hint",
-    className: "primary",
-  },
-  "first-letters": {
-    shown: true,
-    disabled: true,
-    text: "Ingen hint gjenstår",
-    className: undefined,
-  },
-  full: {
-    shown: false,
-    disabled: true,
-    text: "",
-    className: undefined,
-  },
-} as const;
-
 const SolveDialog = () => {
   const { hide } = useDialog();
-  const { hint, show, reveal } = useGameState();
-
-  const giveHint = () => {
-    hint();
-    hide();
-  };
-
-  const { shown, disabled, text, className } = HINT_BUTTON[reveal];
+  const { show, hints, setHints } = useGameState();
 
   return (
     <Dialog title="Vis løsning?" onClose={() => hide()}>
-      <div>
+      <div className={classes.solutions}>
         <p>
           Vil du se en løsning på dette puslespillet? (Det er mange mulige
           løsninger - dette er bare den korteste!)
         </p>
         <div className={classes.buttonBar}>
+          <button
+            disabled={hints.blocks}
+            onClick={() => {
+              setHints({ blocks: true });
+              hide();
+            }}
+          >
+            Vis ruter
+          </button>
+          <button
+            disabled={hints.colors || !hints.blocks}
+            onClick={() => {
+              setHints({ colors: true });
+              hide();
+            }}
+          >
+            Tilsett farger
+          </button>
+          <button
+            disabled={hints.starts > 0 || !hints.colors}
+            onClick={() => {
+              setHints({ starts: 1 });
+              hide();
+            }}
+          >
+            Vis én bokstav
+          </button>
+        </div>
+        <div className={classes.buttonBar}>
           <button onClick={() => hide()}>Nei, jeg skal prøve</button>
           <button
-            className={!className ? "primary" : undefined}
+            className="primary"
             onClick={() => {
               show();
               hide();
@@ -80,15 +67,6 @@ const SolveDialog = () => {
           >
             Vis meg løsningen
           </button>
-          {shown && (
-            <button
-              className={className}
-              disabled={disabled}
-              onClick={giveHint}
-            >
-              {text}
-            </button>
-          )}
         </div>
       </div>
     </Dialog>
@@ -171,6 +149,7 @@ export const Dialogs = ({ children }: Props) => {
                     value={{
                       id: "bkaotnsvmepr",
                       display: "bkaotnsvmepr",
+                      groups: [0, 1, 2, 3],
                       shuffle: () => undefined,
                       randomize: () => undefined,
                       url: "",

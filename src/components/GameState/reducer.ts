@@ -10,7 +10,8 @@ type Update =
   | { action: "clear-error" }
   | ({ action: "restore-complete" } & Partial<SavedState>)
   | { action: "show" }
-  | { action: "hint" };
+  | { action: "hint" }
+  | ({ action: "set-hint" } & Partial<State["hints"]>);
 
 export const reducer =
   (dictionary: Set<string>, isValid: (input: string) => boolean) =>
@@ -192,43 +193,99 @@ export const reducer =
       }
 
       case "hint": {
-        const { reveal: currentReveal } = state;
-        switch (currentReveal) {
-          case "hidden": {
-            return {
-              ...state,
-              reveal: "blocks",
-            };
-          }
-          case "blocks": {
-            return {
-              ...state,
-              reveal: "first-letters",
-            };
-          }
-          case "first-letters": {
-            return {
-              ...state,
-              reveal: "full",
-            };
-          }
-          case "full": {
-            return state;
-          }
-          default: {
-            return neverGuard(currentReveal, state);
-          }
+        const { hints: currentHints } = state;
+        if (currentHints.starts) {
+          // TODO: Reveal letter-by-letter?
+          return {
+            ...state,
+            reveal: "full",
+          };
         }
+
+        if (currentHints.colors) {
+          return {
+            ...state,
+            hints: {
+              ...currentHints,
+              starts: 1,
+            },
+          };
+        }
+
+        if (currentHints.blocks) {
+          return {
+            ...state,
+            hints: {
+              ...currentHints,
+              colors: true,
+            },
+          };
+        }
+
+        return {
+          ...state,
+          hints: {
+            ...currentHints,
+            blocks: true,
+          },
+        };
       }
 
       case "restore-complete": {
+        const migratedReveal = (() => {
+          if (update.hints) {
+            return {
+              hints: update.hints ?? state.hints,
+              reveal: update.reveal ?? state.reveal,
+            };
+          }
+
+          const rev = (update.reveal ?? state.reveal) as string;
+          if (rev === "first-letters") {
+            return {
+              hints: {
+                blocks: true,
+                colors: true,
+                starts: 1,
+              },
+              reveal: "hidden" as const,
+            };
+          }
+
+          if (rev === "blocks") {
+            return {
+              hints: {
+                blocks: true,
+                colors: false,
+                starts: 0,
+              },
+              reveal: "hidden" as const,
+            };
+          }
+
+          return {
+            reveal: "hidden" as const,
+          };
+        })();
+
         return {
           ...state,
           error: undefined,
           words: update.words ?? state.words,
           solved: update.solved ?? state.solved,
-          reveal: update.reveal ?? state.reveal,
+          ...migratedReveal,
           restoreComplete: true,
+        };
+      }
+
+      case "set-hint": {
+        const { action: _, ...delta } = update;
+        return {
+          ...state,
+          hints: {
+            ...state.hints,
+            ...delta,
+          },
         };
       }
 
