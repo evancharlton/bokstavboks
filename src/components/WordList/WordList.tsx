@@ -12,7 +12,7 @@ export const WordList = ({ path }: { path: string[] }) => {
             {i > 0 && <div className={classes.spacer} />}
             {isLetters(word) ? (
               <a
-                href={`https://naob.no/s%C3%B8k/${word}`}
+                href={`https://naob.no/søk?q=${word}`}
                 target="_blank"
                 rel="noreferrer"
               >
