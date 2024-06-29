@@ -10,6 +10,8 @@ body,
   --left-color: #f44336;
   --right-color: #7cb342;
   --bottom-color: #1976d2;
+  --subtle-outline-color: #ccca;
+  --button-outline-color: #999a;
 }
 
 * {

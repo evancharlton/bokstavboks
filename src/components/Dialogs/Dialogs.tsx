@@ -11,6 +11,7 @@ import { WordsContext } from "../WordsProvider/context";
 import { PuzzleIdContext } from "../PuzzleIdProvider/context";
 import { BoardContext } from "../BoardProvider/context";
 import { SolutionContext } from "../SolutionProvider/context";
+import { Link } from "react-router-dom";
 
 type Props = {
   children: React.ReactNode;
@@ -85,21 +86,34 @@ const SettingsDialog = () => {
       }}
     >
       <div>
-        <h3>Guidet utforskning</h3>
-        <div className={classes.entry}>
-          <label className={classes.switch}>
-            <input
-              id="hint-checkbox"
-              type="checkbox"
-              onChange={(e) => update({ enableHint: !!e.target.checked })}
-              checked={!!settings.enableHint}
-            />
-            <span className={[classes.slider, classes.round].join(" ")} />
-          </label>
-          <label htmlFor="hint-checkbox">
-            Angi merknader (<span style={{ fontSize: 10 }}>🔵</span>) på
-            bokstavene for gyldige bokstavvalg.
-          </label>
+        <div className={classes.setting}>
+          <h3>Guidet utforskning</h3>
+          <div className={classes.entry}>
+            <label className={classes.switch}>
+              <input
+                id="hint-checkbox"
+                type="checkbox"
+                onChange={(e) => update({ enableHint: !!e.target.checked })}
+                checked={!!settings.enableHint}
+              />
+              <span className={[classes.slider, classes.round].join(" ")} />
+            </label>
+            <label htmlFor="hint-checkbox">
+              Angi merknader (<span style={{ fontSize: 10 }}>🔵</span>) på
+              bokstavene for gyldige bokstavvalg.
+            </label>
+          </div>
+        </div>
+        <div className={classes.setting}>
+          <h3>Språk</h3>
+          <div className={classes.entry}>
+            <Link to="/nb" className={classes.language}>
+              bokmål
+            </Link>
+            <Link to="/nn" className={classes.language}>
+              nynorsk
+            </Link>
+          </div>
         </div>
       </div>
     </Dialog>

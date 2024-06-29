@@ -54,5 +54,5 @@
 }
 
 .container.solved {
-  border-bottom: 2px solid #999a;
+  border-bottom: 2px solid var(--button-outline-color);
 }
