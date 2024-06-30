@@ -21,7 +21,7 @@ dialog[open]::backdrop {
 @media (max-width: 600px) {
   dialog[open] {
     border: 0;
-    max-width: 100vw;
+    width: 100%;
     border-radius: 0;
     max-height: 90%;
     margin-bottom: 0px;
