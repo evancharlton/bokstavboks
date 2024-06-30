@@ -1,48 +1,34 @@
-.backdrop {
-  backdrop-filter: blur(10px);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+dialog[open] {
+  border: 0;
+  padding: 0;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.dialog {
   min-width: 200px;
   max-width: 600px;
   max-height: 80vh;
-  overflow: hidden;
   border: 1px solid #333a;
   border-radius: 16px;
   background-color: #fff;
-  margin: 32px;
 
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 16px 8px #0004;
 }
 
-@media (max-width: 600px) {
-  .dialog {
-    width: 100%;
-    border-radius: 0;
-    border: 0;
-    border-top: 1px solid #333a;
-    margin: 0;
-    max-height: 90%;
-  }
+dialog[open]::backdrop {
+  backdrop-filter: blur(10px);
+}
 
-  .backdrop {
-    justify-content: flex-end;
+@media (max-width: 600px) {
+  dialog[open] {
+    border: 0;
+    max-width: 100vw;
+    border-radius: 0;
+    max-height: 90%;
+    margin-bottom: 0px;
   }
 }
 
-.dialog a {
+dialog a {
   color: black;
   border-bottom: 1px solid var(--link-color);
 }

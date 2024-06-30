@@ -9,7 +9,20 @@ type Props = {
   title: string;
 };
 
+const dialog = document.getElementById("dialog") as HTMLDialogElement | null;
+
 export const Dialog = ({ children, onClose, title }: Props) => {
+  if (!dialog) {
+    throw new Error("Missing #dialog");
+  }
+
+  useEffect(() => {
+    dialog.showModal();
+    return () => {
+      dialog.close();
+    };
+  }, []);
+
   useEffect(() => {
     const keydown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -23,17 +36,15 @@ export const Dialog = ({ children, onClose, title }: Props) => {
   }, [onClose]);
 
   return createPortal(
-    <div className={classes.backdrop}>
-      <div className={classes.dialog}>
-        <div className={classes.header}>
-          <h2>{title}</h2>
-          <button onClick={onClose}>
-            <MdOutlineClose />
-          </button>
-        </div>
-        <div className={classes.content}>{children}</div>
+    <>
+      <div className={classes.header}>
+        <h2>{title}</h2>
+        <button onClick={onClose} autoFocus>
+          <MdOutlineClose />
+        </button>
       </div>
-    </div>,
-    document.getElementById("root") ?? document.body
+      <div className={classes.content}>{children}</div>
+    </>,
+    dialog
   );
 };
