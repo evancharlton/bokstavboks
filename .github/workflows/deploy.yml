@@ -34,6 +34,8 @@ jobs:
           folder: dist # The folder the action should deploy.
           clean: true # Automatically remove deleted files from the deploy branch
 
-      - run: tofu apply -auto-approve
+      - run: |
+          tofu state rm cloudflare_zone_settings_override.ssl_settings
+          tofu apply -auto-approve
         env:
           TF_VAR_cloudflare_api_token: ${{ secrets.TF_VAR_cloudflare_api_token }}

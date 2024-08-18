@@ -93,3 +93,17 @@ resource "cloudflare_record" "cname_no" {
   ttl      = 1
   type     = "CNAME"
 }
+
+# NOTE: There's a bug in Cloudflare somewhere with this. If you run into
+# problems, try this:
+#  tofu state rm cloudflare_zone_settings_override.ssl_settings
+#
+# https://github.com/cloudflare/terraform-provider-cloudflare/issues/1297
+resource "cloudflare_zone_settings_override" "ssl_settings" {
+  zone_id = local.zones["bokstavboks.no"]
+
+  settings {
+    automatic_https_rewrites = "on"
+    ssl = "strict"
+  }
+}
