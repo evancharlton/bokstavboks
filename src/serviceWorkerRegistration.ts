@@ -31,12 +31,13 @@ export function register(config?: Config) {
     return;
   }
 
-  if (process.env.NODE_ENV !== "production" && !isLocalhost) {
+  if (!import.meta.env.PROD && !isLocalhost) {
     console.warn(`Not registering serviceWorker in dev mode off localhost`);
     return;
   }
+
   // The URL constructor is available in all browsers that support SW.
-  const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
+  const publicUrl = new URL(import.meta.url, window.location.href);
   if (publicUrl.origin !== window.location.origin) {
     console.warn(`Not registering serviceWorker: CDN`);
     // Our service worker won't work if PUBLIC_URL is on a different origin
@@ -46,7 +47,7 @@ export function register(config?: Config) {
   }
 
   window.addEventListener("load", () => {
-    const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+    const swUrl = `${import.meta.url}/service-worker.js`;
 
     if (isLocalhost) {
       // This is running on localhost. Let's check if a service worker still exists or not.

@@ -18,7 +18,11 @@ export const WordsProvider = ({ children, words: initialWords }: Props) => {
       return;
     }
 
-    fetch(`${process.env.PUBLIC_URL}/${lang}/words.json`)
+    const url = `${import.meta.env.BASE_URL}/${lang}/words.json`.replace(
+      /^\/\//g,
+      "/"
+    );
+    fetch(url)
       .then((response) => response.json())
       .then((words) => {
         setWords(words);

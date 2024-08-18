@@ -25,3 +25,6 @@ yarn-error.log*
 # Terraform/Tofu stuff
 .terraform
 .terraform.lock.hcl
+
+# Vite stuff
+dist/
