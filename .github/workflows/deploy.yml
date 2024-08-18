@@ -7,6 +7,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: opentofu/setup-opentofu@v1
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
         with:
@@ -19,9 +20,20 @@ jobs:
           yarn install --frozen-lockfile
           yarn build
           echo "bokstavboks.no" > build/CNAME
+
+      - run: tofu init
+      - id: plan
+        run: tofu plan -no-color
+        env:
+          TF_VAR_cloudflare_api_token: ${{ secrets.TF_VAR_cloudflare_api_token }}
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: build # The folder the action should deploy.
           clean: true # Automatically remove deleted files from the deploy branch
+
+      - run: tofu apply -auto-approve
+        env:
+          TF_VAR_cloudflare_api_token: ${{ secrets.TF_VAR_cloudflare_api_token }}
