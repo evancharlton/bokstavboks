@@ -70,9 +70,10 @@ resource "cloudflare_record" "aaaa_records" {
 resource "cloudflare_record" "txt_records_no" {
   for_each = {
     # Tell recipients that this domain will never send email
-    "_dmarc"        = "v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s;",
-    "*._domainkey"  = "v=DKIM1; p=",
-    "bokstavboks.no" = "v=spf1 -all",
+    "_dmarc"                               = "v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s;",
+    "*._domainkey"                         = "v=DKIM1; p=",
+    "bokstavboks.no"                       = "v=spf1 -all",
+    "_github-pages-challenge-evancharlton" = "ee90a25383ffe6a653b8c834a4b3c5",
   }
   zone_id = local.zones["bokstavboks.no"]
   name    = each.key
