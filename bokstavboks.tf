@@ -13,7 +13,7 @@ variable "cloudflare_api_token" {
 
 locals {
   zones = {
-    "bokstavboks.no"  = "58a5b04492c16abfbcb89f131853dd80"
+    "bokstavboks.no" = "58a5b04492c16abfbcb89f131853dd80"
   }
 }
 
@@ -87,12 +87,12 @@ resource "cloudflare_record" "cname_no" {
   for_each = {
     "www" = "bokstavboks.no"
   }
-  zone_id  = local.zones["bokstavboks.no"]
-  name     = each.key
-  content  = each.value
-  proxied  = true
-  ttl      = 1
-  type     = "CNAME"
+  zone_id = local.zones["bokstavboks.no"]
+  name    = each.key
+  content = each.value
+  proxied = true
+  ttl     = 1
+  type    = "CNAME"
 }
 
 # NOTE: There's a bug in Cloudflare somewhere with this. If you run into
@@ -105,6 +105,6 @@ resource "cloudflare_zone_settings_override" "ssl_settings" {
 
   settings {
     automatic_https_rewrites = "on"
-    ssl = "full"
+    ssl                      = "full"
   }
 }
