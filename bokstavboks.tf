@@ -15,6 +15,24 @@ locals {
   zones = {
     "bokstavboks.no" = "58a5b04492c16abfbcb89f131853dd80"
   }
+  ip4_records = setproduct(
+    toset(["bokstavboks.no"]),
+    [
+      "185.199.111.153",
+      "185.199.110.153",
+      "185.199.109.153",
+      "185.199.108.153"
+    ]
+  )
+  ip6_records = setproduct(
+    toset(["bokstavboks.no"]),
+    [
+      "2606:50c0:8003::153",
+      "2606:50c0:8002::153",
+      "2606:50c0:8001::153",
+      "2606:50c0:8000::153"
+    ]
+  )
 }
 
 provider "cloudflare" {
@@ -23,15 +41,7 @@ provider "cloudflare" {
 
 resource "cloudflare_record" "a_records" {
   for_each = {
-    for val in setproduct(
-      toset(["bokstavboks.no"]),
-      [
-        "185.199.111.153",
-        "185.199.110.153",
-        "185.199.109.153",
-        "185.199.108.153"
-      ]
-      ) : "${val[0]}-${val[1]}" => {
+    for val in local.ip4_records : "${val[0]}-${val[1]}" => {
       domain = val[0]
       ip     = val[1]
     }
@@ -46,15 +56,7 @@ resource "cloudflare_record" "a_records" {
 
 resource "cloudflare_record" "aaaa_records" {
   for_each = {
-    for val in setproduct(
-      toset(["bokstavboks.no"]),
-      [
-        "2606:50c0:8003::153",
-        "2606:50c0:8002::153",
-        "2606:50c0:8001::153",
-        "2606:50c0:8000::153"
-      ]
-      ) : "${val[0]}-${val[1]}" => {
+    for val in local.ip6_records : "${val[0]}-${val[1]}" => {
       domain = val[0]
       ip     = val[1]
     }
