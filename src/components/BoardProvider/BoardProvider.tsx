@@ -14,7 +14,7 @@ type Action =
   | { action: "set-board"; boardId: string; seeds?: string[] }
   | { action: "shuffle" };
 
-const shuffle = <T extends unknown>(arr: T[]): T[] =>
+const shuffle = <T,>(arr: T[]): T[] =>
   arr
     .map((v) => ({ v, key: Math.random() }))
     .sort((a, b) => a.key - b.key)
