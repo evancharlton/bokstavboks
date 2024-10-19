@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useGameState } from "../GameState";
 import classes from "./Status.module.css";
 import {
@@ -37,29 +37,27 @@ const LocalShareButton = ({ children }: { children?: React.ReactNode }) => {
     }
   })();
 
-  const emoji = EMOJI[solved ? "solved" : revealed ? "revealed" : "none"];
+  const getText = useCallback(() => {
+    if (!(revealed || solved)) {
+      return "";
+    }
 
-  const foundLetters = new Set(words.join("")).size;
-  const x = new Array(12).fill("⚫");
-  for (let i = 0; i < foundLetters; i += 1) {
-    x[i] = "🟢";
-  }
+    return [
+      header,
+      words
+        .map((word) =>
+          word
+            .split("")
+            .map(() => "⬛")
+            .join("")
+        )
+        .join(" • "),
+      "",
+      url,
+    ].join("\n");
+  }, [header, revealed, solved, url, words]);
 
-  const text =
-    revealed || solved
-      ? [
-          header,
-          `▫️${x[0]}${x[1]}${x[2]}▫️`,
-          `${x[11]}▫️▫️▫️${x[3]}`,
-          `${x[10]}▫️${emoji}▫️${x[4]}`,
-          `${x[9]}▫️▫️▫️${x[5]}`,
-          `▫️${x[8]}${x[7]}${x[6]}▫️`,
-          ``,
-          url,
-        ].join("\n")
-      : "";
-
-  return <ShareButton text={() => text}>{children}</ShareButton>;
+  return <ShareButton text={getText}>{children}</ShareButton>;
 };
 
 export const Status = () => {
