@@ -149,9 +149,9 @@ export const reducer =
         }
 
         try {
-          // @ts-expect-error
+          // @ts-expect-error - this is weird typing
           document.activeElement?.blur?.();
-        } catch (ex) {
+        } catch {
           // This can throw sometimes.
         }
 

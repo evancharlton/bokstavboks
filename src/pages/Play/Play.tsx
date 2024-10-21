@@ -16,6 +16,7 @@ import { PuzzleIdProvider } from "../../components/PuzzleIdProvider";
 import { Dialogs, useDialog } from "../../components/Dialogs";
 import { SolutionProvider } from "../../components/SolutionProvider";
 import { ShareButton } from "../../components/ShareButton";
+import { GameHistoryProvider } from "../../components/GameHistoryProvider";
 
 const HeaderButtons = () => {
   const { randomize } = useBoard();
@@ -56,27 +57,29 @@ export const Play = () => {
     <PuzzleIdProvider>
       <BoardProvider>
         <SolutionProvider>
-          <GameState>
-            <Dialogs>
-              <Page
-                header={
-                  <Header
-                    leftButtons={[
-                      <ShareUrl key="share" />,
-                      <SettingsButton key="settings" />,
-                    ]}
-                    buttons={<HeaderButtons />}
-                  />
-                }
-              >
-                <div className={classes.container}>
-                  <Status />
-                  <Grid />
-                  <Buttons />
-                </div>
-              </Page>
-            </Dialogs>
-          </GameState>
+          <GameHistoryProvider>
+            <GameState>
+              <Dialogs>
+                <Page
+                  header={
+                    <Header
+                      leftButtons={[
+                        <ShareUrl key="share" />,
+                        <SettingsButton key="settings" />,
+                      ]}
+                      buttons={<HeaderButtons />}
+                    />
+                  }
+                >
+                  <div className={classes.container}>
+                    <Status />
+                    <Grid />
+                    <Buttons />
+                  </div>
+                </Page>
+              </Dialogs>
+            </GameState>
+          </GameHistoryProvider>
         </SolutionProvider>
       </BoardProvider>
     </PuzzleIdProvider>

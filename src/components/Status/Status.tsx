@@ -13,6 +13,7 @@ import { useSolution } from "../SolutionProvider";
 import { Solution } from "../Solution";
 import { WordList } from "../WordList";
 import { ShareButton } from "../ShareButton";
+import { useGameHistory } from "../GameHistoryProvider";
 
 const EMOJI = {
   revealed: "💥",
@@ -72,6 +73,8 @@ export const Status = () => {
   const emoji = EMOJI[solved ? "solved" : revealed ? "revealed" : "none"];
 
   const { show: showDialog } = useDialog();
+
+  const { solutions } = useGameHistory();
 
   useEffect(() => {
     if (revealed && solved) {
@@ -152,6 +155,7 @@ export const Status = () => {
     revealed,
     show,
     showDialog,
+    solutions,
     solved,
     words,
     words.length,

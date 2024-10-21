@@ -8,6 +8,7 @@ import { reducer } from "./reducer";
 import { useStorage } from "../../useStorage";
 import { useToaster } from "../Toaster";
 import { ERRORS } from "./errors";
+import { useGameHistory } from "../GameHistoryProvider";
 
 type Props = {
   children: React.ReactNode;
@@ -177,6 +178,13 @@ export const GameState = ({ children, ...initialState }: Props) => {
     }
     clearError();
   }, [clearError, error, hideToast, showToast]);
+
+  const { add: addSolution } = useGameHistory();
+  useEffect(() => {
+    if (solved) {
+      addSolution(words);
+    }
+  }, [addSolution, words, solved]);
 
   return (
     <GameStateContext.Provider
