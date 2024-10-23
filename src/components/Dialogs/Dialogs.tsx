@@ -23,7 +23,7 @@ const SolveDialog = () => {
   const { show, hints, setHints } = useGameState();
 
   return (
-    <Dialog title="Vis løsning?" onClose={() => hide()}>
+    <Dialog title="Vis den beste løsningen?" onClose={() => hide()}>
       <div className={classes.solutions}>
         <p>
           Vil du se en løsning på dette puslespillet? (Det er mange mulige
