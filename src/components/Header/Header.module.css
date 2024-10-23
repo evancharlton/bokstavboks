@@ -2,11 +2,9 @@
   background-color: #000;
   width: 100%;
   color: #fff;
-  text-align: center;
 
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-areas: "left title right";
+  display: flex;
+  justify-content: space-between;
 }
 
 @media (max-width: 850px) {
@@ -25,7 +23,8 @@
   grid-area: title;
 
   white-space: pre;
-  text-align: center;
+
+  padding: 0px 16px;
 }
 
 .container h1 a {

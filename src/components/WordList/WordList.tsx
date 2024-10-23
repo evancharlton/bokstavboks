@@ -3,12 +3,23 @@ import classes from "./WordList.module.css";
 import { TbExternalLink } from "react-icons/tb";
 import { isLetters } from "../../types";
 
-export const WordList = ({ path }: { path: string[] }) => {
+type Props = {
+  path: string[];
+  className?: string;
+  element?: (_: {
+    className: string;
+    children: React.ReactNode;
+  }) => React.ReactElement;
+};
+
+const H3: NonNullable<Props["element"]> = (props) => <h3 {...props} />;
+
+export const WordList = ({ path, element: Element = H3, className }: Props) => {
   return (
-    <div className={classes.words}>
+    <div className={[classes.words, className].filter(Boolean).join(" ")}>
       {path.map((word, i) => (
         <Fragment key={[word, i].join("/")}>
-          <h3 className={classes.word}>
+          <Element className={classes.word}>
             {i > 0 && <div className={classes.spacer} />}
             {isLetters(word) ? (
               <a
@@ -22,7 +33,7 @@ export const WordList = ({ path }: { path: string[] }) => {
             ) : (
               word
             )}
-          </h3>
+          </Element>
         </Fragment>
       ))}
     </div>

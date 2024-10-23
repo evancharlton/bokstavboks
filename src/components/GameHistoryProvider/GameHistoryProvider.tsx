@@ -24,21 +24,28 @@ export const GameHistoryProvider = ({
       });
   }, [id, storage]);
 
-  const addSolution = useCallback((solution: string[]) => {
-    setSolutions((previous) => {
-      const key = solution.join("-");
-      if (previous[key]) {
-        return previous;
-      }
-      return {
-        ...previous,
-        [key]: {
-          words: solution,
-          timestamp: Date.now(),
-        },
-      };
-    });
-  }, []);
+  const addSolution = useCallback(
+    (solution: string[]) => {
+      setSolutions((previous) => {
+        const key = solution.join("-");
+        if (previous[key]) {
+          return previous;
+        }
+        const next = {
+          ...previous,
+          [key]: {
+            words: solution,
+            timestamp: Date.now(),
+          },
+        };
+
+        storage.setItem(id, next);
+
+        return next;
+      });
+    },
+    [id, storage]
+  );
 
   const solutions = useMemo(
     () =>

@@ -12,6 +12,7 @@ import { PuzzleIdContext } from "../PuzzleIdProvider/context";
 import { BoardContext } from "../BoardProvider/context";
 import { SolutionContext } from "../SolutionProvider/context";
 import { Link } from "react-router-dom";
+import { HamburgerMenu } from "./HamburgerMenu";
 
 type Props = {
   children: React.ReactNode;
@@ -254,7 +255,7 @@ export const Dialogs = ({ children }: Props) => {
               <li>
                 <a
                   target="_blank"
-                  href="https://evancharlton.github.io/ordle"
+                  href="https://ordle-app.no/"
                   rel="noreferrer"
                 >
                   Ordle: Wordle på norsk
@@ -281,6 +282,17 @@ export const Dialogs = ({ children }: Props) => {
                 evancharlton@gmail.com
               </a>
             </p>
+            <hr />
+            <span
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              versjon{" "}
+              <code>{import.meta.env.VITE_RELEASE ?? "development"}</code>
+            </span>
           </Dialog>
         );
       }
@@ -291,6 +303,10 @@ export const Dialogs = ({ children }: Props) => {
 
       case "settings": {
         return <SettingsDialog />;
+      }
+
+      case "hamburger": {
+        return <HamburgerMenu />;
       }
 
       default: {
