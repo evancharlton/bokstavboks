@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 import { isLetters, neverGuard } from "../../types";
 import { BoardContext } from "./context";
 import { usePuzzleId } from "../PuzzleIdProvider";
@@ -131,6 +131,16 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
     dispatch({ action: "shuffle" });
   }, []);
 
+  const sideLookup = useMemo(
+    () =>
+      id
+        .split("")
+        .reduce<
+          Record<string, number>
+        >((acc, letter, i) => ({ ...acc, [letter]: Math.floor(i / 3) }), {}),
+    [id]
+  );
+
   if (!display) {
     return <Loader text="generere puslespill ..." />;
   }
@@ -155,6 +165,7 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
         shuffle,
         randomize,
         url,
+        sideLookup,
       }}
     >
       <WordsProvider key={id} words={relevantWords}>

@@ -168,6 +168,7 @@ export const Dialogs = ({ children }: Props) => {
                       shuffle: () => undefined,
                       randomize: () => undefined,
                       url: "",
+                      sideLookup: {},
                     }}
                   >
                     <SolutionContext.Provider

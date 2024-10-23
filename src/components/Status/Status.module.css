@@ -87,3 +87,19 @@
 .buttons button:hover {
   box-shadow: 0px 0px 8px var(--link-color);
 }
+
+.leftSide {
+  color: var(--left-color);
+}
+
+.topSide {
+  color: var(--top-color);
+}
+
+.rightSide {
+  color: var(--right-color);
+}
+
+.bottomSide {
+  color: var(--bottom-color);
+}

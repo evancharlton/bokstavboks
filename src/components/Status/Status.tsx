@@ -60,9 +60,16 @@ const LocalShareButton = ({ children }: { children?: React.ReactNode }) => {
   return <ShareButton text={getText}>{children}</ShareButton>;
 };
 
+const SIDES = [
+  classes.topSide,
+  classes.rightSide,
+  classes.bottomSide,
+  classes.leftSide,
+];
+
 export const Status = () => {
-  const { randomize } = useBoard();
-  const { words, current, solved, reveal } = useGameState();
+  const { sideLookup, randomize } = useBoard();
+  const { words, current, solved, reveal, hints } = useGameState();
   const { show, hide } = useDialog();
 
   const revealed = reveal === "full";
@@ -158,6 +165,21 @@ export const Status = () => {
     words.length,
   ]);
 
+  const colorize = useCallback(
+    (letter: string, i: number) => {
+      return (
+        <span className={SIDES[sideLookup[letter] ?? 0]} key={`${letter}-${i}`}>
+          {letter}
+        </span>
+      );
+    },
+    [sideLookup]
+  );
+
+  const letters = hints.colors
+    ? current.split("").map((letter, i) => colorize(letter, i))
+    : current;
+
   return (
     <div className={classes.container}>
       {(solved || revealed) && (
@@ -168,7 +190,7 @@ export const Status = () => {
       )}
       {!(revealed || solved) && (
         <div className={classes.input}>
-          {current}
+          {letters}
           <div className={classes.caret} />
         </div>
       )}

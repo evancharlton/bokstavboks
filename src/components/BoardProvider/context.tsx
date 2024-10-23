@@ -6,6 +6,7 @@ export const BoardContext = createContext<
       shuffle: () => void;
       randomize: () => void;
       url: string;
+      sideLookup: Record<string, number>;
     })
   | undefined
 >(undefined);
