@@ -1,4 +1,11 @@
-import { useState, useCallback, useEffect, useRef, Fragment } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  Fragment,
+  CSSProperties,
+} from "react";
 import { IconType } from "react-icons";
 import {
   MdOutlineShare,
@@ -12,9 +19,13 @@ type Props = {
   text: () => string;
   children?: React.ReactNode;
   CopyIcon?: IconType;
+  className?: string;
+  style?: CSSProperties;
 };
 
 export const ShareButton = ({
+  className,
+  style,
   children,
   text: getText,
   CopyIcon = MdOutlineContentCopy,
@@ -89,7 +100,7 @@ export const ShareButton = ({
     }[state] ?? Fragment;
 
   return (
-    <button onClick={onShare}>
+    <button onClick={onShare} className={className} style={style}>
       <Icon />
       {children}
     </button>

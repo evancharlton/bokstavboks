@@ -6,7 +6,6 @@ import {
   MdOutlineDone,
   MdOutlineRestartAlt,
 } from "react-icons/md";
-import { useNavigate, useParams } from "react-router";
 import { useBoard } from "../BoardProvider";
 import { useDialog } from "../Dialogs";
 import { useSolution } from "../SolutionProvider";
@@ -64,8 +63,6 @@ const LocalShareButton = ({ children }: { children?: React.ReactNode }) => {
 export const Status = () => {
   const { randomize } = useBoard();
   const { words, current, solved, reveal } = useGameState();
-  const navigate = useNavigate();
-  const { lang } = useParams();
   const { show, hide } = useDialog();
 
   const revealed = reveal === "full";
@@ -166,13 +163,7 @@ export const Status = () => {
       {(solved || revealed) && (
         <div className={classes.complete}>
           <h1>{emoji}</h1>
-          <LocalShareButton />
-          <button disabled={revealed} onClick={() => show("solve")}>
-            <MdOutlineDone />
-          </button>
-          <button onClick={() => navigate(`/${lang}/${Date.now()}`)}>
-            <MdOutlineAutorenew />
-          </button>
+          <LocalShareButton>Del løsningen</LocalShareButton>
         </div>
       )}
       {!(revealed || solved) && (
