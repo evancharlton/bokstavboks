@@ -13,11 +13,14 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
+  gap: 8px;
+  row-gap: 8px;
 }
 
 .container button {
   font-size: 32px;
-  padding: 12px 28px;
+  padding: 12px 20px;
+
   border-radius: 16px;
   border: 1px solid #000;
   background-color: #eee6;
