@@ -21,7 +21,7 @@ export const HamburgerMenu = () => {
   const { solutions } = useGameHistory();
   const { hide, show } = useDialog();
   const { randomize, url } = useBoard();
-  const { words, current, reset, ideas, reveal, solved } = useGameState();
+  const { words, current, reset, ideas, reveal } = useGameState();
   const { solution } = useSolution();
 
   return (
@@ -64,7 +64,7 @@ export const HamburgerMenu = () => {
                     words,
                     ideas,
                     reveal,
-                    solved,
+                    solved: true,
                   },
                   url,
                   solution
