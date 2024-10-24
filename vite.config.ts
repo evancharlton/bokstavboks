@@ -34,7 +34,7 @@ export default defineConfig({
 
       devOptions: { enabled: true, navigateFallback: "index.html" },
       workbox: {
-        globPatterns: ["**/*.js", "**/*.css"],
+        globPatterns: ["**/*.js", "**/*.css", "**/*.html"],
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
         cacheId: "bokstavboks",
         runtimeCaching: [
