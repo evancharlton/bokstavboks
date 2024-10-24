@@ -13,21 +13,26 @@ export const SettingsProvider = ({ children, ...initialSettings }: Props) => {
     ...initialSettings,
   });
 
-  useEffect(() => {
-    store.setItem("settings", settings);
-  }, [settings, store]);
+  const update = useCallback(
+    (update: Partial<Settings>) => {
+      setSettings((old) => {
+        const merged = { ...old, ...update };
 
-  const update = useCallback((update: Partial<Settings>) => {
-    setSettings((old) => ({ ...old, ...update }));
-  }, []);
+        store.setItem("settings", merged);
+
+        return merged;
+      });
+    },
+    [store]
+  );
 
   useEffect(() => {
-    store.getItem("settings").then((settings) => {
-      if (settings) {
-        update(settings);
+    store.getItem("settings").then((loaded) => {
+      if (loaded) {
+        setSettings((old) => ({ ...old, ...loaded }));
       }
     });
-  }, [store, update]);
+  }, [store]);
 
   return (
     <SettingsContext.Provider value={{ settings, update }}>
