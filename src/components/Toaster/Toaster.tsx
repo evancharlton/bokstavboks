@@ -16,7 +16,7 @@ export const Toaster = ({ children }: Props) => {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
         setToast(undefined);
-      }, 1500);
+      }, toast.duration ?? 1500);
     }, []);
 
   const hide = useCallback(() => setToast(undefined), []);

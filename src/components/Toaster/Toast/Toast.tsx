@@ -3,7 +3,7 @@ import classes from "./Toast.module.css";
 import { ToastType } from "../context";
 
 type Props = {
-  text: string;
+  text: React.ReactNode;
   level: ToastType["level"];
 };
 

@@ -8,30 +8,33 @@ import { LanguageSelect } from "./pages/LanguageSelect";
 import { Dialogs } from "./components/Dialogs";
 import { Toaster } from "./components/Toaster";
 import { SettingsProvider } from "./components/SettingsProvider";
+import { PwaContainer } from "./components/PwaContainer/PwaContainer";
 
 function App() {
   return (
     <Toaster>
-      <SettingsProvider>
-        <HashRouter>
-          <Routes>
-            <Route
-              index
-              element={
-                <Dialogs>
-                  <Page header={<Header />}>
-                    <LanguageSelect />
-                  </Page>
-                </Dialogs>
-              }
-            />
-            <Route path=":lang" element={<WordsProvider />}>
-              <Route index element={<Play />} />
-              <Route path=":puzzleId" element={<Play />} />
-            </Route>
-          </Routes>
-        </HashRouter>
-      </SettingsProvider>
+      <PwaContainer>
+        <SettingsProvider>
+          <HashRouter>
+            <Routes>
+              <Route
+                index
+                element={
+                  <Dialogs>
+                    <Page header={<Header />}>
+                      <LanguageSelect />
+                    </Page>
+                  </Dialogs>
+                }
+              />
+              <Route path=":lang" element={<WordsProvider />}>
+                <Route index element={<Play />} />
+                <Route path=":puzzleId" element={<Play />} />
+              </Route>
+            </Routes>
+          </HashRouter>
+        </SettingsProvider>
+      </PwaContainer>
     </Toaster>
   );
 }

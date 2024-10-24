@@ -1,6 +1,10 @@
 import { createContext, useContext } from "react";
 
-export type ToastType = { text: string; level: "info" | "warning" };
+export type ToastType = {
+  text: React.ReactNode;
+  level: "info" | "warning";
+  duration?: number;
+};
 
 export const ToasterContext = createContext<
   { show: (toast: ToastType) => void; hide: () => void } | undefined

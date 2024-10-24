@@ -7,3 +7,35 @@
 .content {
   flex: 1;
 }
+
+.pwaContainer {
+  font-size: 2em;
+  background-color: #000;
+  color: var(--link-color);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 32px;
+  align-items: center;
+}
+
+.pwaContainer button {
+  background-color: transparent;
+  border: 2px solid var(--link-color);
+  border-radius: 8px;
+  color: var(--link-color);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 8px;
+  padding: 8px;
+  font-size: 1em;
+}
+
+.pwaContainer button:hover,
+.pwaContainer button:focus-visible {
+  color: #000;
+  background-color: var(--link-color);
+}
