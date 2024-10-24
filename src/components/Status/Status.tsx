@@ -13,6 +13,7 @@ import { Solution } from "../Solution";
 import { WordList } from "../WordList";
 import { ShareButton } from "../ShareButton";
 import { useGameHistory } from "../GameHistoryProvider";
+import { createShareString } from "../../utils";
 
 const EMOJI = {
   revealed: "💥",
@@ -23,41 +24,13 @@ const EMOJI = {
 const LocalShareButton = ({ children }: { children?: React.ReactNode }) => {
   const { url } = useBoard();
   const { solution } = useSolution();
-  const { words, solved, reveal } = useGameState();
+  const gameState = useGameState();
 
-  const revealed = reveal === "full";
-
-  const header = (() => {
-    if (revealed && solved) {
-      return `Løste ${solution.length}-ordsoppgave med ${words.length} ord!`;
-    } else if (revealed) {
-      return `Sitter fast på ${words.length} ord.`;
-    } else {
-      return `Løst med ${words.length} ord!`;
-    }
-  })();
-
-  const getText = useCallback(() => {
-    if (!(revealed || solved)) {
-      return "";
-    }
-
-    return [
-      header,
-      words
-        .map((word) =>
-          word
-            .split("")
-            .map(() => "⬛")
-            .join("")
-        )
-        .join(" • "),
-      "",
-      url,
-    ].join("\n");
-  }, [header, revealed, solved, url, words]);
-
-  return <ShareButton text={getText}>{children}</ShareButton>;
+  return (
+    <ShareButton text={() => createShareString(gameState, url, solution)}>
+      {children}
+    </ShareButton>
+  );
 };
 
 const SIDES = [

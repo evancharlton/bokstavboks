@@ -2,6 +2,7 @@ import { isLetter, isLetters, neverGuard } from "../../types";
 import { SavedState, State } from "./types";
 
 type Update =
+  | { action: "set-frozen"; frozen: boolean }
   | { action: "set-current"; input: string }
   | { action: "add-letter"; letter: string }
   | { action: "remove-letter" }
@@ -11,7 +12,8 @@ type Update =
   | ({ action: "restore-complete" } & Partial<SavedState>)
   | { action: "show" }
   | { action: "hint" }
-  | ({ action: "set-hint" } & Partial<State["hints"]>);
+  | ({ action: "set-hint" } & Partial<State["hints"]>)
+  | { action: "add-idea"; providedWord: string };
 
 export const reducer =
   (dictionary: Set<string>, isValid: (input: string) => boolean) =>
@@ -268,13 +270,22 @@ export const reducer =
           };
         })();
 
+        const words = update.words ?? state.words;
+        const solved = update.solved ?? state.solved;
+
+        const finalWord = words.length > 0 ? words[words.length - 1] : "";
+        const finalLetter =
+          finalWord.length > 0 ? finalWord[finalWord.length - 1] : "";
+
         return {
           ...state,
           error: undefined,
-          words: update.words ?? state.words,
-          solved: update.solved ?? state.solved,
+          words: words,
+          solved: solved,
           ...migratedReveal,
           restoreComplete: true,
+          current: solved ? "" : finalLetter,
+          ideas: update.ideas ?? state.ideas,
         };
       }
 
@@ -285,6 +296,23 @@ export const reducer =
           hints: {
             ...state.hints,
             ...delta,
+          },
+        };
+      }
+
+      case "set-frozen": {
+        return {
+          ...state,
+          frozen: update.frozen,
+        };
+      }
+
+      case "add-idea": {
+        return {
+          ...state,
+          ideas: {
+            ...state.ideas,
+            [update.providedWord]: Date.now(),
           },
         };
       }

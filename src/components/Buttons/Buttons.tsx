@@ -2,23 +2,31 @@ import {
   MdOutlineBackspace,
   MdKeyboardReturn,
   MdOutlineRestartAlt,
+  MdOutlineLightbulb,
 } from "react-icons/md";
 import { useGameState } from "../GameState";
 import classes from "./Buttons.module.css";
 
 export const Buttons = () => {
-  const { remove, reset, commit, reveal } = useGameState();
+  const { frozen, remove, reset, commit, reveal, current, provideIdea } =
+    useGameState();
 
   return (
     <div className={classes.container}>
       <div className={classes.row}>
-        <button disabled={reveal === "full"} onClick={() => reset()}>
+        <button disabled={frozen || reveal === "full"} onClick={() => reset()}>
           <MdOutlineRestartAlt />
         </button>
-        <button disabled={reveal === "full"} onClick={() => remove()}>
+        <button
+          disabled={frozen || reveal === "full" || current.length > 1}
+          onClick={() => provideIdea()}
+        >
+          <MdOutlineLightbulb />
+        </button>
+        <button disabled={frozen || reveal === "full"} onClick={() => remove()}>
           <MdOutlineBackspace />
         </button>
-        <button disabled={reveal === "full"} onClick={() => commit()}>
+        <button disabled={frozen || reveal === "full"} onClick={() => commit()}>
           <MdKeyboardReturn />
         </button>
       </div>

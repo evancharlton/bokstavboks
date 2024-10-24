@@ -10,17 +10,22 @@ export type Hints = {
 };
 
 export type State = {
+  frozen: boolean;
   words: string[];
   current: string;
   error: ValidationError | undefined;
   solved: boolean;
   reveal: Reveal;
   hints: Hints;
+  ideas: Record<string, number>;
 } & {
   restoreComplete: boolean;
 };
 
-export type SavedState = Pick<State, "words" | "solved" | "reveal" | "hints">;
+export type SavedState = Pick<
+  State,
+  "words" | "solved" | "reveal" | "hints" | "ideas"
+>;
 
 const KNOWN_REVEALED: Record<string, true> = {
   hidden: true,

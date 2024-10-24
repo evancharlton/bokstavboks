@@ -18,7 +18,7 @@ const Button = ({
   b: Letter;
   className: string;
 }) => {
-  const { add, remove, current, usedLetters, reveal } = useGameState();
+  const { frozen, add, remove, current, usedLetters, reveal } = useGameState();
   const { words } = useWords();
   const { settings } = useSettings();
 
@@ -36,7 +36,7 @@ const Button = ({
         .join(" ")}
     >
       <button
-        disabled={reveal === "full"}
+        disabled={frozen || reveal === "full"}
         className={[
           classes.letter,
           usedLetters.has(letter) && classes.used,

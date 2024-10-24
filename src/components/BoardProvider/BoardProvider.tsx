@@ -145,12 +145,22 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
     return <Loader text="generere puslespill ..." />;
   }
 
-  const idLetters = new Set(id);
   const relevantWords = wordBank.filter((word) => {
-    for (let i = 0; i < word.length; i += 1) {
-      if (!idLetters.has(word[i])) {
+    let prevSide = sideLookup[word[0]];
+    if (prevSide === undefined) {
+      return false;
+    }
+
+    for (let i = 1; i < word.length; i += 1) {
+      const currSide = sideLookup[word[i]];
+      if (currSide === undefined) {
         return false;
       }
+
+      if (currSide === prevSide) {
+        return false;
+      }
+      prevSide = currSide;
     }
     return true;
   });

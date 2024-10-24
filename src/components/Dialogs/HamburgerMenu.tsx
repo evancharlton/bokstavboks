@@ -14,12 +14,15 @@ import { useDialog } from "./context";
 import classes from "./HamburgerMenu.module.css";
 import { WordList } from "../WordList";
 import { useGameState } from "../GameState";
+import { createShareString } from "../../utils";
+import { useSolution } from "../SolutionProvider";
 
 export const HamburgerMenu = () => {
   const { solutions } = useGameHistory();
   const { hide, show } = useDialog();
   const { randomize, url } = useBoard();
-  const { words, current, reset } = useGameState();
+  const { words, current, reset, ideas, reveal, solved } = useGameState();
+  const { solution } = useSolution();
 
   return (
     <dialog
@@ -54,7 +57,20 @@ export const HamburgerMenu = () => {
       <div className={classes.previousSolutions}>
         {solutions.map(({ words }) => (
           <div className={classes.menuItem} key={words.join("-")}>
-            <ShareButton text={() => words.join("-")}></ShareButton>
+            <ShareButton
+              text={() =>
+                createShareString(
+                  {
+                    words,
+                    ideas,
+                    reveal,
+                    solved,
+                  },
+                  url,
+                  solution
+                )
+              }
+            />
             <WordList className={classes.previousSolution} path={words} />
           </div>
         ))}

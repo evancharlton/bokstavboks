@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 import { GameStateContext } from "./context";
 import { isLetters } from "../../types";
 import { useWords } from "../WordsProvider";
@@ -15,7 +15,7 @@ type Props = {
 } & Partial<State>;
 
 export const GameState = ({ children, ...initialState }: Props) => {
-  const { dictionary } = useWords();
+  const { words: dictionaryArray, dictionary } = useWords();
   const { id: boardId } = useBoard();
   const { show: showToast, hide: hideToast } = useToaster();
 
@@ -71,10 +71,26 @@ export const GameState = ({ children, ...initialState }: Props) => {
     [sides]
   );
 
+  const reducerMemo = useMemo(
+    () => reducer(dictionary, isValid),
+    [dictionary, isValid]
+  );
+
   const [
-    { restoreComplete, words, current, error, solved, reveal, hints },
+    {
+      frozen,
+      restoreComplete,
+      words,
+      current,
+      error,
+      solved,
+      reveal,
+      hints,
+      ideas,
+    },
     dispatch,
-  ] = useReducer(reducer(dictionary, isValid), {
+  ] = useReducer(reducerMemo, {
+    frozen: false,
     words: [],
     current: "",
     error: undefined,
@@ -86,6 +102,7 @@ export const GameState = ({ children, ...initialState }: Props) => {
       colors: false,
       starts: 0,
     },
+    ideas: {},
     ...initialState,
   } satisfies State);
 
@@ -123,9 +140,10 @@ export const GameState = ({ children, ...initialState }: Props) => {
         solved,
         reveal,
         hints,
+        ideas,
       });
     }
-  }, [boardId, restoreComplete, reveal, solved, games, words, hints]);
+  }, [boardId, restoreComplete, reveal, solved, games, words, hints, ideas]);
 
   const setInput = useCallback((input: string) => {
     dispatch({ action: "set-current", input });
@@ -135,8 +153,10 @@ export const GameState = ({ children, ...initialState }: Props) => {
     dispatch({ action: "commit" });
   }, []);
 
-  const add = useCallback((letter: string) => {
-    dispatch({ action: "add-letter", letter });
+  const add = useCallback((input: string) => {
+    for (const letter of input) {
+      dispatch({ action: "add-letter", letter });
+    }
   }, []);
 
   const remove = useCallback(() => {
@@ -162,6 +182,58 @@ export const GameState = ({ children, ...initialState }: Props) => {
   const setHints = useCallback((delta: Partial<State["hints"]>) => {
     dispatch({ action: "set-hint", ...delta });
   }, []);
+
+  const playRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    return () => {
+      dispatch({ action: "set-frozen", frozen: false });
+      if (playRef.current) {
+        clearTimeout(playRef.current);
+      }
+    };
+  }, []);
+
+  const currentRef = useRef<typeof current>(current);
+  currentRef.current = current;
+
+  const provideIdea = useCallback(async (): Promise<string> => {
+    const current = currentRef.current;
+    const candidates = dictionaryArray.filter((word) => {
+      return (
+        word.length > current.length &&
+        word.startsWith(current) &&
+        !words.includes(word)
+      );
+    });
+    const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+
+    dispatch({ action: "add-idea", providedWord: chosen });
+
+    dispatch({ action: "set-frozen", frozen: true });
+    return new Promise<string>((resolve) => {
+      const queue = chosen.split("");
+      const playNext = () => {
+        if (queue.length === 0) {
+          dispatch({ action: "commit" });
+          resolve(chosen);
+          return;
+        }
+
+        const letter = queue.shift();
+        if (!letter) {
+          throw new Error("No more letters in the queue");
+        }
+
+        dispatch({ action: "add-letter", letter });
+        playRef.current = setTimeout(playNext, 500);
+      };
+
+      playNext();
+    }).finally(() => {
+      dispatch({ action: "set-frozen", frozen: false });
+    });
+  }, [dictionaryArray, words]);
 
   const combined = `${words.join("")}`;
   if (!isLetters(combined)) {
@@ -189,11 +261,13 @@ export const GameState = ({ children, ...initialState }: Props) => {
   return (
     <GameStateContext.Provider
       value={{
+        frozen,
         words,
         current,
         reveal,
         solved,
         hints,
+        ideas,
         setInput,
         add,
         remove,
@@ -205,6 +279,7 @@ export const GameState = ({ children, ...initialState }: Props) => {
         show,
         hint,
         setHints,
+        provideIdea,
       }}
     >
       {children}
