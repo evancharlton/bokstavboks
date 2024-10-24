@@ -17,9 +17,11 @@ export const Header = () => {
           <button onClick={() => show("help")}>
             <MdHelpOutline />
           </button>
-          <button onClick={() => show("hamburger")}>
-            <MdMenu />
-          </button>
+          {lang ? (
+            <button onClick={() => show("hamburger")}>
+              <MdMenu />
+            </button>
+          ) : null}
         </div>
       </div>
     </>
