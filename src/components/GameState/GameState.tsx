@@ -254,9 +254,9 @@ export const GameState = ({ children, ...initialState }: Props) => {
   const { add: addSolution } = useGameHistory();
   useEffect(() => {
     if (solved) {
-      addSolution(words);
+      addSolution({ words, reveal });
     }
-  }, [addSolution, words, solved]);
+  }, [addSolution, words, solved, reveal]);
 
   return (
     <GameStateContext.Provider

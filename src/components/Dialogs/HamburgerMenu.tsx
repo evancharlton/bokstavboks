@@ -21,7 +21,13 @@ export const HamburgerMenu = () => {
   const { solutions } = useGameHistory();
   const { hide, show } = useDialog();
   const { randomize, url } = useBoard();
-  const { words, current, reset, ideas, reveal } = useGameState();
+  const {
+    words,
+    current,
+    reset,
+    ideas,
+    reveal: currentReveal,
+  } = useGameState();
   const { solution } = useSolution();
 
   return (
@@ -55,7 +61,7 @@ export const HamburgerMenu = () => {
         </ShareButton>
       </div>
       <div className={classes.previousSolutions}>
-        {solutions.map(({ words }) => (
+        {solutions.map(({ words, reveal }) => (
           <div className={classes.menuItem} key={words.join("-")}>
             <ShareButton
               text={() =>
@@ -63,7 +69,7 @@ export const HamburgerMenu = () => {
                   {
                     words,
                     ideas,
-                    reveal,
+                    reveal: reveal ?? currentReveal,
                     solved: true,
                   },
                   url,

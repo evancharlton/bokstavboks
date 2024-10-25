@@ -1,12 +1,18 @@
 import { createContext, useContext } from "react";
+import { GameStateType } from "../GameState";
 
 export type PreviousSolution = {
   words: string[];
+  reveal: GameStateType["reveal"];
   timestamp: number;
 };
 
 export const GameHistoryContext = createContext<
-  { solutions: PreviousSolution[]; add: (words: string[]) => void } | undefined
+  | {
+      solutions: PreviousSolution[];
+      add: (info: Omit<PreviousSolution, "timestamp">) => void;
+    }
+  | undefined
 >(undefined);
 
 export const useGameHistory = () => {

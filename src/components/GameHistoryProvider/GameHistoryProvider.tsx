@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ContextType, useCallback, useEffect, useMemo, useState } from "react";
 import { GameHistoryContext, PreviousSolution } from "./context";
 import { useBoard } from "../BoardProvider";
 import { useStorage } from "../../useStorage";
@@ -24,8 +24,10 @@ export const GameHistoryProvider = ({
       });
   }, [id, storage]);
 
-  const addSolution = useCallback(
-    (solution: string[]) => {
+  const addSolution: NonNullable<
+    ContextType<typeof GameHistoryContext>
+  >["add"] = useCallback(
+    ({ words: solution, reveal }) => {
       setSolutions((previous) => {
         const key = solution.join("-");
         if (previous[key]) {
@@ -36,6 +38,7 @@ export const GameHistoryProvider = ({
           [key]: {
             words: solution,
             timestamp: Date.now(),
+            reveal,
           },
         };
 
