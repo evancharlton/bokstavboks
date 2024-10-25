@@ -4,7 +4,9 @@
   color: #fff;
 
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 850px) {
@@ -29,6 +31,7 @@
 
 .container h1 a {
   color: #fff;
+  font-size: 0.8em;
 }
 
 .container h1 a:hover,
@@ -76,4 +79,9 @@
   filter: grayscale(0);
   text-decoration: none;
   border: 0px solid transparent;
+}
+
+.buttons button.refresh {
+  color: var(--link-color);
+  filter: unset;
 }
