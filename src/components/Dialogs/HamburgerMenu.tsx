@@ -5,7 +5,7 @@ import {
   MdOutlineAutorenew,
   MdSettings,
   MdOutlineInfo,
-  MdOutlineRefresh,
+  MdOutlineRestartAlt,
 } from "react-icons/md";
 import { useBoard } from "../BoardProvider";
 import { useGameHistory } from "../GameHistoryProvider";
@@ -51,7 +51,7 @@ export const HamburgerMenu = () => {
           }}
           disabled={words.length === 0 && current.length === 0}
         >
-          <MdOutlineRefresh />
+          <MdOutlineRestartAlt />
           Start på nytt
         </button>
       </div>
