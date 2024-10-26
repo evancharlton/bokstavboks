@@ -17,15 +17,19 @@ export const Header = () => {
         </h1>
         <div className={classes.buttons} style={{ gridArea: "right" }}>
           {updateNeeded ? (
-            <button onClick={() => performUpdate()} className={classes.refresh}>
+            <button
+              title="oppdater appen"
+              onClick={() => performUpdate()}
+              className={classes.refresh}
+            >
               <MdOutlineRefresh />
             </button>
           ) : null}
-          <button onClick={() => show("help")}>
+          <button title="Hjelp med Bokstavboks" onClick={() => show("help")}>
             <MdHelpOutline />
           </button>
           {lang ? (
-            <button onClick={() => show("hamburger")}>
+            <button title="Flere handlinger" onClick={() => show("hamburger")}>
               <MdMenu />
             </button>
           ) : null}

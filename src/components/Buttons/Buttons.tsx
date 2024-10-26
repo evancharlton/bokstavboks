@@ -14,19 +14,32 @@ export const Buttons = () => {
   return (
     <div className={classes.container}>
       <div className={classes.row}>
-        <button disabled={frozen || reveal === "full"} onClick={() => reset()}>
+        <button
+          title="Start på nytt"
+          disabled={frozen || reveal === "full"}
+          onClick={() => reset()}
+        >
           <MdOutlineRestartAlt />
         </button>
         <button
+          title="Gi en idé"
           disabled={frozen || reveal === "full" || current.length > 1}
           onClick={() => provideIdea()}
         >
           <MdOutlineLightbulb />
         </button>
-        <button disabled={frozen || reveal === "full"} onClick={() => remove()}>
+        <button
+          title="Fjern den siste bokstaven"
+          disabled={frozen || reveal === "full"}
+          onClick={() => remove()}
+        >
           <MdOutlineBackspace />
         </button>
-        <button disabled={frozen || reveal === "full"} onClick={() => commit()}>
+        <button
+          title="Legg til"
+          disabled={frozen || reveal === "full"}
+          onClick={() => commit()}
+        >
           <MdKeyboardReturn />
         </button>
       </div>
