@@ -13,6 +13,7 @@ import { BoardContext } from "../BoardProvider/context";
 import { SolutionContext } from "../SolutionProvider/context";
 import { Link } from "react-router-dom";
 import { HamburgerMenu } from "./HamburgerMenu";
+import { GameHistoryContext } from "../GameHistoryProvider/context";
 
 type Props = {
   children: React.ReactNode;
@@ -176,9 +177,13 @@ export const Dialogs = ({ children }: Props) => {
                         solution: [],
                       }}
                     >
-                      <GameState words={[]} current="bokstav">
-                        <Grid />
-                      </GameState>
+                      <GameHistoryContext.Provider
+                        value={{ solutions: [], add: () => undefined }}
+                      >
+                        <GameState words={[]} current="bokstav">
+                          <Grid />
+                        </GameState>
+                      </GameHistoryContext.Provider>
                     </SolutionContext.Provider>
                   </BoardContext.Provider>
                 </PuzzleIdContext.Provider>

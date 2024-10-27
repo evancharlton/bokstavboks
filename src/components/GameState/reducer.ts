@@ -275,7 +275,9 @@ export const reducer =
 
         const finalWord = words.length > 0 ? words[words.length - 1] : "";
         const finalLetter =
-          finalWord.length > 0 ? finalWord[finalWord.length - 1] : "";
+          finalWord.length > 0
+            ? finalWord[finalWord.length - 1]
+            : state.current;
 
         return {
           ...state,
