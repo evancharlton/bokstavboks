@@ -1,35 +1,4 @@
-export type Letter =
-  | "a"
-  | "b"
-  | "c"
-  | "d"
-  | "e"
-  | "f"
-  | "g"
-  | "h"
-  | "i"
-  | "j"
-  | "k"
-  | "l"
-  | "m"
-  | "n"
-  | "o"
-  | "p"
-  | "q"
-  | "r"
-  | "s"
-  | "t"
-  | "u"
-  | "v"
-  | "w"
-  | "x"
-  | "y"
-  | "z"
-  | "ø"
-  | "æ"
-  | "å";
-
-export const LETTERS: Record<string, true> = {
+export const LETTERS = {
   a: true,
   b: true,
   c: true,
@@ -61,11 +30,13 @@ export const LETTERS: Record<string, true> = {
   å: true,
 } as const;
 
+export type Letter = keyof typeof LETTERS;
+
 export const isLetter = (l: string): l is Letter => {
   if (l.length !== 1) {
     return false;
   }
-  return LETTERS[l];
+  return !!LETTERS[l as Letter];
 };
 
 export const isLetters = (l: unknown): l is Letter[] => {
@@ -101,6 +72,6 @@ export const boardId = (board: Board): string => {
     .join("");
 };
 
-export const neverGuard = <T extends unknown>(_: never, v: T): T => {
+export const neverGuard = <T,>(_: never, v: T): T => {
   return v;
 };
