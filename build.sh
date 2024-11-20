@@ -8,6 +8,7 @@ find wordlist/bokstavboks \
   -exec cp -Rv {} public/ \; \
 || exit $?
 
+npm ci || exit $?
 npm run build || exit $?
 
 echo "bokstavboks.no" > dist/CNAME
