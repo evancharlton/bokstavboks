@@ -9,9 +9,11 @@ jobs:
     steps:
       - uses: opentofu/setup-opentofu@v1
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
+          submodules: "true"
+          token: ${{ secrets.ORDLIST_TOKEN }}
 
       - name: "Set environment variables"
         run: |
@@ -21,9 +23,7 @@ jobs:
         env:
           PUBLIC_URL: /
         run: |
-          npm ci
-          npm run build
-          echo "bokstavboks.no" > dist/CNAME
+          ./build.sh
 
       - run: tofu init
       - id: plan

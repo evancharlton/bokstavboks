@@ -30,3 +30,8 @@ terraform.*.backup
 # Vite stuff
 dist/
 dev-dist/
+
+# Wordlists
+
+public/nb/
+public/nn/
