@@ -13,7 +13,10 @@ export const Header = () => {
     <>
       <div className={classes.container}>
         <h1>
-          <Link to={`/${lang}`}>Bokstavboks</Link>
+          <Link to={`/${lang}`}>
+            <img src="/logo.svg" />
+            Bokstavboks
+          </Link>
         </h1>
         <div className={classes.buttons} style={{ gridArea: "right" }}>
           {updateNeeded ? (

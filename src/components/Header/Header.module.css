@@ -32,6 +32,17 @@
 .container h1 a {
   color: #fff;
   font-size: 0.8em;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+
+  img {
+    display: inline;
+    aspect-ratio: 1 / 1;
+    width: 1em;
+  }
 }
 
 .container h1 a:hover,

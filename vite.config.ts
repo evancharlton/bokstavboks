@@ -14,17 +14,17 @@ export default defineConfig({
         theme_color: "#ffffff",
         icons: [
           {
-            src: "favicon.png",
+            src: "logo-64.png",
             sizes: "64x64 32x32",
-            type: "image/x-icon",
+            type: "image/png",
           },
           {
-            src: "logo192.png",
+            src: "logo-192.png",
             type: "image/png",
             sizes: "192x192",
           },
           {
-            src: "logo512.png",
+            src: "logo-512.png",
             type: "image/png",
             sizes: "512x512",
           },
