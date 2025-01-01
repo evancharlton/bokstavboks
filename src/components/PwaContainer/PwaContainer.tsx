@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { registerSW } from "virtual:pwa-register";
 import { useToaster } from "../Toaster";
 import { PwaContext } from "./context";
@@ -14,10 +14,12 @@ export const PwaContainer = ({ children }: { children: ReactNode }) => {
     () => WINDOW_RELOAD
   );
   const [error, setError] = useState<unknown | undefined>(undefined);
+  const [registration, setRegistration] = useState<ServiceWorkerRegistration>();
 
   useEffect(() => {
     const updateSW = registerSW({
-      onRegisteredSW: () => {
+      onRegisteredSW: (_, reg) => {
+        setRegistration(reg);
         console.log("SW registered");
       },
       onRegisterError: (error) => {
@@ -43,6 +45,16 @@ export const PwaContainer = ({ children }: { children: ReactNode }) => {
         updateNeeded,
         performUpdate,
         error,
+        check: useCallback(() => {
+          registration
+            ?.update()
+            .then(() => {
+              console.log("Update performed");
+            })
+            .catch((e) => {
+              console.warn("Error while updating", e);
+            });
+        }, [registration]),
       }}
     >
       {children}

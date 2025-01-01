@@ -5,6 +5,7 @@ export const PwaContext = createContext<
       updateNeeded: boolean;
       performUpdate: () => void;
       error: unknown | undefined;
+      check: () => void;
     }
   | undefined
 >(undefined);
