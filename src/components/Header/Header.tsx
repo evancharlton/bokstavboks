@@ -3,6 +3,7 @@ import { MdHelpOutline, MdMenu, MdOutlineRefresh } from "react-icons/md";
 import { Link, useParams } from "react-router-dom";
 import { useDialog } from "../Dialogs";
 import { usePwa } from "../PwaContainer";
+import logo from "../../logo.svg";
 
 export const Header = () => {
   const { lang = "" } = useParams();
@@ -14,7 +15,7 @@ export const Header = () => {
       <div className={classes.container}>
         <h1>
           <Link to={`/${lang}`}>
-            <img src="/logo.svg" />
+            <img src={logo} />
             Bokstavboks
           </Link>
         </h1>
