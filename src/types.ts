@@ -71,7 +71,3 @@ export const boardId = (board: Board): string => {
     .map((side) => serializeSide(side))
     .join("");
 };
-
-export const neverGuard = <T,>(_: never, v: T): T => {
-  return v;
-};

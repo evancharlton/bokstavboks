@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
-import { isLetters, neverGuard } from "../../types";
+import { isLetters } from "../../types";
 import { BoardContext } from "./context";
 import { usePuzzleId } from "../PuzzleIdProvider";
 import { WordsProvider, useWords } from "../WordsProvider";
@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router";
 import { extractBoardId } from "./extractBoardId";
 import { useStorage } from "../../useStorage";
 import { normalizeId } from "../../utils";
+import { neverGuard } from "../../spa-components/neverGuard";
 
 type Action =
   | { action: "set-board"; boardId: string; seeds?: string[] }

@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useReducer } from "react";
 import { SolutionContext } from "./context";
 import { State } from "./types";
-import { isLetters, neverGuard } from "../../types";
+import { isLetters } from "../../types";
 import { findSolutionById } from "../../logic";
 import { useWords } from "../WordsProvider";
 import { useBoard } from "../BoardProvider";
 import { useStorage } from "../../useStorage";
 import { Solving } from "./Solving";
+import { neverGuard } from "../../spa-components/neverGuard";
 
 type Update =
   | { action: "start-solving"; controller: AbortController }

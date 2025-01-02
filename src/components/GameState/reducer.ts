@@ -1,4 +1,5 @@
-import { isLetter, isLetters, neverGuard } from "../../types";
+import { neverGuard } from "../../spa-components/neverGuard";
+import { isLetter, isLetters } from "../../types";
 import { SavedState, State } from "./types";
 
 type Update =
