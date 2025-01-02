@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router";
 import { WordsContext } from "./context";
-import { Loader } from "../Loader";
+import { Loader } from "../../spa-components/Loader";
 
 type Props = {
   children?: React.ReactNode;

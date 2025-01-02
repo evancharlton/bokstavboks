@@ -1,14 +1,14 @@
 import "./App.css";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router";
 import { Play } from "./pages/Play";
 import { WordsProvider } from "./components/WordsProvider";
 import { Header } from "./components/Header";
 import { Page } from "./components/Page";
-import { LanguageSelect } from "./pages/LanguageSelect";
 import { Dialogs } from "./components/Dialogs";
 import { Toaster } from "./components/Toaster";
 import { SettingsProvider } from "./components/SettingsProvider";
-import { PwaContainer } from "./components/PwaContainer/PwaContainer";
+import LanguageSelector from "./spa-components/LanguageSelector";
+import PwaContainer from "./spa-components/PwaContainer";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
                 element={
                   <Dialogs>
                     <Page header={<Header />}>
-                      <LanguageSelect />
+                      <LanguageSelector />
                     </Page>
                   </Dialogs>
                 }

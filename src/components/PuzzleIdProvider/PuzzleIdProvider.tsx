@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { PuzzleIdContext } from "./context";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 type Props = {
   children: React.ReactNode;

@@ -3,7 +3,7 @@ import { isLetters, neverGuard } from "../../types";
 import { BoardContext } from "./context";
 import { usePuzzleId } from "../PuzzleIdProvider";
 import { WordsProvider, useWords } from "../WordsProvider";
-import { Loader } from "../Loader";
+import { Loader } from "../../spa-components/Loader";
 import { State } from "./types";
 import { useNavigate, useParams } from "react-router";
 import { extractBoardId } from "./extractBoardId";
@@ -142,7 +142,7 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
   );
 
   if (!display) {
-    return <Loader text="generere puslespill ..." />;
+    return <Loader text="genererer puslespill ..." />;
   }
 
   const relevantWords = wordBank.filter((word) => {

@@ -5,6 +5,7 @@ body,
   display: flex;
   flex-direction: column;
 
+  --theme-color: #21c294;
   --link-color: #21c294;
   --top-color: #ffcc32;
   --left-color: #f44336;

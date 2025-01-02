@@ -1,14 +1,13 @@
 import classes from "./Header.module.css";
-import { MdHelpOutline, MdMenu, MdOutlineRefresh } from "react-icons/md";
-import { Link, useParams } from "react-router-dom";
+import { MdHelpOutline, MdMenu } from "react-icons/md";
+import { Link, useParams } from "react-router";
 import { useDialog } from "../Dialogs";
-import { usePwa } from "../PwaContainer";
 import logo from "../../logo.svg";
+import { UpdateButton } from "../../spa-components/PwaContainer/UpdateButton";
 
 export const Header = () => {
   const { lang = "" } = useParams();
   const { show } = useDialog();
-  const { updateNeeded, performUpdate } = usePwa();
 
   return (
     <>
@@ -20,15 +19,7 @@ export const Header = () => {
           </Link>
         </h1>
         <div className={classes.buttons} style={{ gridArea: "right" }}>
-          {updateNeeded ? (
-            <button
-              title="oppdater appen"
-              onClick={() => performUpdate()}
-              className={classes.refresh}
-            >
-              <MdOutlineRefresh />
-            </button>
-          ) : null}
+          <UpdateButton />
           <button title="Hjelp med Bokstavboks" onClick={() => show("help")}>
             <MdHelpOutline />
           </button>

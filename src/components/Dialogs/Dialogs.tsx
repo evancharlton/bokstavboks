@@ -11,10 +11,9 @@ import { WordsContext } from "../WordsProvider/context";
 import { PuzzleIdContext } from "../PuzzleIdProvider/context";
 import { BoardContext } from "../BoardProvider/context";
 import { SolutionContext } from "../SolutionProvider/context";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { HamburgerMenu } from "./HamburgerMenu";
 import { GameHistoryContext } from "../GameHistoryProvider/context";
-import { usePwa } from "../PwaContainer";
 
 type Props = {
   children: React.ReactNode;
@@ -125,7 +124,6 @@ const SettingsDialog = () => {
 
 export const Dialogs = ({ children }: Props) => {
   const [dialog, setDialog] = useState<DialogType | undefined>(undefined);
-  const { check } = usePwa();
 
   const hide = useCallback(() => {
     setDialog(undefined);
@@ -297,7 +295,6 @@ export const Dialogs = ({ children }: Props) => {
                 flexDirection: "row",
                 justifyContent: "space-between",
               }}
-              onClick={() => check()}
             >
               versjon{" "}
               <code>{import.meta.env.VITE_RELEASE ?? "development"}</code>

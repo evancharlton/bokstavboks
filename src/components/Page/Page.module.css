@@ -6,6 +6,10 @@
 
 .content {
   flex: 1;
+
+  max-width: 600px;
+
+  align-self: center;
 }
 
 .pwaContainer {
