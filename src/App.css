@@ -13,6 +13,10 @@ body,
   --bottom-color: #1976d2;
   --subtle-outline-color: #ccca;
   --button-outline-color: #999a;
+
+  --header-background-color: #000;
+  --header-foreground-color: #fff;
+  --header-button-color: #fff;
 }
 
 * {
