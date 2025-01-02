@@ -1,3 +1,7 @@
+:root {
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+}
+
 html,
 body,
 #root {
@@ -17,10 +21,6 @@ body,
   --header-background-color: #000;
   --header-foreground-color: #fff;
   --header-button-color: #fff;
-}
-
-* {
-  font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
 
 .App {
