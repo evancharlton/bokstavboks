@@ -4,12 +4,23 @@ import { BoardProvider } from "../../components/BoardProvider";
 import { Status } from "../../components/Status";
 import classes from "./Play.module.css";
 import { Buttons } from "../../components/Buttons";
-import { Header } from "../../components/Header";
-import { Page } from "../../components/Page";
 import { PuzzleIdProvider } from "../../components/PuzzleIdProvider";
-import { Dialogs } from "../../components/Dialogs";
+import { Dialogs, useDialog } from "../../components/Dialogs";
 import { SolutionProvider } from "../../components/SolutionProvider";
 import { GameHistoryProvider } from "../../components/GameHistoryProvider";
+import { MdMenu } from "react-icons/md";
+import { ButtonsPortal } from "../../spa-components/Header";
+
+const Hamburger = () => {
+  const { show } = useDialog();
+  return (
+    <ButtonsPortal>
+      <button title="Flere handlinger" onClick={() => show("hamburger")}>
+        <MdMenu />
+      </button>
+    </ButtonsPortal>
+  );
+};
 
 export const Play = () => {
   return (
@@ -19,13 +30,12 @@ export const Play = () => {
           <GameHistoryProvider>
             <GameState>
               <Dialogs>
-                <Page header={<Header />}>
-                  <div className={classes.container}>
-                    <Status />
-                    <Grid />
-                    <Buttons />
-                  </div>
-                </Page>
+                <Hamburger />
+                <div className={classes.container}>
+                  <Status />
+                  <Grid />
+                  <Buttons />
+                </div>
               </Dialogs>
             </GameState>
           </GameHistoryProvider>

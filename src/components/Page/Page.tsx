@@ -1,15 +1,14 @@
+import { Outlet } from "react-router";
+import { Header } from "../Header";
 import classes from "./Page.module.css";
 
-type Props = {
-  header: React.ReactNode;
-  children: React.ReactNode;
-};
-
-export const Page = ({ header, children }: Props) => {
+export const Page = () => {
   return (
     <div className={classes.container}>
-      {header}
-      <div className={classes.content}>{children}</div>
+      <Header />
+      <div className={classes.content}>
+        <Outlet />
+      </div>
     </div>
   );
 };
