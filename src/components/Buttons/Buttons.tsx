@@ -30,14 +30,14 @@ export const Buttons = () => {
         </button>
         <button
           title="Fjern den siste bokstaven"
-          disabled={frozen || reveal === "full"}
+          disabled={frozen || reveal === "full" || current.length === 0}
           onClick={() => remove()}
         >
           <MdOutlineBackspace />
         </button>
         <button
           title="Legg til"
-          disabled={frozen || reveal === "full"}
+          disabled={frozen || reveal === "full" || current.length < 3}
           onClick={() => commit()}
         >
           <MdKeyboardReturn />

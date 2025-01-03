@@ -17,17 +17,24 @@
   row-gap: 8px;
 }
 
-.container button {
-  font-size: 32px;
-  padding: 12px 20px;
+.container {
+  button {
+    font-size: 32px;
+    padding: 12px 20px;
 
-  border-radius: 16px;
-  border: 1px solid #000;
-  background-color: #eee6;
-  text-transform: capitalize;
-  margin: 0;
+    border-radius: 16px;
+    color: currentColor;
+    border: 1px solid var(--button-outline-color);
+    background-color: rgba(from var(--button-color) r g b / 0.1);
+    text-transform: capitalize;
+    margin: 0;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  button:disabled {
+    color: hsl(from var(--button-color) h s calc(l/2));
+  }
 }

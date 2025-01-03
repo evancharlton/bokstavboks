@@ -8,6 +8,10 @@ body,
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+:root {
+  --background-color: #fff;
 
   --theme-color: #21c294;
   --link-color: #21c294;
@@ -21,6 +25,32 @@ body,
   --header-background-color: #000;
   --header-foreground-color: #fff;
   --header-button-color: #fff;
+
+  --grid-current-shadow-color: #000;
+  --grid-button-background: #fff;
+
+  --nest-line-color: #999a;
+  --nest-box-color: #000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #fff;
+    background-color: #000;
+    --background-color: #000;
+
+    --button-color: #fff;
+
+    --grid-current-shadow-color: #666;
+    --grid-button-background: #000;
+
+    --nest-line-color: #999a;
+    --nest-box-color: #999a;
+  }
+}
+
+dialog {
+  color-scheme: light dark;
 }
 
 .App {

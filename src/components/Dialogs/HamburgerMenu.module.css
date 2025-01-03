@@ -34,7 +34,8 @@
   justify-content: center;
   background-color: transparent;
   border-radius: 4px;
-  border: 1px solid black;
+  border: 0;
+  color: currentColor;
 }
 
 .hamburger .previousSolution {
@@ -68,6 +69,7 @@
   text-wrap: pretty;
 
   cursor: pointer;
+  color: currentColor;
 }
 
 .hamburger .menuItem button svg {
