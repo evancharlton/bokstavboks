@@ -74,7 +74,7 @@ button.primary {
 }
 
 button {
-  color: #000;
+  color: currentColor;
 }
 
 button:disabled {

@@ -12,11 +12,15 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  color: currentColor;
 }
 
 .container button {
   border-radius: 4px;
   background-color: transparent;
-  border: 1px solid #333a;
+  --color: currentColor;
+  --dimmed: hsl(from var(--color) h s calc(l * 0.6));
+  color: var(--dimmed);
+  border: 1px solid var(--dimmed);
   padding: 4px 8px;
 }
