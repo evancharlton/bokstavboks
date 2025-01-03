@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 import { DialogContext, DialogType, useDialog } from "./context";
-import { Dialog } from "../Dialog/Dialog";
 import { MdOutlineAutorenew } from "react-icons/md";
 import { GameState, useGameState } from "../GameState";
 import { Grid } from "../Grid";
@@ -14,6 +13,7 @@ import { SolutionContext } from "../SolutionProvider/context";
 import { Link } from "react-router";
 import { HamburgerMenu } from "./HamburgerMenu";
 import { GameHistoryContext } from "../GameHistoryProvider/context";
+import { Modal } from "../../spa-components/Modal";
 
 type Props = {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ const SolveDialog = () => {
   const { show, hints, setHints } = useGameState();
 
   return (
-    <Dialog title="Vis den beste løsningen?" onClose={() => hide()}>
+    <Modal open title="Vis den beste løsningen?" onClose={() => hide()}>
       <div className={classes.solutions}>
         <p>
           Vil du se en løsning på dette puslespillet? (Det er mange mulige
@@ -72,7 +72,7 @@ const SolveDialog = () => {
           </button>
         </div>
       </div>
-    </Dialog>
+    </Modal>
   );
 };
 
@@ -81,7 +81,8 @@ const SettingsDialog = () => {
   const { settings, update } = useSettings();
 
   return (
-    <Dialog
+    <Modal
+      open
       title="Instillinger"
       onClose={() => {
         hide();
@@ -118,7 +119,7 @@ const SettingsDialog = () => {
           </div>
         </div>
       </div>
-    </Dialog>
+    </Modal>
   );
 };
 
@@ -137,7 +138,7 @@ export const Dialogs = ({ children }: Props) => {
     switch (dialog) {
       case "help": {
         return (
-          <Dialog title="Reglene" onClose={hide}>
+          <Modal open title="Reglene" onClose={hide}>
             <p>
               Målet er å bruke alle 12 bokstavene, med så få ord som mulig.
               Bokstavene kan brukes flere ganger, men må krysse til forskjellige
@@ -206,13 +207,13 @@ export const Dialogs = ({ children }: Props) => {
               </span>{" "}
               knappene for å generere et nytt puslespill!
             </p>
-          </Dialog>
+          </Modal>
         );
       }
 
       case "about": {
         return (
-          <Dialog title="Om Bokstavboks" onClose={hide}>
+          <Modal open title="Om Bokstavboks" onClose={hide}>
             <p>
               Bokstavboks var inspirert av{" "}
               <a
@@ -299,7 +300,7 @@ export const Dialogs = ({ children }: Props) => {
               versjon{" "}
               <code>{import.meta.env.VITE_RELEASE ?? "development"}</code>
             </span>
-          </Dialog>
+          </Modal>
         );
       }
 
@@ -317,9 +318,9 @@ export const Dialogs = ({ children }: Props) => {
 
       default: {
         return (
-          <Dialog title={dialog.title} onClose={() => setDialog(undefined)}>
+          <Modal open title={dialog.title} onClose={() => setDialog(undefined)}>
             {dialog.content}
-          </Dialog>
+          </Modal>
         );
       }
     }
