@@ -14,7 +14,7 @@ body,
   --background-color: #fff;
 
   --theme-color: #21c294;
-  --link-color: #21c294;
+  --link-color: #1bb489;
   --top-color: #ffcc32;
   --left-color: #f44336;
   --right-color: #7cb342;
@@ -57,6 +57,13 @@ dialog {
   display: flex;
   flex-direction: column;
   flex: 1;
+}
+
+a,
+a:link,
+a:visited,
+a:active {
+  color: var(--link-color);
 }
 
 a,
