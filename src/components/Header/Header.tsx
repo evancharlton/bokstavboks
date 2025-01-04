@@ -6,11 +6,9 @@ import { Header as SpaHeader } from "../../spa-components/Header";
 const Buttons = () => {
   const { show } = useDialog();
   return (
-    <>
-      <button title="Hjelp med Bokstavboks" onClick={() => show("help")}>
-        <MdHelpOutline />
-      </button>
-    </>
+    <button title="Hjelp med Bokstavboks" onClick={() => show("help")}>
+      <MdHelpOutline />
+    </button>
   );
 };
 

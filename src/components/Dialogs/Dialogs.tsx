@@ -11,7 +11,6 @@ import { PuzzleIdContext } from "../PuzzleIdProvider/context";
 import { BoardContext } from "../BoardProvider/context";
 import { SolutionContext } from "../SolutionProvider/context";
 import { Link } from "react-router";
-import { HamburgerMenu } from "./HamburgerMenu";
 import { GameHistoryContext } from "../GameHistoryProvider/context";
 import { Modal } from "../../spa-components/Modal";
 
@@ -313,7 +312,7 @@ export const Dialogs = ({ children }: Props) => {
       }
 
       case "hamburger": {
-        return <HamburgerMenu />;
+        return null;
       }
 
       default: {
@@ -327,7 +326,7 @@ export const Dialogs = ({ children }: Props) => {
   })();
 
   return (
-    <DialogContext.Provider value={{ show: setDialog, hide }}>
+    <DialogContext.Provider value={{ show: setDialog, hide, which: dialog }}>
       {children}
       {dialogElement}
     </DialogContext.Provider>

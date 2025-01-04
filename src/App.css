@@ -75,6 +75,7 @@ button.primary {
 
 button {
   color: currentColor;
+  border: 0;
 }
 
 button:disabled {

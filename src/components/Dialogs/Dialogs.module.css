@@ -1,3 +1,7 @@
+.solutions {
+  margin-top: 8px;
+}
+
 .buttonBar {
   display: flex;
   flex-direction: row;
@@ -6,8 +10,8 @@
 }
 
 .buttonBar button {
-  border: 1px solid #333;
-  background-color: white;
+  border: 1px solid #666;
+  background-color: transparent;
   font-size: 1.1em;
   border-radius: 4px;
   padding: 8px 12px;

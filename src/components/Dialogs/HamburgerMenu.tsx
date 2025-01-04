@@ -1,11 +1,10 @@
 import {
-  MdOutlineClose,
   MdOutlineDoneAll,
   MdLink,
   MdOutlineAutorenew,
   MdSettings,
-  MdOutlineInfo,
   MdOutlineRestartAlt,
+  MdInfoOutline,
 } from "react-icons/md";
 import { useBoard } from "../BoardProvider";
 import { useGameHistory } from "../GameHistoryProvider";
@@ -16,50 +15,40 @@ import { WordList } from "../WordList";
 import { useGameState } from "../GameState";
 import { createShareString } from "../../utils";
 import { useSolution } from "../SolutionProvider";
+import {
+  Action,
+  HamburgerMenu as SpaHamburgerMenu,
+} from "../../spa-components/HamburgerMenu";
+import hamburgerClasses from "../../spa-components/HamburgerMenu/HamburgerMenu.module.css";
 
 export const HamburgerMenu = () => {
   const { solutions } = useGameHistory();
-  const { hide, show } = useDialog();
+  const { hide, show, which } = useDialog();
   const { randomize, url } = useBoard();
-  const {
-    words,
-    current,
-    reset,
-    ideas,
-    reveal: currentReveal,
-  } = useGameState();
+  const { reset, ideas, reveal: currentReveal } = useGameState();
   const { solution } = useSolution();
 
   return (
-    <dialog
-      ref={(ref) => {
-        ref?.showModal();
-      }}
-      onClose={() => hide()}
-      className={classes.hamburger}
+    <SpaHamburgerMenu
+      open={which === "hamburger"}
+      onClose={() => which === "hamburger" && hide()}
+      onOpen={() => show("hamburger")}
     >
-      <div className={classes.header}>
-        <button onClick={() => hide()}>
-          <MdOutlineClose />
-        </button>
-      </div>
-      <div className={classes.menuItem}>
-        <button
-          onClick={() => {
-            reset();
-            hide();
-          }}
-          disabled={words.length === 0 && current.length === 0}
-        >
-          <MdOutlineRestartAlt />
-          Start på nytt
-        </button>
-      </div>
-      <div className={classes.menuItem}>
-        <ShareButton text={() => url} CopyIcon={MdLink}>
-          Del puslespill
-        </ShareButton>
-      </div>
+      <Action
+        icon={MdOutlineRestartAlt}
+        text="Start på nytt"
+        onClick={() => {
+          reset();
+          hide();
+        }}
+      />
+      <ShareButton
+        className={hamburgerClasses.action}
+        text={() => url}
+        CopyIcon={MdLink}
+      >
+        Del puslespill
+      </ShareButton>
       <div className={classes.previousSolutions}>
         {solutions.map(({ words, reveal }) => (
           <div className={classes.menuItem} key={words.join("-")}>
@@ -81,31 +70,29 @@ export const HamburgerMenu = () => {
           </div>
         ))}
       </div>
-      <div className={classes.menuItem}>
-        <button onClick={() => show("solve")}>
-          <MdOutlineDoneAll /> Vis den beste løsningen
-        </button>
-      </div>
-      <div className={classes.menuItem}>
-        <button
-          onClick={() => {
-            hide();
-            randomize();
-          }}
-        >
-          <MdOutlineAutorenew /> Nytt puslespill
-        </button>
-      </div>
-      <div className={classes.menuItem}>
-        <button onClick={() => show("settings")}>
-          <MdSettings /> Instillinger
-        </button>
-      </div>
-      <div className={classes.menuItem}>
-        <button onClick={() => show("about")}>
-          <MdOutlineInfo /> Om Bokstavboks
-        </button>
-      </div>
-    </dialog>
+      <Action
+        icon={MdOutlineDoneAll}
+        text="Vis den beste løsningen"
+        onClick={() => show("solve")}
+      />
+      <Action
+        icon={MdOutlineAutorenew}
+        text="Nytt puslespill"
+        onClick={() => {
+          hide();
+          randomize();
+        }}
+      />
+      <Action
+        icon={MdSettings}
+        text="Instillinger"
+        onClick={() => show("settings")}
+      />
+      <Action
+        icon={MdInfoOutline}
+        text="Om Bokstavboks"
+        onClick={() => show("about")}
+      />
+    </SpaHamburgerMenu>
   );
 };

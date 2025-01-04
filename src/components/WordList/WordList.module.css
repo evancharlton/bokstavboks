@@ -18,7 +18,7 @@
 
 .word,
 .word a {
-  color: #000;
+  color: currentColor;
 
   display: flex;
   flex-direction: row;
@@ -31,4 +31,6 @@
 
 .word svg {
   color: #888;
+  font-size: 0.8em;
+  align-self: flex-start;
 }

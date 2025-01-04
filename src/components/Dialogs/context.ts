@@ -9,7 +9,12 @@ export type DialogType =
   | { title: string; content: React.ReactNode };
 
 export const DialogContext = createContext<
-  { show: (kind: DialogType) => void; hide: () => void } | undefined
+  | {
+      show: (kind: DialogType) => void;
+      hide: () => void;
+      which: DialogType | undefined;
+    }
+  | undefined
 >(undefined);
 
 export const useDialog = () => {
