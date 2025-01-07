@@ -37,26 +37,12 @@
   opacity: 0.5;
 }
 
-.previousSolutions {
-  flex: 1;
-  overflow-y: auto;
-  border-top: 1px solid #999a;
-}
-
-.previousSolution li {
-  font-size: 1.2em;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
 .previousSolution {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  align-items: center;
 
-  list-style-type: none;
   margin-block-start: 8px;
   margin-block-end: 8px;
   padding-inline-start: 0px;

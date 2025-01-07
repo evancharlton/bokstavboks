@@ -17,6 +17,7 @@ import { createShareString } from "../../utils";
 import { useSolution } from "../SolutionProvider";
 import {
   Action,
+  Content,
   HamburgerMenu as SpaHamburgerMenu,
 } from "../../spa-components/HamburgerMenu";
 import hamburgerClasses from "../../spa-components/HamburgerMenu/HamburgerMenu.module.css";
@@ -50,7 +51,7 @@ export const HamburgerMenu = () => {
       >
         Del puslespill
       </ShareButton>
-      <div className={classes.previousSolutions}>
+      <Content className={classes.previousSolutions}>
         {solutions.map(({ words, reveal }) => (
           <div className={classes.menuItem} key={words.join("-")}>
             <ShareButton
@@ -70,7 +71,7 @@ export const HamburgerMenu = () => {
             <WordList className={classes.previousSolution} path={words} />
           </div>
         ))}
-      </div>
+      </Content>
       <Action
         icon={MdOutlineDoneAll}
         text="Vis den beste løsningen"
