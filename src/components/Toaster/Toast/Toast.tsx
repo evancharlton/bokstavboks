@@ -20,6 +20,6 @@ export const Toast = ({ text, level }: Props) => {
     >
       {text}
     </div>,
-    document.body
+    document.body,
   );
 };

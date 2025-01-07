@@ -48,7 +48,7 @@ const reducer = (state: State, update: Update): State => {
       state.onChange(nextWords.join("").split("").filter(isLetter));
 
       const letters = new Set<Letter>(
-        nextWords.join("").split("").filter(isLetter)
+        nextWords.join("").split("").filter(isLetter),
       );
 
       return {

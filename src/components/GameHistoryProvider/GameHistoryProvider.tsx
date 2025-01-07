@@ -10,7 +10,7 @@ export const GameHistoryProvider = ({
 }) => {
   const { id } = useBoard();
   const [previous, setSolutions] = useState<Record<string, PreviousSolution>>(
-    {}
+    {},
   );
   const storage = useStorage("found-solutions");
 
@@ -47,15 +47,15 @@ export const GameHistoryProvider = ({
         return next;
       });
     },
-    [id, storage]
+    [id, storage],
   );
 
   const solutions = useMemo(
     () =>
       Object.values(previous).sort(
-        ({ timestamp: a }, { timestamp: b }) => b - a
+        ({ timestamp: a }, { timestamp: b }) => b - a,
       ),
-    [previous]
+    [previous],
   );
 
   return (

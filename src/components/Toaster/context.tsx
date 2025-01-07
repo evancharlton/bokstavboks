@@ -14,7 +14,7 @@ export const useToaster = () => {
   const context = useContext(ToasterContext);
   if (!context) {
     throw new Error(
-      "Must be rendered inside of a <ToasterContext.Provider />!"
+      "Must be rendered inside of a <ToasterContext.Provider />!",
     );
   }
   return context;

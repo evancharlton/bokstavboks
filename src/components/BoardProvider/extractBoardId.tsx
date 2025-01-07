@@ -4,7 +4,7 @@ import { isLetter, Letter, boardId } from "../../types";
 export const extractBoardId = async (
   puzzleId: string,
   random: () => number,
-  wordBank: string[]
+  wordBank: string[],
 ): Promise<string> => {
   if (puzzleId.length === 12 && puzzleId.split("").every(isLetter)) {
     return puzzleId;

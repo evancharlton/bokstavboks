@@ -92,7 +92,7 @@ export const SolutionProvider = ({ children, ...initialState }: Props) => {
       queueSize: 0,
       maxQueueSize: 0,
       ...initialState,
-    }
+    },
   );
 
   useEffect(() => {
@@ -124,7 +124,7 @@ export const SolutionProvider = ({ children, ...initialState }: Props) => {
           id,
           controller.signal,
           onSolution,
-          onProgress
+          onProgress,
         );
       })
       .then((solution: string[]) => {

@@ -74,7 +74,7 @@ export const isComplete = (board: Board): boolean => {
 
 export const addLetter = (
   boardOrBoards: Board | Board[],
-  next: Letter
+  next: Letter,
 ): Board[] => {
   if (Array.isArray(boardOrBoards)) {
     return boardOrBoards.flatMap((board) => addLetter(board, next));
@@ -139,12 +139,12 @@ export const canPlay = (board: Board, word: Letter[]): boolean => {
 
 export const findSolution = async (
   words: readonly string[],
-  board: Board
+  board: Board,
 ): Promise<string[]> => {
   return findSolutionById(
     words,
     [...board.sideA, ...board.sideB, ...board.sideC, ...board.sideD].join(""),
-    null as unknown as AbortSignal
+    null as unknown as AbortSignal,
   );
 };
 
@@ -182,12 +182,12 @@ export const bfs = async (
   id: string,
   abortSignal: AbortSignal,
   onSolution: (solution: string[]) => void,
-  onProgress: (queueSize: number) => void
+  onProgress: (queueSize: number) => void,
 ): Promise<string[]> => {
   const translate = (ids: number[]): string[] => ids.map((id) => words[id]);
 
   const finalLetters = new Uint8Array(
-    words.map((w) => w.charCodeAt(w.length - 1))
+    words.map((w) => w.charCodeAt(w.length - 1)),
   );
   const wordsByStartLetter = new Map<number, number[]>();
   const singleWordSolutions: string[] = [];
@@ -221,7 +221,7 @@ export const bfs = async (
         }
       }
       return mask;
-    })
+    }),
   );
 
   const queue: number[][] = words.map((_, i) => [i]);
@@ -299,7 +299,7 @@ export const findSolutionById = (
   rawBoardId: string,
   abortSignal: AbortSignal,
   onSolution: (solution: string[]) => void = () => undefined,
-  onProgress: (queueSize: number) => void = () => undefined
+  onProgress: (queueSize: number) => void = () => undefined,
 ) => {
   const boardId = normalizeId(rawBoardId);
 

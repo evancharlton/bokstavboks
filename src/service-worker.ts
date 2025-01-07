@@ -51,8 +51,8 @@ registerRoute(
     return true;
   },
   createHandlerBoundToURL(
-    `${import.meta.env.BASE_URL}/index.html`.replace(/\/\//g, "/")
-  )
+    `${import.meta.env.BASE_URL}/index.html`.replace(/\/\//g, "/"),
+  ),
 );
 
 // An example runtime caching route for requests that aren't handled by the
@@ -69,7 +69,7 @@ registerRoute(
       // least-recently used images are removed.
       new ExpirationPlugin({ maxEntries: 50 }),
     ],
-  })
+  }),
 );
 
 // An example runtime caching route for requests that aren't handled by the
@@ -81,7 +81,7 @@ registerRoute(
   // Customize this strategy as needed, e.g., by changing to CacheFirst.
   new StaleWhileRevalidate({
     cacheName: "words",
-  })
+  }),
 );
 
 // This allows the web app to trigger skipWaiting via

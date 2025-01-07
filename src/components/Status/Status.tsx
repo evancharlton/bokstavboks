@@ -146,7 +146,7 @@ export const Status = () => {
         </span>
       );
     },
-    [sideLookup]
+    [sideLookup],
   );
 
   const letters = hints.colors

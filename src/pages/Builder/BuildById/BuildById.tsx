@@ -21,7 +21,7 @@ export const BuildById = () => {
           setId(
             e.target.value
               .toLocaleLowerCase()
-              .replace(/[^abcdefghijklmnopqrstuvwxyzåæø]/g, "")
+              .replace(/[^abcdefghijklmnopqrstuvwxyzåæø]/g, ""),
           )
         }
         maxLength={12}

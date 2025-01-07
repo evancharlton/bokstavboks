@@ -23,7 +23,7 @@ export const SettingsProvider = ({ children, ...initialSettings }: Props) => {
         return merged;
       });
     },
-    [store]
+    [store],
   );
 
   useEffect(() => {

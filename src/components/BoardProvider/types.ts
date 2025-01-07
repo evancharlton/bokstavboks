@@ -8,7 +8,7 @@ export type State = {
       GroupId, // top
       GroupId, // right
       GroupId, // bottom
-      GroupId // left
+      GroupId, // left
     ]
   >;
 };

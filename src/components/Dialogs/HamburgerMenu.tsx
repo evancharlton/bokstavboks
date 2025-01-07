@@ -63,7 +63,7 @@ export const HamburgerMenu = () => {
                     solved: true,
                   },
                   url,
-                  solution
+                  solution,
                 )
               }
             />

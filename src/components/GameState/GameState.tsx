@@ -36,7 +36,7 @@ export const GameState = ({ children, ...initialState }: Props) => {
       [boardId[10]]: "d",
       [boardId[11]]: "d",
     }),
-    [boardId]
+    [boardId],
   );
 
   const isValid = useCallback(
@@ -68,12 +68,12 @@ export const GameState = ({ children, ...initialState }: Props) => {
 
       return true;
     },
-    [sides]
+    [sides],
   );
 
   const reducerMemo = useMemo(
     () => reducer(dictionary, isValid),
-    [dictionary, isValid]
+    [dictionary, isValid],
   );
 
   const [

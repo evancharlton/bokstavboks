@@ -33,7 +33,7 @@ export const createShareString = (
     solved,
   }: Pick<GameStateType, "ideas" | "words" | "reveal" | "solved">,
   url: string,
-  solution: string[]
+  solution: string[],
 ) => {
   const revealed = reveal === "full";
   if (!(revealed || solved)) {

@@ -32,7 +32,7 @@ describe("logic", () => {
         sideB: new Set(),
         sideC: new Set(),
         sideD: new Set(),
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -42,7 +42,7 @@ describe("logic", () => {
         sideB: new Set(),
         sideC: new Set(),
         sideD: new Set(),
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -52,7 +52,7 @@ describe("logic", () => {
         sideB: new Set(),
         sideC: new Set(),
         sideD: new Set(),
-      })
+      }),
     ).toBe(false);
 
     expect(
@@ -62,7 +62,7 @@ describe("logic", () => {
         sideB: new Set(["b"]),
         sideC: new Set(["c"]),
         sideD: new Set(),
-      })
+      }),
     ).toBe(true);
 
     expect(
@@ -72,7 +72,7 @@ describe("logic", () => {
         sideB: new Set("aiw".split("")),
         sideC: new Set("xso".split("")),
         sideD: new Set("nhr".split("")),
-      })
+      }),
     ).toBe(true);
   });
 
@@ -142,8 +142,8 @@ describe("logic", () => {
           sideC: new Set("xso".split("").filter(isLetter)),
           sideD: new Set("nh".split("").filter(isLetter)),
         },
-        "w"
-      )
+        "w",
+      ),
     ).toHaveLength(2);
   });
 });
@@ -167,7 +167,7 @@ describe("solving", () => {
     const words = (() => {
       const contents = readFileSync(
         resolve(__dirname, "../wordlist/fullformsliste.txt"),
-        { encoding: "latin1" }
+        { encoding: "latin1" },
       ).toString();
       const words = contents
         .split("\n")
@@ -237,19 +237,19 @@ describe("solving", () => {
         const solution = await findSolutionById(
           words,
           "akynorgsteil",
-          null as unknown as AbortSignal
+          null as unknown as AbortSignal,
         );
         expect(solution).toHaveLength(2);
         expect(solution[0][solution[0].length - 1]).toEqual(solution[1][0]);
       },
-      20 * 1000
+      20 * 1000,
     );
 
     test("aejorvbmtinp", async () => {
       const solution = await findSolutionById(
         words ?? ["evertebrat", "tjonete", "empatiene"],
         "aejorvbmtinp",
-        null as unknown as AbortSignal
+        null as unknown as AbortSignal,
       );
       expect(solution).toHaveLength(2);
     });

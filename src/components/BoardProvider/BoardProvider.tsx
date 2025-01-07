@@ -28,7 +28,7 @@ const shuffleId = (boardId: string): string =>
       [boardId[3], boardId[4], boardId[5]],
       [boardId[6], boardId[7], boardId[8]],
       [boardId[9], boardId[10], boardId[11]],
-    ].map((arr) => shuffle(arr).join(""))
+    ].map((arr) => shuffle(arr).join("")),
   ).join("");
 
 const reducer = (state: State, update: Action): State => {
@@ -139,7 +139,7 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
         .reduce<
           Record<string, number>
         >((acc, letter, i) => ({ ...acc, [letter]: Math.floor(i / 3) }), {}),
-    [id]
+    [id],
   );
 
   if (!display) {

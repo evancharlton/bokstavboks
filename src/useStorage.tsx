@@ -21,7 +21,7 @@ export const useStorage = (database: string) => {
         name: `bokstavboks/${version}/${lang}/${database}`,
         driver: driver ?? localforage.INDEXEDDB,
       }),
-    [database, driver, lang, version]
+    [database, driver, lang, version],
   );
 };
 

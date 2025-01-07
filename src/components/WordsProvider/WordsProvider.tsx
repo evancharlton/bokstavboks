@@ -20,7 +20,7 @@ export const WordsProvider = ({ children, words: initialWords }: Props) => {
 
     const url = `${import.meta.env.BASE_URL}/${lang}/words.json`.replace(
       /^\/\//g,
-      "/"
+      "/",
     );
     fetch(url)
       .then((response) => response.json())
@@ -34,7 +34,7 @@ export const WordsProvider = ({ children, words: initialWords }: Props) => {
       words,
       dictionary: new Set(words),
     }),
-    [words]
+    [words],
   );
 
   if (words.length === 0) {
