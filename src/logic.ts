@@ -206,6 +206,12 @@ export const bfs = async (
     }
   }
 
+  // See if we can short-cut the larger BFS.
+  if (singleWordSolutions.length > 0) {
+    const shortest = singleWordSolutions.sort((a, b) => a.length - b.length);
+    return [shortest[0]];
+  }
+
   const bits = new Uint16Array(
     words.map((word) => {
       let mask: number = 0;
@@ -217,12 +223,6 @@ export const bfs = async (
       return mask;
     })
   );
-
-  // See if we can short-cut the larger BFS.
-  if (singleWordSolutions.length > 0) {
-    const shortest = singleWordSolutions.sort((a, b) => a.length - b.length);
-    return [shortest[0]];
-  }
 
   const queue: number[][] = words.map((_, i) => [i]);
   const solutions: number[][] = [];

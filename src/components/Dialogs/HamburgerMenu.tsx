@@ -20,6 +20,7 @@ import {
   HamburgerMenu as SpaHamburgerMenu,
 } from "../../spa-components/HamburgerMenu";
 import hamburgerClasses from "../../spa-components/HamburgerMenu/HamburgerMenu.module.css";
+import { OtherApps } from "../../spa-components/HamburgerMenu/OtherApps";
 
 export const HamburgerMenu = () => {
   const { solutions } = useGameHistory();
@@ -93,6 +94,7 @@ export const HamburgerMenu = () => {
         text="Om Bokstavboks"
         onClick={() => show("about")}
       />
+      <OtherApps />
     </SpaHamburgerMenu>
   );
 };

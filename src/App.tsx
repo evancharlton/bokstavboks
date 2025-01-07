@@ -12,7 +12,7 @@ import { Page } from "./components/Page";
 function App() {
   return (
     <Toaster>
-      <PwaContainer>
+      <PwaContainer appId="bokstavboks">
         <SettingsProvider>
           <Dialogs>
             <HashRouter>
