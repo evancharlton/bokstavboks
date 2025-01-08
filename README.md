@@ -9,9 +9,4 @@ wish.
 
 It is free to play on <https://evancharlton.github.io/bokstavboks>.
 
-## Dictionaries
-
-The word lists are sourced from <https://nb.no>, and are licensed under the CC-BY
-license.
-
 [letterboxed]: https://www.nytimes.com/puzzles/letter-boxed

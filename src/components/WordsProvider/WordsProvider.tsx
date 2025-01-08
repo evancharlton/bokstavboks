@@ -18,11 +18,7 @@ export const WordsProvider = ({ children, words: initialWords }: Props) => {
       return;
     }
 
-    const url = `${import.meta.env.BASE_URL}/${lang}/words.json`.replace(
-      /^\/\//g,
-      "/",
-    );
-    fetch(url)
+    fetch(`https://lister.evanc.no/bokstavboks/${lang}/words.json`)
       .then((response) => response.json())
       .then((words) => {
         setWords(words);
