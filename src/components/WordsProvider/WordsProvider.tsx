@@ -1,29 +1,25 @@
-import { useEffect, useMemo, useState } from "react";
-import { Outlet, useParams } from "react-router";
+import { useMemo } from "react";
+import { useParams } from "react-router";
 import { WordsContext } from "./context";
 import { Loader } from "../../spa-components/Loader";
+import { useLanguageData } from "../../spa-components/DataProvider";
 
 type Props = {
   children?: React.ReactNode;
-  words?: string[];
+  words: string[];
 };
 
-export const WordsProvider = ({ children, words: initialWords }: Props) => {
+export const DataFetcher = ({ children }: { children: React.ReactNode }) => {
+  const { data: words, state } = useLanguageData<string[]>("words.json");
+
+  if (state === "loaded" && words) {
+    return <WordsProvider words={words}>{children}</WordsProvider>;
+  }
+  return <Loader text="laster ned ..." />;
+};
+
+export const WordsProvider = ({ children, words }: Props) => {
   const { lang } = useParams();
-  const [words, setWords] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (initialWords) {
-      setWords(initialWords);
-      return;
-    }
-
-    fetch(`https://lister.evanc.no/bokstavboks/${lang}/words.json`)
-      .then((response) => response.json())
-      .then((words) => {
-        setWords(words);
-      });
-  }, [lang, initialWords]);
 
   const value = useMemo(
     () => ({
@@ -33,14 +29,9 @@ export const WordsProvider = ({ children, words: initialWords }: Props) => {
     [words],
   );
 
-  if (words.length === 0) {
-    return <Loader text="laster ned ..." />;
-  }
-
   return (
     <WordsContext.Provider key={lang} value={value}>
       {children}
-      <Outlet />
     </WordsContext.Provider>
   );
 };

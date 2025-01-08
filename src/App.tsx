@@ -1,13 +1,13 @@
 import "./App.css";
-import { HashRouter, Route, Routes } from "react-router";
+import { HashRouter, Outlet, Route, Routes } from "react-router";
 import { Play } from "./pages/Play";
-import { WordsProvider } from "./components/WordsProvider";
 import { Dialogs } from "./components/Dialogs";
 import { Toaster } from "./components/Toaster";
 import { SettingsProvider } from "./components/SettingsProvider";
 import LanguageSelector from "./spa-components/LanguageSelector";
 import PwaContainer from "./spa-components/PwaContainer";
 import { Page } from "./components/Page";
+import { DataFetcher } from "./components/WordsProvider";
 
 function App() {
   return (
@@ -19,7 +19,14 @@ function App() {
               <Routes>
                 <Route path="/" element={<Page />}>
                   <Route path="" element={<LanguageSelector />} />
-                  <Route path=":lang" element={<WordsProvider />}>
+                  <Route
+                    path=":lang"
+                    element={
+                      <DataFetcher>
+                        <Outlet />
+                      </DataFetcher>
+                    }
+                  >
                     <Route index element={<Play />} />
                     <Route path=":puzzleId" element={<Play />} />
                   </Route>

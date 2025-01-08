@@ -1,2 +1,2 @@
-export { WordsProvider } from "./WordsProvider";
+export { DataFetcher, WordsProvider } from "./WordsProvider";
 export { useWords } from "./context";
