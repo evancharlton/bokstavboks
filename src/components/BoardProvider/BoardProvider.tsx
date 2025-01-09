@@ -10,6 +10,7 @@ import { extractBoardId } from "./extractBoardId";
 import { useStorage } from "../../useStorage";
 import { normalizeId } from "../../utils";
 import { neverGuard } from "../../spa-components/neverGuard";
+import { useRandom } from "../../spa-components/RandomProvider";
 
 type Action =
   | { action: "set-board"; boardId: string; seeds?: string[] }
@@ -81,7 +82,8 @@ export const BoardProvider = ({ children, ...initialState }: Props) => {
   const navigate = useNavigate();
   const { lang } = useParams();
   const { words: wordBank } = useWords();
-  const { puzzleId, random } = usePuzzleId();
+  const { puzzleId } = usePuzzleId();
+  const { random } = useRandom();
 
   const [{ id, display, groups }, dispatch] = useReducer(reducer, {
     id: "",

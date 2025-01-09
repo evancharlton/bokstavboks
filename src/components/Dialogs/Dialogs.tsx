@@ -154,13 +154,7 @@ export const Dialogs = ({ children }: Props) => {
               <WordsContext.Provider
                 value={{ words: ["bokstav"], dictionary: new Set() }}
               >
-                <PuzzleIdContext.Provider
-                  value={{
-                    puzzleId: "bkaotnsvmepr",
-                    puzzleHash: 0,
-                    random: () => 0,
-                  }}
-                >
+                <PuzzleIdContext.Provider value={{ puzzleId: "bkaotnsvmepr" }}>
                   <BoardContext.Provider
                     value={{
                       id: "bkaotnsvmepr",

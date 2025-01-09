@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react";
 
-export const PuzzleIdContext = createContext<
-  { puzzleId: string; puzzleHash: number; random: () => number } | undefined
->(undefined);
+export const PuzzleIdContext = createContext<{ puzzleId: string } | undefined>(
+  undefined,
+);
 
 export const usePuzzleId = () => {
   const context = useContext(PuzzleIdContext);
