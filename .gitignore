@@ -22,11 +22,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Terraform/Tofu stuff
-.terraform
-.terraform.lock.hcl
-terraform.*.backup
-
 # Vite stuff
 dist/
 dev-dist/
