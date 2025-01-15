@@ -4,7 +4,7 @@ import { Play } from "./pages/Play";
 import { Dialogs } from "./components/Dialogs";
 import { Toaster } from "./components/Toaster";
 import { SettingsProvider } from "./components/SettingsProvider";
-import LanguageSelector from "./spa-components/LanguageSelector";
+import { LanguageProvider } from "./spa-components/LanguageSelector";
 import PwaContainer from "./spa-components/PwaContainer";
 import { Page } from "./components/Page";
 import { DataFetcher } from "./components/WordsProvider";
@@ -18,13 +18,15 @@ function App() {
             <HashRouter>
               <Routes>
                 <Route path="/" element={<Page />}>
-                  <Route path="" element={<LanguageSelector />} />
+                  <Route path="" element={<LanguageProvider />} />
                   <Route
                     path=":lang"
                     element={
-                      <DataFetcher>
-                        <Outlet />
-                      </DataFetcher>
+                      <LanguageProvider>
+                        <DataFetcher>
+                          <Outlet />
+                        </DataFetcher>
+                      </LanguageProvider>
                     }
                   >
                     <Route index element={<Play />} />
