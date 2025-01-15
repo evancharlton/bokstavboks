@@ -40,7 +40,7 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.endsWith(".json"),
-            handler: "NetworkFirst",
+            handler: "StaleWhileRevalidate",
           },
         ],
       },
